@@ -1,50 +1,79 @@
 # Demo Walkthrough
 
-A strong Nopmo demo should show a chain of evidence and control, not a collection of disconnected AI features.
+The design-partner demo is intentionally narrow. It should prove one complete management loop rather than tour the feature set.
 
 ## Scenario
-A delivery issue in one project threatens a dependency used by another project.
 
-### 1. Source refresh
-A connector receives or fetches an updated issue or message. The raw source identity and timestamp are preserved.
+Three initiatives are related:
 
-### 2. Normalization
-The source-specific object becomes a project signal that downstream logic can understand without depending on Jira-, Slack-, or email-specific fields.
+- **Platform API** — owns a delivery needed by downstream testing.
+- **Customer Launch** — depends on the API and carries the external go-live commitment.
+- **Training & Enablement** — plans content and sessions against the launch date.
 
-### 3. Material-change check
-The system determines whether the new information changes the project state enough to warrant additional work.
+The Platform API develops a delivery problem. Two different sources also disagree about the launch date.
 
-This prevents a scheduler from generating new model calls and new prose for an unchanged project.
+## 1. Start on Today
 
-### 4. Project reasoning
-Status/risk/dependency logic evaluates the new signal against existing project state and related evidence.
+The demo opens on **Today**, not on a project setup screen.
 
-The reviewer should be able to distinguish direct evidence, deterministic classification, model inference, and model-written explanation.
+The first view should answer:
 
-### 5. Cross-project interpretation
-If another project depends on the affected deliverable, the portfolio layer should surface that relationship rather than treating the issue as isolated.
+> What deserves management attention right now?
 
-### 6. Recommendation / decision request
-The system describes what deserves attention. When a real management choice exists, the output should make the missing owner, deadline, or decision explicit.
+### Cross-project impact
 
-### 7. Human review
-The user can inspect the evidence behind the recommendation before accepting a consequential change.
+Nopmo should show that the Platform API problem affects Customer Launch because regression testing waits on it.
 
-### 8. Bounded action
-Policy — not model confidence — determines whether the action can be executed automatically, queued for approval, or blocked.
+The point is not that two projects are independently yellow. The insight exists because of the relationship between them.
 
-### 9. Longitudinal memory
-The next run compares against retained state so the system can distinguish new, persistent, improving, deteriorating, stale, or resolved conditions.
+### Conflicting evidence
+
+Two sources contain incompatible launch dates.
+
+Nopmo should surface the disagreement rather than silently selecting the newest value.
+
+The user should be able to inspect the sources and establish the working truth.
+
+### Decision / intervention
+
+The attention item should make the management choice explicit, including the affected projects and supporting evidence.
+
+Consequential changes remain reviewable.
+
+### Outcome check
+
+A prior decision is still being tracked.
+
+The user can record whether the expected result is improving, achieved, mixed, or failed, preserving evidence about what happened after the intervention.
+
+## 2. Open an affected project only when useful
+
+The project view exists to inspect status, evidence, risks/issues, sources, commitments, and project relationships.
+
+Detailed backlog/schedule/resource views are secondary. When a source system such as Jira is connected, Nopmo is not trying to replace that system.
+
+## 3. Show why Nopmo reached the conclusion
+
+A reviewer should be able to distinguish:
+
+- source evidence,
+- deterministic findings,
+- model inference or explanation,
+- proposed changes,
+- verified state,
+- policy/approval decisions,
+- execution results.
+
+The model never grants itself authority.
 
 ## What the demo should prove
 
-A reviewer should leave understanding:
+A design partner should leave understanding that Nopmo:
 
-- where the evidence came from
-- what the model inferred versus what the application computed
-- why the recommendation exists
-- why an action was or was not allowed
-- whether another project is affected
-- what will happen on the next run if nothing changes
+- detects implications that only exist across projects,
+- surfaces disagreement instead of inventing certainty,
+- focuses attention rather than producing an endless insight feed,
+- keeps consequential actions under explicit control, and
+- checks whether decisions actually worked.
 
-That is a stronger demonstration of agentic program intelligence than showing a chatbot answer a project-management question.
+That is the demo standard.
