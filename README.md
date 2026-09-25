@@ -1,145 +1,108 @@
-# Nopmo — Agentic Program Intelligence
+# Nopmo — Program Intelligence Across Projects
 
 **A public product and architecture case study for a private working prototype.**
 
-Nopmo explores what project and program management looks like when AI moves beyond summarizing work and starts continuously interpreting delivery signals, identifying what deserves attention, preparing decisions, and taking bounded actions under explicit human oversight.
+Nopmo watches the systems where work already happens and surfaces the few things across projects that deserve management attention.
 
-The production prototype is private. This repository intentionally documents the **product thinking, system design, safety model, evaluation approach, and demo flow** without publishing the private application source code, credentials, or customer data.
+It is designed for situations where the important conclusion does not live in one Jira issue, one status report, or even one project. A delivery change in one initiative may expose a launch elsewhere, consume a shared resource, contradict a stakeholder commitment, or create a decision that needs leadership attention.
 
-## The problem
+## What Nopmo is trying to do
 
-Project information is fragmented across Jira, email, chat, calendars, meetings, documents, spreadsheets, and people's heads.
+Nopmo connects project signals from tools such as Jira, email, chat, calendars, meetings, and documents, then maintains an evidence-backed view of execution over time.
 
-Most AI project tools stop at one of two places: summarizing the context they are given, or attaching a chatbot to an existing project-management application.
+The product is built to answer questions such as:
 
-Nopmo is aimed at a different layer: **program intelligence across systems and over time.**
+- What changed that actually matters?
+- What other projects are affected?
+- Which sources disagree?
+- What decision or intervention is needed?
+- What evidence supports that conclusion?
+- What action is safe to take automatically?
+- Did the eventual decision actually improve the situation?
 
-It is designed to answer questions like:
-
-- What materially changed since the last review?
-- Which signals point to a real delivery risk rather than normal project noise?
-- Is a dependency merely waiting, actively blocked, or becoming dangerous?
-- Which decision needs a human owner and deadline?
-- What action is safe to suggest?
-- What action, if any, is safe to execute automatically?
-- What evidence supports the conclusion?
-
-## Core operating loop
+## The management loop
 
 ```text
-Jira / Email / Chat / Calendar / Meetings / Documents
-                         |
-                         v
-                  Source connectors
-                         |
-                         v
-              Normalized project signals
-                         |
-                         v
-          Deterministic checks + agent reasoning
-                         |
-              +----------+-----------+
-              |          |           |
-            Status      Risk     Dependencies
-              |          |           |
-              +----------+-----------+
-                         |
-                         v
-              Decisions / recommendations
-                         |
-                         v
-               Human review boundaries
-                         |
-                         v
-          Bounded action + audit / history
+Execution signals
+      |
+      v
+Evidence + source quality
+      |
+      v
+Findings / proposed changes
+      |
+      v
+Verified project state
+      |
+      v
+Cross-project impact + contradictions
+      |
+      v
+Management attention
+      |
+      v
+Decision / bounded action
+      |
+      v
+Outcome check
 ```
 
-The important design choice is that **an LLM is not the authorization layer**. Model output can interpret, explain, draft, and recommend. Deterministic rules, organization boundaries, operating mode, and explicit approval policies decide what is allowed to happen.
+The important design choice is that **an LLM is not the authorization layer**. Models can interpret, explain, draft, and recommend. Deterministic rules, organization boundaries, policy, and explicit review decide what is allowed to happen.
 
-## What exists in the private prototype
+## Current prototype
 
-The working prototype includes real application slices rather than only prompt demos:
+The private prototype includes:
 
 - organization-scoped authentication and access
-- Jira and communication connector work
-- normalized project signals
-- project, risk, status, backlog, schedule, portfolio, communications, and task-update workflows
-- longitudinal project state and material-change detection
-- evidence/provenance handling
-- human approval queues for consequential actions
-- coaching vs. autonomous operating modes
-- recurring background work with per-org controls
-- failure isolation and observability
-- LLM usage caps and change-gating to avoid unnecessary model calls
-- OAuth refresh handling and reconnect states
-- calibration/evaluation work using synthetic scenarios and reviewed datasets
-- explicit guardrails around milestone changes, customer-facing work, and communications
+- source connectors and normalized project signals
+- deterministic status/risk logic with evidence provenance
+- longitudinal state and material-change detection
+- explicit project-to-project relationships
+- cross-project impact propagation
+- conflicting-signal detection
+- a management Attention Queue
+- proposed-change review inside the relevant attention item
+- first-class decision history and outcome tracking
+- human review boundaries around consequential changes
+- recurring background work with failure isolation and LLM cost controls
+- OAuth credential refresh/reconnect handling
+- groundwork for treating humans, AI agents, and services as work actors
 
-This repository does **not** claim every connector or autonomous behavior is production-ready. The point of the prototype is to make the hard operating questions testable.
+The application source remains private. This repository documents the product thesis, architecture choices, safety boundaries, and representative demo.
 
-## The product thesis
+## Representative demo
 
-The differentiator is not “many agents.”
+The focused demo uses three related initiatives:
 
-Specialist agents are an implementation technique. The product thesis is that an AI-native program system should maintain context across time, separate evidence from inference, reason across projects rather than inside one ticket, surface management decisions rather than just summaries, preserve inspectability, and make automation graduated and reversible.
+**Platform API → Customer Launch → Training & Enablement**
 
-See [PRODUCT_THESIS.md](PRODUCT_THESIS.md).
+A blocked API deliverable appears local at first. Nopmo traces the dependency into the customer launch, then into the downstream training commitment. At the same time, two sources disagree about the intended launch date.
 
-## Representative demo flow
+The Today experience surfaces:
 
-A useful Nopmo demo traces one real signal through the system:
-
-1. A Jira issue or communication signal changes.
-2. The connector refreshes and normalizes it.
-3. The system determines whether the change is material.
-4. Risk/status/dependency logic evaluates the signal in project context.
-5. Cross-project context can change the interpretation.
-6. Nopmo surfaces a recommendation or decision request.
-7. A human can inspect the supporting evidence.
-8. Any consequential action passes through the appropriate policy or approval boundary.
-9. The outcome is retained for later comparison rather than forgotten on the next prompt.
+1. the cross-project consequence,
+2. the conflicting launch-date evidence,
+3. the management decision that needs attention, and
+4. a prior decision whose outcome still needs to be checked.
 
 See [DEMO_WALKTHROUGH.md](DEMO_WALKTHROUGH.md).
 
-## Design decisions worth challenging
+## Product thesis
 
-Examples include:
+Nopmo is not intended to replace Jira, Smartsheet, Monday, or other systems of record.
 
-- Why not let the LLM determine project health?
-- Why keep provenance for every material finding?
-- Why not auto-close a risk when it disappears from the next status update?
-- Why are committed milestone changes harder to automate?
-- Why gate recurring model work on material change?
-- Why is organization authorization enforced outside the prompt?
+Its thesis is that the missing layer is **management intelligence across those systems**: preserving evidence, connecting consequences, identifying disagreement, focusing scarce human attention, and closing the loop after decisions.
 
-See [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md).
+See [PRODUCT_THESIS.md](PRODUCT_THESIS.md).
 
 ## How AI coding agents are used
 
-AI coding agents generate a significant amount of implementation. That is explicit, not hidden.
+AI coding agents generate a significant amount of implementation. That is explicit.
 
-The work I own is product definition, domain modeling, prioritization, acceptance criteria, operating policies, architecture review, evaluation design, failure analysis, and deciding whether generated implementation actually matches the intended system behavior.
-
-I use AI to increase implementation leverage; I do not treat generated code or generated product claims as automatically correct.
+I own the product definition, domain model, prioritization, acceptance criteria, operating policies, architecture review, evaluation design, failure analysis, and the decision about whether generated implementation actually matches the intended behavior.
 
 See [AI_COLLABORATION.md](AI_COLLABORATION.md).
 
-## What this portfolio is intended to demonstrate
-
-- AI product design
-- technical program tradeoffs
-- multi-system workflows
-- human-in-the-loop automation
-- reliability and observability
-- model cost and change gating
-- data isolation and credential boundaries
-- evaluations and evidence
-- enterprise adoption constraints
-
-## Related open-source project
-
-[Project Risk Agent](https://github.com/jsconu/project-risk-agent) extracts evidence-backed risks, issues, dependencies, and decision requests from project signals. It provides a smaller, fully public view of several ideas that also matter in Nopmo.
-
 ## Status
 
-Nopmo is a prototype under active development. The application source remains private while the product model, design decisions, and selected architecture are shared here for review and discussion.
+Nopmo is a prototype under active development and is beginning design-partner testing.
