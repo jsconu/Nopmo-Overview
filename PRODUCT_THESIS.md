@@ -49,6 +49,29 @@ A useful design test is:
 
 Human effort should be concentrated on ambiguity, correction, decisions, and authorization.
 
+### 6. Nopmo should adapt to the work
+
+Organizations are messy before software sees them. Project names differ across systems. Dates conflict.
+Dependencies are implied in meetings but absent from trackers. Important work may not have a clean
+project object at all.
+
+Nopmo should therefore connect to the world as it exists, reconstruct a coherent working model, and
+ask humans mainly where ambiguity or consequence requires judgment.
+
+The default interaction should be:
+
+**observe → infer structure → show evidence → confirm/correct → monitor**
+
+not:
+
+**create structure → maintain it manually → ask AI to analyze it**
+
+A practical design test follows from this: before adding a required field or setup step, ask whether
+Nopmo can derive a useful hypothesis from existing evidence instead.
+
+Humans should spend their time confirming, correcting, deciding, and authorizing—not acting as
+Nopmo's data-entry layer.
+
 ## What would falsify the thesis?
 
 The project should be considered unsuccessful if real users find that:
