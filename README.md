@@ -2,9 +2,21 @@
 
 **A public product and architecture case study for a private working prototype.**
 
-Nopmo watches the systems where work already happens and surfaces the few things across projects that deserve management attention.
+Nopmo starts with the messy systems where work already happens, organizes what they collectively say, and surfaces the few things across projects that deserve management attention.
 
 It is designed for situations where the important conclusion does not live in one Jira issue, one status report, or even one project. A delivery change in one initiative may expose a launch elsewhere, consume a shared resource, contradict a stakeholder commitment, or create a decision that needs leadership attention.
+
+## Source-first by design
+
+Nopmo should not require a team to build a pristine project model before it can help.
+
+The intended first-use experience is:
+
+**connect sources → discover work → resolve ambiguity → confirm structure → keep reconciling it**
+
+If Jira calls something one name, email calls it another, and a meeting implies a dependency nobody
+documented, Nopmo should preserve those signals and propose the structure it thinks exists. Humans
+confirm or correct the model instead of reconstructing the evidence by hand.
 
 ## What Nopmo is trying to do
 
