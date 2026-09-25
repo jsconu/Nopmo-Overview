@@ -18,6 +18,10 @@ If Jira calls something one name, email calls it another, and a meeting implies 
 documented, Nopmo should preserve those signals and propose the structure it thinks exists. Humans
 confirm or correct the model instead of reconstructing the evidence by hand.
 
+Those corrections should become durable organizational knowledge. If a reviewer confirms that
+“Customer Portal,” “Portal Phase 2,” and “CX Portal” refer to the same initiative, Nopmo remembers
+those names when future signals arrive instead of repeatedly asking the same identity question.
+
 ## What Nopmo is trying to do
 
 Nopmo connects project signals from tools such as Jira, email, chat, calendars, meetings, and documents, then maintains an evidence-backed view of execution over time.
