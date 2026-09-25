@@ -1,630 +1,182 @@
 <!DOCTYPE html>
-<!--
-  PLACEHOLDER APP URL: every call-to-action on this page points to
-  https://app.Nopmo.example/signup. Find-and-replace this exact string with the real
-  webapp's public signup URL once real hosting exists (see README.md).
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Applies a saved theme/text-size choice before first paint, so there's no flash of the
-       wrong look on reload. This is the only reason any script runs this early in <head>. -->
-  <script>
-    (function () {
-      try {
-        var theme = localStorage.getItem('pmo-theme');
-        if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
-        if (localStorage.getItem('pmo-text-size') === 'large') document.documentElement.setAttribute('data-text-size', 'large');
-      } catch (e) {}
-    })();
-  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <title>Nopmo — Agentic program intelligence</title>
-  <meta name="description" content="Nopmo turns fragmented project signals into evidence-backed risks, dependencies, decisions, and bounded actions across a portfolio.">
+  <title>Nopmo — Program intelligence across projects</title>
+  <meta name="description" content="Nopmo finds the few things across your projects that actually need management attention.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
-  <!-- Open Graph / Twitter Card -- no og:image/twitter:image yet: producing a real one needs
-       either an AI image-generation key (none configured) or a way to export a rendered banner
-       to a raster file (not available in this environment either). Platforms fall back to a
-       plain text-only card until a real image is supplied. -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://jsconu.github.io/Nopmo-site/">
-  <meta property="og:title" content="Nopmo — Agentic program intelligence">
-  <meta property="og:description" content="Project signals → evidence-backed judgment → management attention → bounded action.">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Nopmo — Agentic program intelligence">
-  <meta name="twitter:description" content="Project signals → evidence-backed judgment → management attention → bounded action.">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <a href="#top" class="skip-link">Skip to main content</a>
 
   <header class="topbar">
     <div class="wrap topbar-inner">
-      <div class="topbar-brand-group">
-        <a href="#top" class="brand" title="Give it a click">
-          <span class="brand-mark" id="brand-mark" aria-hidden="true"></span>
-          Nopmo
-        </a>
-        <button type="button" id="mascot-robot" class="mascot-btn" aria-label="Say hi" title="Say hi">
-          <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
-            <!-- The header mascot combines one signature piece from each of the 10 specialist
-                 agents (same palette as the "What it does" cards below), Transformers-style -- the
-                 base head/antenna/body/arms are the original design; every other agent contributes
-                 one small, distinctly-colored accent piece (shoulder plate, chest shape, alert
-                 badge, sensor row, speech vent, ear tabs, radar dish, broadcast antenna, visor).
-                 Mirrors the real webapp's header mascot exactly (same SVG, same markup). -->
-            <rect class="mascot-arm-static" x="5" y="20" width="5" height="10" rx="2.5"/>
-            <g class="mascot-arm-wave"><rect x="30" y="20" width="5" height="10" rx="2.5"/></g>
-            <rect class="mascot-body" x="10" y="18" width="20" height="16" rx="2"/>
-            <line class="mascot-antenna" x1="18" y1="6" x2="18" y2="2"/>
-            <circle class="mascot-antenna-tip" cx="18" cy="2" r="1.7"/>
-            <rect class="mascot-head" x="12" y="6" width="16" height="14" rx="5"/>
-            <!-- Each <g> below is one agent's accent piece, grouped so a multi-shape accent (the
-                 ear tabs, the visor's housing+slit) pops in as a single unit during the assemble
-                 animation -- see .mascot-assemble in style.css and the inline script below. -->
-            <g class="mascot-assemble">
-              <g><rect x="4.5" y="18.5" width="6" height="2" rx="0.5" fill="#374151"/></g>
-              <g><polygon points="12,19.6 14.6,19.6 13.3,17.2" fill="#991b1b"/></g>
-              <g><circle cx="16" cy="26.5" r="1.3" fill="#6d28d9"/><circle cx="20" cy="26.5" r="1.3" fill="#6d28d9"/><circle cx="24" cy="26.5" r="1.3" fill="#6d28d9"/></g>
-              <g><polygon points="26,34 26,37.2 29.2,34" fill="#92400e"/></g>
-              <g><rect x="8.7" y="10" width="2.4" height="5" rx="1.2" fill="#0369a1"/><rect x="28.9" y="10" width="2.4" height="5" rx="1.2" fill="#0369a1"/></g>
-              <g><path d="M29.3 8.6 a2.3 2.3 0 0 1 4.5 0 Z" fill="#be185d"/></g>
-              <g><polyline points="24,6 22.6,4.6 25,3.3 23.6,1.9" fill="none" stroke="#a16207" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></g>
-              <g><rect x="14.5" y="11" width="11" height="3.4" rx="1.5" fill="#1d4ed8"/><rect x="15.3" y="11.8" width="9.4" height="1.8" rx="0.9" fill="var(--bg)"/></g>
-            </g>
-          </svg>
-          <span id="mascot-quote" class="mascot-quote-bubble" role="status"></span>
-        </button>
-      </div>
+      <a href="#top" class="brand">Nopmo</a>
       <nav class="topnav">
-        <a href="#agents">How it works</a>
+        <a href="#how">How it works</a>
+        <a href="#different">What is different</a>
+        <a href="DEMO_WALKTHROUGH.md">Demo</a>
         <a href="PRODUCT_THESIS.md">Product thesis</a>
-        <button type="button" id="theme-toggle" class="icon-btn" aria-pressed="false" aria-label="Switch to dark mode">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>
-          </svg>
-        </button>
-        <button type="button" id="text-size-toggle" class="icon-btn text-size-btn" aria-pressed="false" aria-label="Switch to larger text">A</button>
-        <a href="DEMO_WALKTHROUGH.md" class="btn btn-small">View case study</a>
       </nav>
     </div>
   </header>
 
   <main id="top" tabindex="-1">
-
-    <!-- ============ Hero ============ -->
     <section class="hero">
       <div class="wrap hero-inner">
-        <p class="hero-eyebrow">Agentic program intelligence</p>
-        <h1>Turn fragmented project signals into decisions and bounded action.</h1>
+        <p class="hero-eyebrow">Program intelligence across projects</p>
+        <h1>Nopmo finds the few things across your projects that actually need attention.</h1>
         <p class="hero-sub">
-          Nopmo connects signals across the systems where work already happens, maintains project
-          context over time, identifies evidence-backed risks and dependencies, and surfaces the
-          decisions that need management attention.
+          It watches signals across project tools, email, chat, meetings, calendars, and documents;
+          connects consequences between projects; surfaces conflicting evidence; and helps leaders
+          make and follow through on consequential decisions.
         </p>
         <p class="hero-sub">
-          The model can interpret, explain, draft, and recommend. Deterministic rules, organization
-          boundaries, operating policy, and human-review gates decide what is allowed to happen.
-          The goal is not another chatbot beside a task tracker; it is an inspectable operating
-          layer across projects and tools.
+          Nopmo is not trying to replace Jira, Smartsheet, Monday, or another system of record.
+          It is the management-intelligence layer above them.
         </p>
         <div class="hero-ctas">
-          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary btn-large">Trace the demo flow</a>
+          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary btn-large">See the demo flow</a>
           <a href="DESIGN_DECISIONS.md" class="btn btn-ghost btn-large">Read design decisions</a>
         </div>
       </div>
     </section>
 
-    <!-- ============ The problem ============ -->
-    <section class="section">
+    <section class="section" id="different">
       <div class="wrap">
-        <h2>
-          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <rect x="6" y="4" width="12" height="17" rx="2"/>
-            <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/>
-            <path d="M9 11h6M9 15h6M9 19h3"/>
-          </svg>
-          The problem
-        </h2>
+        <h2>What Nopmo is built to notice</h2>
         <div class="cards cards-3">
           <div class="card">
-            <h3>Hours spent building a slideshow no one asked for</h3>
-            <p>Someone spends an afternoon every week piecing together a status update from
-            memory, old chat messages, and whatever notes they can still find.</p>
+            <h3>Consequences across projects</h3>
+            <p>
+              A delivery problem in one initiative can expose testing, launch, training, or
+              customer commitments elsewhere. Nopmo models those relationships explicitly.
+            </p>
           </div>
           <div class="card">
-            <h3>A problem tracker nobody actually looks at</h3>
-            <p>A spreadsheet gets set up on day one to track what could go wrong, filled in once,
-            and never opened again, right up until the thing it was supposed to catch happens.</p>
+            <h3>Disagreement between sources</h3>
+            <p>
+              If Jira, email, and a meeting contain incompatible dates or commitments, Nopmo
+              surfaces the conflict instead of quietly choosing one and pretending certainty.
+            </p>
           </div>
           <div class="card">
-            <h3>Or a chatbot that just makes it up</h3>
-            <p>Plenty of "AI" tools will cheerfully tell you a project is fine based on a vague
-            prompt and a good vibe. If there isn't enough information to actually know, that's
-            what it should say out loud, not something reassuring instead.</p>
+            <h3>Whether a decision worked</h3>
+            <p>
+              A recommendation is not success. Nopmo can retain the expected outcome of a decision
+              and later compare it with evidence from execution.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ Why we skipped the standards ============ -->
-    <section class="section section-alt">
+    <section class="section section-alt" id="how">
       <div class="wrap">
-        <h2>
-          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5z"/>
-            <path d="M15 3v5h5"/>
-            <path d="M8 13l3 3 5-6"/>
-          </svg>
-          We didn't start from a standards binder
-        </h2>
+        <h2>From fragmented signals to management attention</h2>
         <p class="section-lede">
-          Most advice on running projects traces back to a handful of thick official playbooks that
-          take a committee years to update. By the time one of them catches up to how teams
-          actually work, most teams have already moved on to something else. So we skipped it. We
-          didn't ask "what does the standard say"; we asked "what actually tells someone whether
-          their work is really okay," and built that instead.
-        </p>
-      </div>
-    </section>
-
-    <!-- ============ How it's different ============ -->
-    <section class="section">
-      <div class="wrap">
-        <h2>
-          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-          How it's different
-        </h2>
-        <p class="section-lede">
-          The judgment call (is this actually fine, or not) is always made by plain, checkable
-          rules first. Only after that's decided does anything get written into a sentence you'd
-          read. A few real examples of how that plays out:
+          The underlying system preserves evidence and project state, but the user experience is
+          intentionally simpler: show the small number of things that deserve attention, explain
+          why they matter, and make the next decision or action clear.
         </p>
         <div class="cards cards-3">
-          <div class="card card-example">
-            <p class="eyebrow">A deadline slips by a few days</p>
-            <p>That gets marked <span class="pill pill-at_risk">worth watching</span>, not treated
-            like a <span class="pill pill-off_track">five-alarm fire</span>. There's a little room
-            built in before a late date actually becomes a real problem, because that's how
-            someone experienced would judge it too.</p>
+          <div class="card">
+            <p class="eyebrow">1. Observe</p>
+            <h3>Read the systems where execution already happens</h3>
+            <p>Source identity, timestamps, freshness, and provenance are retained.</p>
           </div>
-          <div class="card card-example">
-            <p class="eyebrow">Not enough information yet</p>
-            <p>If there hasn't been enough recent activity to say for sure how things are going, it
-            says exactly that: <span class="pill pill-insufficient">not enough data</span>, instead
-            of guessing <span class="pill pill-on_track">everything's fine</span> just because
-            nothing bad turned up.</p>
+          <div class="card">
+            <p class="eyebrow">2. Connect</p>
+            <h3>Reason across project boundaries</h3>
+            <p>
+              Relationships, shared resources, commitments, risks, and conflicting claims change
+              the meaning of otherwise local signals.
+            </p>
           </div>
-          <div class="card card-example">
-            <p class="eyebrow">A written update you can actually trust</p>
-            <p>Before any message about a real problem goes out, it's checked against the actual
-            facts first. Get that check wrong, and the message doesn't go out. It's never quietly
-            fixed for you, and never sent out downplaying something real.</p>
+          <div class="card">
+            <p class="eyebrow">3. Intervene</p>
+            <h3>Surface a decision, bounded action, or outcome check</h3>
+            <p>
+              Consequential actions stay behind deterministic policy and human review. Model
+              confidence never grants authority.
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ No PM experience needed ============ -->
+    <section class="section">
+      <div class="wrap">
+        <h2>Representative demo</h2>
+        <p class="section-lede">
+          Platform API → Customer Launch → Training &amp; Enablement.
+        </p>
+        <div class="cards cards-3">
+          <div class="card">
+            <h3>A blocked API delivery</h3>
+            <p>The problem originates in Platform API and threatens the downstream test window.</p>
+          </div>
+          <div class="card">
+            <h3>A launch-date conflict</h3>
+            <p>An executive email and a readiness meeting contain different working launch dates.</p>
+          </div>
+          <div class="card">
+            <h3>An outcome still to verify</h3>
+            <p>A previous decision aimed to preserve regression testing. Nopmo keeps tracking whether it did.</p>
+          </div>
+        </div>
+        <div class="hero-ctas">
+          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary">Walk through the scenario</a>
+        </div>
+      </div>
+    </section>
+
     <section class="section section-alt">
       <div class="wrap">
-        <h2>
-          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"/>
-            <polygon points="15,9 13,13 9,15 11,11" fill="currentColor" stroke="none"/>
-          </svg>
-          You don't need PM experience to use this
-        </h2>
-        <p class="section-lede">
-          A step-by-step Getting Started checklist walks a first-time user through starting a
-          project, adding tasks, and running the first status check, and it tailors its
-          suggestions to who you actually are, whether that's a founder wearing every hat, someone
-          just handed a project to manage, or a PM who's run dozens of these before. Stuck on
-          anything? A built-in Help assistant answers questions about using the product itself, in
-          plain language, any time you ask.
-        </p>
-      </div>
-    </section>
-
-    <!-- ============ What it does ============ -->
-    <section class="section" id="agents">
-      <div class="wrap">
-        <h2>
-          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-            <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-            <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-            <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-          </svg>
-          What it does
-        </h2>
-        <p class="section-lede">
-          Specialist agents are an implementation detail. The product is the operating loop across them: source signals, normalized context, evidence-backed judgment, decisions, review boundaries, bounded action, and retained history.
-        </p>
-        <div class="cards cards-agents">
+        <h2>Inspectable by design</h2>
+        <div class="cards cards-3">
           <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="nod" aria-label="Say hi from the Getting Started agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #0f766e;"><line x1="20" y1="6" x2="20" y2="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="2" r="1.8" fill="currentColor"/><rect x="12" y="6" width="16" height="14" rx="5" fill="currentColor"/><circle cx="17" cy="12" r="1.6" fill="var(--white)"/><circle cx="23" cy="12" r="1.6" fill="var(--white)"/></svg></button>Getting started</p>
-            <p>Has a real back-and-forth conversation with whoever's requesting the work to
-            understand what's actually needed, asking a follow-up when an answer is vague, and
-            speaking up when two answers don't add up, instead of just writing down whatever it's
-            told.</p>
+            <h3>Evidence before assertion</h3>
+            <p>Material findings stay traceable to the source signals that support them.</p>
           </div>
           <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="tick" aria-label="Say hi from the Backlog agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #166534;"><line x1="20" y1="6" x2="20" y2="3" stroke="currentColor" stroke-width="2"/><rect x="18.5" y="1.5" width="3" height="3" fill="currentColor"/><rect x="11" y="6" width="18" height="14" rx="2" fill="currentColor"/><rect x="15.5" y="10.5" width="3" height="3" fill="var(--white)"/><rect x="21.5" y="10.5" width="3" height="3" fill="var(--white)"/></svg></button>Turning it into tasks</p>
-            <p>Takes what's been agreed on and breaks it into a clear, ordered task list, keeping
-            that list current as new requests come in, with the order set by real, visible rules,
-            not a gut feeling.</p>
+            <h3>Rules before authority</h3>
+            <p>LLMs can interpret and recommend; deterministic application policy decides what may execute.</p>
           </div>
           <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="blink" aria-label="Say hi from the Status agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #1d4ed8;"><line x1="20" y1="6" x2="20" y2="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="2" r="1.8" fill="currentColor"/><rect x="12" y="6" width="16" height="14" rx="5" fill="currentColor"/><rect x="15" y="11.5" width="10" height="2.5" rx="1.25" fill="var(--white)"/></svg></button>Status checks</p>
-            <p>Looks at real tasks, deadlines, and messages and tells you plainly whether a project
-            is on track, worth watching, or behind, and points to exactly what led to that answer,
-            so you can check it yourself.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="shake" aria-label="Say hi from the Risk agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #991b1b;"><line x1="20" y1="7" x2="20" y2="3" stroke="currentColor" stroke-width="2"/><polygon points="20,0.5 22.2,4 17.8,4" fill="currentColor"/><rect x="12" y="7" width="16" height="14" rx="5" fill="currentColor"/><line x1="14.5" y1="11" x2="17.5" y2="12.3" stroke="var(--white)" stroke-width="1.4"/><line x1="25.5" y1="11" x2="22.5" y2="12.3" stroke="var(--white)" stroke-width="1.4"/><circle cx="17" cy="15" r="1.5" fill="var(--white)"/><circle cx="23" cy="15" r="1.5" fill="var(--white)"/></svg></button>Spotting trouble early</p>
-            <p>Notices problems before they become a fire drill: work stuck behind one holdup,
-            tasks with no one clearly responsible for them, and warning phrases like "we'll deal
-            with that later" buried in updates.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="bounce" aria-label="Say hi from the Comms agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #92400e;"><line x1="20" y1="6" x2="20" y2="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="2" r="1.8" fill="currentColor"/><rect x="12" y="6" width="16" height="12" rx="5" fill="currentColor"/><polygon points="14,18 14,21.5 17.5,18" fill="currentColor"/><circle cx="17" cy="12" r="1.6" fill="var(--white)"/><circle cx="23" cy="12" r="1.6" fill="var(--white)"/></svg></button>Writing updates</p>
-            <p>Drafts a status message in whatever tone fits, whether that's a quick internal note,
-            a client-facing update, an executive summary, or an urgent heads-up, all without ever
-            softening or leaving out a real problem.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="scan" aria-label="Say hi from the Portfolio agent"><svg class="agent-robot" viewBox="0 0 40 22" width="30" height="20" aria-hidden="true" style="color: #6d28d9;"><line x1="20" y1="6" x2="20" y2="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="2" r="1.8" fill="currentColor"/><rect x="8" y="6" width="24" height="14" rx="5" fill="currentColor"/><circle cx="15" cy="13" r="1.4" fill="var(--white)"/><circle cx="20" cy="13" r="1.4" fill="var(--white)"/><circle cx="25" cy="13" r="1.4" fill="var(--white)"/></svg></button>The big picture</p>
-            <p>Rolls every active project into one view, so a leader can see which ones need
-            attention first, without sitting through five separate status meetings to find out.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="wiggle" aria-label="Say hi from the Task Update agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #0369a1;"><line x1="20" y1="6" x2="20" y2="2" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="2" r="1.8" fill="currentColor"/><rect x="9" y="10" width="3" height="6" rx="1.5" fill="currentColor"/><rect x="28" y="10" width="3" height="6" rx="1.5" fill="currentColor"/><rect x="12" y="6" width="16" height="14" rx="5" fill="currentColor"/><circle cx="17" cy="12" r="1.6" fill="var(--white)"/><circle cx="23" cy="12" r="1.6" fill="var(--white)"/></svg></button>Keeping tasks current</p>
-            <p>Reads real evidence in task history and messages and proposes updates to task
-            details, applied automatically if you want, or held for your okay first if you'd
-            rather keep the final say.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="broadcast" aria-label="Say hi from the Digest agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #a16207;"><polyline points="20,6 18,4.5 21,3 19,1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="12" y="6" width="16" height="14" rx="5" fill="currentColor"/><circle cx="17" cy="12" r="1.6" fill="var(--white)"/><circle cx="23" cy="12" r="1.6" fill="var(--white)"/></svg></button>Regular summaries</p>
-            <p>Sends a plain-language recap of what's changed daily, weekly, or monthly, so nobody
-            has to piece one together by hand.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="spin" aria-label="Say hi from the Project Signal agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #be185d;"><line x1="20" y1="7" x2="20" y2="3" stroke="currentColor" stroke-width="2"/><path d="M16.5 3 a3.5 3.5 0 0 1 7 0 Z" fill="currentColor"/><rect x="12" y="7" width="16" height="14" rx="5" fill="currentColor"/><circle cx="17" cy="13" r="1.6" fill="var(--white)"/><circle cx="23" cy="13" r="1.6" fill="var(--white)"/></svg></button>Catching new requests</p>
-            <p>Watches incoming messages (a forwarded email, a chat excerpt, meeting notes) for
-            signs that someone's actually asking for a new project, and flags it for a person to
-            look at.</p>
-          </div>
-          <div class="card">
-            <p class="agent-name"><button type="button" class="agent-robot-btn" data-anim="flip" aria-label="Say hi from the Retrospective agent"><svg class="agent-robot" viewBox="0 0 40 22" width="26" height="20" aria-hidden="true" style="color: #374151;"><rect x="13" y="2.5" width="14" height="2.5" rx="0.5" fill="currentColor"/><rect x="18.5" y="1" width="3" height="2" fill="currentColor"/><rect x="12" y="6" width="16" height="14" rx="5" fill="currentColor"/><circle cx="17" cy="12" r="1.6" fill="var(--white)"/><circle cx="23" cy="12" r="1.6" fill="var(--white)"/></svg></button>Learning from what happened</p>
-            <p>When a project wraps up, writes a short, specific list of what worked and what to do
-            differently next time, the kind of thing you'd actually tell the next person taking on
-            something similar, not generic advice.</p>
-          </div>
-        </div>
-        <p class="agents-footnote">
-          Two more things come free with every plan: something that quietly coordinates all of the
-          above behind the scenes, and a built-in help assistant for using the product itself.
-        </p>
-      </div>
-    </section>
-
-    <!-- ============ Pricing ============ -->
-    <section class="section section-alt" id="pricing">
-      <div class="wrap">
-        <h2>
-          <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M11.5 3H5a2 2 0 0 0-2 2v6.5a2 2 0 0 0 .586 1.414l8.5 8.5a2 2 0 0 0 2.828 0l6.5-6.5a2 2 0 0 0 0-2.828l-8.5-8.5A2 2 0 0 0 11.5 3z"/>
-            <circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/>
-          </svg>
-          Pricing
-        </h2>
-        <p class="section-lede">
-          Pay for exactly what you use: no tiers, no bundles, no paying for things that sit there
-          unused. Pick what you need when you sign up, and add or drop any of it later.
-        </p>
-        <!-- PRICING: update with real per-agent amounts once billing_plans.json is final. -->
-        <div class="pricing-box">
-          <p class="pricing-line"><strong>Each thing on the list above is priced and billed on its
-          own</strong>, every month, with no long-term contract.</p>
-          <p class="pricing-line">The behind-the-scenes coordinator and the built-in help assistant
-          are included automatically. You're never billed for those separately.</p>
-          <p class="pricing-line muted">Exact prices are shown when you sign up.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ CTA footer ============ -->
-    <section class="cta-footer">
-      <div class="wrap">
-        <h2>See the reasoning chain, not just the AI answer.</h2>
-        <p>Follow one signal from source evidence through recommendation, review, and retained history.</p>
-        <div class="cta-with-robot">
-          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary btn-large">View case study</a>
-          <!-- The click-all-10-combo's landing spot: hidden until the combo fires, then revealed
-               with the same assemble animation/quote bubble as the header mascot -- "the whole
-               team, assembled, right where you'd sign up." Same SVG markup as #mascot-robot
-               (id="cta-robot" here) so all of style.css's .mascot-btn/.mascot-assemble/
-               .mascot-piece-pop rules apply unchanged; a <div> (not a <button>) since this is a
-               one-time celebratory reveal, never itself clickable. -->
-          <div class="mascot-btn cta-robot" id="cta-robot" aria-hidden="true">
-            <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
-              <rect class="mascot-arm-static" x="5" y="20" width="5" height="10" rx="2.5"/>
-              <g class="mascot-arm-wave"><rect x="30" y="20" width="5" height="10" rx="2.5"/></g>
-              <rect class="mascot-body" x="10" y="18" width="20" height="16" rx="2"/>
-              <line class="mascot-antenna" x1="18" y1="6" x2="18" y2="2"/>
-              <circle class="mascot-antenna-tip" cx="18" cy="2" r="1.7"/>
-              <rect class="mascot-head" x="12" y="6" width="16" height="14" rx="5"/>
-              <g class="mascot-assemble">
-                <g><rect x="4.5" y="18.5" width="6" height="2" rx="0.5" fill="#374151"/></g>
-                <g><polygon points="12,19.6 14.6,19.6 13.3,17.2" fill="#991b1b"/></g>
-                <g><circle cx="16" cy="26.5" r="1.3" fill="#6d28d9"/><circle cx="20" cy="26.5" r="1.3" fill="#6d28d9"/><circle cx="24" cy="26.5" r="1.3" fill="#6d28d9"/></g>
-                <g><polygon points="26,34 26,37.2 29.2,34" fill="#92400e"/></g>
-                <g><rect x="8.7" y="10" width="2.4" height="5" rx="1.2" fill="#0369a1"/><rect x="28.9" y="10" width="2.4" height="5" rx="1.2" fill="#0369a1"/></g>
-                <g><path d="M29.3 8.6 a2.3 2.3 0 0 1 4.5 0 Z" fill="#be185d"/></g>
-                <g><polyline points="24,6 22.6,4.6 25,3.3 23.6,1.9" fill="none" stroke="#a16207" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></g>
-                <g><rect x="14.5" y="11" width="11" height="3.4" rx="1.5" fill="#1d4ed8"/><rect x="15.3" y="11.8" width="9.4" height="1.8" rx="0.9" fill="var(--bg)"/></g>
-              </g>
-            </svg>
-            <span id="cta-robot-quote" class="mascot-quote-bubble" role="status"></span>
+            <h3>Silence is not resolution</h3>
+            <p>Risks do not disappear simply because a later update fails to mention them.</p>
           </div>
         </div>
       </div>
     </section>
 
+    <section class="section">
+      <div class="wrap">
+        <h2>Prototype status</h2>
+        <p class="section-lede">
+          Nopmo is a private working prototype beginning design-partner testing. This public
+          repository shares the product model, architecture decisions, and demo flow without
+          publishing the private application source.
+        </p>
+        <div class="hero-ctas">
+          <a href="README.md" class="btn btn-ghost">Read the case study</a>
+          <a href="AI_COLLABORATION.md" class="btn btn-ghost">How AI coding agents are used</a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <p>&copy; 2026 Nopmo. Early access: the product is actively evolving.</p>
+      <p>&copy; 2026 Nopmo. Prototype under active development.</p>
     </div>
   </footer>
-
-  <!-- Theme toggle, text-size toggle, and a small click-for-fun animation on the logo mark.
-       This is the one deliberate exception to an otherwise zero-JS page: none of the three can
-       be done with plain HTML/CSS alone on a static site with no backend to store a preference
-       server-side, so each choice is kept in localStorage instead. -->
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var themeBtn = document.getElementById('theme-toggle');
-      var sizeBtn = document.getElementById('text-size-toggle');
-
-      function effectiveTheme() {
-        var explicit = root.getAttribute('data-theme');
-        if (explicit === 'light' || explicit === 'dark') return explicit;
-        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-
-      // Which icon is showing is driven entirely by CSS (keyed off data-theme / the OS
-      // preference) -- this only needs to update the accessible name/state.
-      function syncThemeButton() {
-        var dark = effectiveTheme() === 'dark';
-        themeBtn.setAttribute('aria-pressed', String(dark));
-        themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-      }
-
-      themeBtn.addEventListener('click', function () {
-        var next = effectiveTheme() === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        try { localStorage.setItem('pmo-theme', next); } catch (e) {}
-        syncThemeButton();
-      });
-      syncThemeButton();
-
-      function syncSizeButton() {
-        var large = root.getAttribute('data-text-size') === 'large';
-        sizeBtn.setAttribute('aria-pressed', String(large));
-        sizeBtn.setAttribute('aria-label', large ? 'Switch to normal text size' : 'Switch to larger text');
-      }
-
-      sizeBtn.addEventListener('click', function () {
-        if (root.getAttribute('data-text-size') === 'large') {
-          root.removeAttribute('data-text-size');
-          try { localStorage.removeItem('pmo-text-size'); } catch (e) {}
-        } else {
-          root.setAttribute('data-text-size', 'large');
-          try { localStorage.setItem('pmo-text-size', 'large'); } catch (e) {}
-        }
-        syncSizeButton();
-      });
-      syncSizeButton();
-
-      // A little status-check burst when the logo mark gets clicked, purely for fun.
-      var mark = document.getElementById('brand-mark');
-      var palette = ['#16a34a', '#f59e0b', '#ef4444', '#64748b'];
-      mark.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        mark.classList.remove('mark-pop');
-        void mark.offsetWidth;
-        mark.classList.add('mark-pop');
-
-        var rect = mark.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
-        var cy = rect.top + rect.height / 2;
-        for (var i = 0; i < 8; i++) {
-          var dot = document.createElement('span');
-          dot.className = 'confetti-dot';
-          dot.style.background = palette[i % palette.length];
-          dot.style.left = cx + 'px';
-          dot.style.top = cy + 'px';
-          var angle = (Math.PI * 2 * i) / 8;
-          var distance = 46 + Math.random() * 20;
-          dot.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
-          dot.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-          document.body.appendChild(dot);
-          (function (el) { el.addEventListener('animationend', function () { el.remove(); }); })(dot);
-        }
-      });
-
-      // A short, encouraging line from the mascot -- a small bit of fun on top of what's
-      // otherwise a routine "check on your projects" nudge.
-      var MASCOT_QUOTES = [
-        "Reporting in. Nothing's on fire right now.",
-        "Ten specialists, zero guessing.",
-        "Happy to help you skip the status meeting.",
-        "Let's see what's actually going on today.",
-        "No drama. Just the facts.",
-        "Assembled and ready to work.",
-        "Good news and bad news get treated the same here.",
-        "Here to make the boring parts faster."
-      ];
-      var COMBO_QUOTES = [
-        "All ten robots, working together.",
-        "Full team assembled. Let's ship something.",
-        "Every specialist, one mascot. Let's get to it."
-      ];
-      var mascotQuoteTimers = {};
-      function showMascotQuote(pool, durationMs, bubbleId) {
-        var bubble = document.getElementById(bubbleId || 'mascot-quote');
-        if (!bubble) return;
-        bubble.textContent = pool[Math.floor(Math.random() * pool.length)];
-        bubble.classList.add('mascot-quote-visible');
-        clearTimeout(mascotQuoteTimers[bubble.id]);
-        mascotQuoteTimers[bubble.id] = setTimeout(function () {
-          bubble.classList.remove('mascot-quote-visible');
-        }, durationMs);
-      }
-
-      // Re-triggers the mascot's 8 accent-piece pop animation, staggered so they visibly snap
-      // into place one after another rather than all at once.
-      function playMascotAssemble(mascotEl) {
-        var pieces = mascotEl.querySelectorAll('.mascot-assemble > *');
-        pieces.forEach(function (piece, i) {
-          piece.classList.remove('mascot-piece-pop');
-          void piece.getBoundingClientRect();
-          piece.style.animationDelay = (i * 70) + 'ms';
-          piece.classList.add('mascot-piece-pop');
-        });
-      }
-
-      // Mascot wave -- same component and behavior as the real webapp's header (base.html), so
-      // the brand carries through consistently from marketing site to product.
-      var mascotRobot = document.getElementById('mascot-robot');
-      mascotRobot.addEventListener('click', function () {
-        mascotRobot.classList.remove('mascot-waving');
-        void mascotRobot.offsetWidth;
-        mascotRobot.classList.add('mascot-waving');
-        playMascotAssemble(mascotRobot);
-        showMascotQuote(MASCOT_QUOTES, 2600);
-      });
-
-      // Each of the 10 "What it does" agent robots gets its own distinct shape (set in the
-      // markup) and its own distinct click animation (set here via data-anim), so the "ten
-      // specialized helpers" pitch is genuinely visual, not one icon recolored ten times.
-      //
-      // Click-all-10 combo: once every one of the 10 has been clicked at least once, each flies
-      // (as a temporary fixed-position clone of its own SVG, so the real cards are never touched)
-      // DOWN toward the footer CTA's "Start free" button while the page scrolls there too, then
-      // the landed #cta-robot plays its assemble animation as the finale right next to the
-      // button -- the payoff of "you've now met the whole team" is the actual conversion moment,
-      // not a trip back to the top of the page.
-      var agentRobotButtons = document.querySelectorAll('.agent-robot-btn');
-      var clickedRobots = new Set();
-      var prefersReducedMotion = window.matchMedia &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var ctaRobot = document.getElementById('cta-robot');
-
-      function landAtCta() {
-        ctaRobot.classList.add('cta-robot-visible');
-        playMascotAssemble(ctaRobot);
-        showMascotQuote(COMBO_QUOTES, 3400, 'cta-robot-quote');
-      }
-
-      function playCombineAnimation() {
-        var ctaButton = document.querySelector('.cta-footer .btn-primary');
-
-        if (prefersReducedMotion) {
-          ctaButton.scrollIntoView({ block: 'center' });
-          landAtCta();
-          return;
-        }
-
-        var clones = [];
-        agentRobotButtons.forEach(function (robotBtn) {
-          var rect = robotBtn.getBoundingClientRect();
-          var clone = robotBtn.querySelector('svg').cloneNode(true);
-          clone.style.position = 'fixed';
-          clone.style.left = rect.left + 'px';
-          clone.style.top = rect.top + 'px';
-          clone.style.width = rect.width + 'px';
-          clone.style.height = rect.height + 'px';
-          clone.style.margin = '0';
-          clone.style.zIndex = '9999';
-          clone.style.pointerEvents = 'none';
-          clone.style.transition = 'transform 0.9s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.9s ease';
-          document.body.appendChild(clone);
-          clones.push(clone);
-        });
-
-        function flyClonesToCta() {
-          var targetRect = ctaButton.getBoundingClientRect();
-          var targetX = targetRect.left + targetRect.width / 2;
-          var targetY = targetRect.top + targetRect.height / 2;
-
-          clones.forEach(function (clone, i) {
-            var cloneRect = clone.getBoundingClientRect();
-            var startX = cloneRect.left + cloneRect.width / 2;
-            var startY = cloneRect.top + cloneRect.height / 2;
-            clone.style.transitionDelay = (i * 25) + 'ms';
-            clone.style.transform = 'translate(' + (targetX - startX) + 'px, ' + (targetY - startY) + 'px) scale(0.15)';
-            clone.style.opacity = '0';
-          });
-
-          setTimeout(function () {
-            clones.forEach(function (clone) { clone.remove(); });
-            landAtCta();
-          }, 1000);
-        }
-
-        ctaButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Unlike the old header-mascot target (position: sticky, so its on-screen rect never
-        // moved during the scroll), the footer CTA is a normal in-flow element -- its rect only
-        // becomes correct once the scroll has actually finished. scrollend is the correct, modern
-        // signal for that; the timeout is a fallback for browsers that don't support it yet.
-        var settled = false;
-        function onSettled() {
-          if (settled) return;
-          settled = true;
-          window.removeEventListener('scrollend', onSettled);
-          flyClonesToCta();
-        }
-        window.addEventListener('scrollend', onSettled);
-        setTimeout(onSettled, 900);
-      }
-
-      agentRobotButtons.forEach(function (btn, index) {
-        var animClass = 'robot-play-' + btn.dataset.anim;
-        btn.addEventListener('click', function () {
-          btn.classList.remove(animClass);
-          void btn.offsetWidth;
-          btn.classList.add(animClass);
-
-          clickedRobots.add(index);
-          if (clickedRobots.size === agentRobotButtons.length) {
-            clickedRobots.clear();
-            playCombineAnimation();
-          }
-        });
-      });
-    })();
-  </script>
-
 </body>
 </html>
