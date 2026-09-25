@@ -35,6 +35,20 @@ Refreshing a source is different from editing a task. Editing a task is differen
 
 The system should earn autonomy behavior by behavior, with deterministic boundaries, review, auditability, and a fallback to human action.
 
+### 6. Nopmo should infer structure before asking for structure
+Organizations rarely present a clean project model. The same work may appear under different names
+across email, chat, meetings, ticketing tools, spreadsheets, and executive conversations.
+
+Nopmo should therefore start with evidence, propose the project/program structure it thinks exists,
+and ask people to confirm or correct that structure. It should not require teams to recreate clean
+metadata inside Nopmo before the system can become useful.
+
+A useful design test is:
+
+> Could Nopmo retrieve or responsibly infer this before asking a person to enter it?
+
+Human effort should be concentrated on ambiguity, correction, decisions, and authorization.
+
 ## What would falsify the thesis?
 
 The project should be considered unsuccessful if real users find that:
