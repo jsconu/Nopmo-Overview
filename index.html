@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   PLACEHOLDER APP URL: every call-to-action on this page points to
-  https://app.pmo-agents.example/signup. Find-and-replace this exact string with the real
+  https://app.Nopmo.example/signup. Find-and-replace this exact string with the real
   webapp's public signup URL once real hosting exists (see README.md).
 -->
 <html lang="en">
@@ -20,8 +20,8 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <title>pmo-agents: Straight answers about your projects, not guesses</title>
-  <meta name="description" content="pmo-agents does the project coordination work that usually means hiring another project manager, for a fraction of the cost, and tells you plainly what's on track, what's not, and why, using the same clear rules every time. It never makes something up just to sound reassuring.">
+  <title>Nopmo — Agentic program intelligence</title>
+  <meta name="description" content="Nopmo turns fragmented project signals into evidence-backed risks, dependencies, decisions, and bounded actions across a portfolio.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
   <!-- Open Graph / Twitter Card -- no og:image/twitter:image yet: producing a real one needs
@@ -29,12 +29,12 @@
        to a raster file (not available in this environment either). Platforms fall back to a
        plain text-only card until a real image is supplied. -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://jsconu.github.io/pmo-agents-site/">
-  <meta property="og:title" content="pmo-agents: Straight answers about your projects, not guesses">
-  <meta property="og:description" content="pmo-agents does the project coordination work that usually means hiring another project manager, for a fraction of the cost, and tells you plainly what's on track, what's not, and why, using the same clear rules every time. It never makes something up just to sound reassuring.">
+  <meta property="og:url" content="https://jsconu.github.io/Nopmo-site/">
+  <meta property="og:title" content="Nopmo — Agentic program intelligence">
+  <meta property="og:description" content="Project signals → evidence-backed judgment → management attention → bounded action.">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="pmo-agents: Straight answers about your projects, not guesses">
-  <meta name="twitter:description" content="pmo-agents does the project coordination work that usually means hiring another project manager, for a fraction of the cost, and tells you plainly what's on track, what's not, and why, using the same clear rules every time. It never makes something up just to sound reassuring.">
+  <meta name="twitter:title" content="Nopmo — Agentic program intelligence">
+  <meta name="twitter:description" content="Project signals → evidence-backed judgment → management attention → bounded action.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +50,7 @@
       <div class="topbar-brand-group">
         <a href="#top" class="brand" title="Give it a click">
           <span class="brand-mark" id="brand-mark" aria-hidden="true"></span>
-          pmo-agents
+          Nopmo
         </a>
         <button type="button" id="mascot-robot" class="mascot-btn" aria-label="Say hi" title="Say hi">
           <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
@@ -84,8 +84,8 @@
         </button>
       </div>
       <nav class="topnav">
-        <a href="#agents">What it does</a>
-        <a href="#pricing">Pricing</a>
+        <a href="#agents">How it works</a>
+        <a href="PRODUCT_THESIS.md">Product thesis</a>
         <button type="button" id="theme-toggle" class="icon-btn" aria-pressed="false" aria-label="Switch to dark mode">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
             <circle cx="12" cy="12" r="4"/>
@@ -96,7 +96,7 @@
           </svg>
         </button>
         <button type="button" id="text-size-toggle" class="icon-btn text-size-btn" aria-pressed="false" aria-label="Switch to larger text">A</button>
-        <a href="https://app.pmo-agents.example/signup" class="btn btn-small">Start free</a>
+        <a href="DEMO_WALKTHROUGH.md" class="btn btn-small">View case study</a>
       </nav>
     </div>
   </header>
@@ -106,24 +106,22 @@
     <!-- ============ Hero ============ -->
     <section class="hero">
       <div class="wrap hero-inner">
-        <p class="hero-eyebrow">Do more projects without doing more hiring</p>
-        <h1>Project management doesn't have to be boring.</h1>
+        <p class="hero-eyebrow">Agentic program intelligence</p>
+        <h1>Turn fragmented project signals into decisions and bounded action.</h1>
         <p class="hero-sub">
-          For a fraction of what a new project-manager hire costs, pmo-agents does the coordinating
-          work that usually forces a growing team, or a small-business owner running the whole show
-          alone, to bring someone else on: watching status, catching risk early, and keeping
-          everyone updated. Turn on only the pieces you actually need, so what you can deliver grows
-          without your overhead growing right along with it.
+          Nopmo connects signals across the systems where work already happens, maintains project
+          context over time, identifies evidence-backed risks and dependencies, and surfaces the
+          decisions that need management attention.
         </p>
         <p class="hero-sub">
-          pmo-agents looks at your real tasks, deadlines, and updates and tells you plainly whether
-          things are on&nbsp;track, worth&nbsp;watching, or falling&nbsp;behind, and exactly why.
-          The answer comes from the same clear rules every time, before anything gets written up.
-          Nothing is guessed, and nothing is dressed up after the fact to sound better than it is.
+          The model can interpret, explain, draft, and recommend. Deterministic rules, organization
+          boundaries, operating policy, and human-review gates decide what is allowed to happen.
+          The goal is not another chatbot beside a task tracker; it is an inspectable operating
+          layer across projects and tools.
         </p>
         <div class="hero-ctas">
-          <a href="https://app.pmo-agents.example/signup" class="btn btn-primary btn-large">Start free</a>
-          <a href="#agents" class="btn btn-ghost btn-large">See what it does ↓</a>
+          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary btn-large">Trace the demo flow</a>
+          <a href="DESIGN_DECISIONS.md" class="btn btn-ghost btn-large">Read design decisions</a>
         </div>
       </div>
     </section>
@@ -255,9 +253,7 @@
           What it does
         </h2>
         <p class="section-lede">
-          Ten focused helpers, each good at one thing, doing the work that would otherwise mean
-          hiring more people just to keep up. Turn on only the ones you actually need. You pay per
-          helper, never for <a href="#pricing">a bundle</a> of stuff you don't use.
+          Specialist agents are an implementation detail. The product is the operating loop across them: source signals, normalized context, evidence-backed judgment, decisions, review boundaries, bounded action, and retained history.
         </p>
         <div class="cards cards-agents">
           <div class="card">
@@ -355,10 +351,10 @@
     <!-- ============ CTA footer ============ -->
     <section class="cta-footer">
       <div class="wrap">
-        <h2>See what's really going on, without adding headcount.</h2>
-        <p>Start free. Turn on only what you need.</p>
+        <h2>See the reasoning chain, not just the AI answer.</h2>
+        <p>Follow one signal from source evidence through recommendation, review, and retained history.</p>
         <div class="cta-with-robot">
-          <a href="https://app.pmo-agents.example/signup" class="btn btn-primary btn-large">Start free</a>
+          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary btn-large">View case study</a>
           <!-- The click-all-10-combo's landing spot: hidden until the combo fires, then revealed
                with the same assemble animation/quote bubble as the header mascot -- "the whole
                team, assembled, right where you'd sign up." Same SVG markup as #mascot-robot
@@ -394,7 +390,7 @@
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
-      <p>&copy; 2026 pmo-agents. Early access: the product is actively evolving.</p>
+      <p>&copy; 2026 Nopmo. Early access: the product is actively evolving.</p>
     </div>
   </footer>
 
