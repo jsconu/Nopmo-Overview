@@ -572,8 +572,8 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <div class="tiles" id="sum-tiles"></div>
         <div class="seg" role="tablist" aria-label="Summary view">
           <button type="button" role="tab" id="st-overview" aria-selected="true" aria-controls="sum-table">Overview</button>
-          <button type="button" role="tab" id="st-metrics" aria-selected="false" aria-controls="sum-table">Metrics</button>
-          <button type="button" role="tab" id="st-success" aria-selected="false" aria-controls="sum-table">Success metrics</button>
+          <button type="button" role="tab" id="st-metrics" aria-selected="false" aria-controls="sum-table">Delivery</button>
+          <button type="button" role="tab" id="st-success" aria-selected="false" aria-controls="sum-table">Outcomes</button>
         </div>
         <p class="section-intro" style="margin-top:12px" id="sum-intro"></p>
         <div class="panel" id="sum-new" style="margin-bottom:14px" hidden></div>
@@ -1206,12 +1206,13 @@ function renderSummary(){
   $('sum-tiles').innerHTML=[[money(tot),'approved budget'],[money(sp),`spent (${Math.round(sp/tot*100)}%)`],[money(fc),`forecast at completion (${fc>=tot?'+':''}${((fc-tot)/tot*100).toFixed(1)}%)`],[`${PROJECTS.length-flagged} of ${PROJECTS.length}`,'with no Ondatrace findings']].map(([a,b])=>`<div class="counter"><strong class="num">${a}</strong><span>${b}</span></div>`).join('');
   const tab=S.sumTab||'overview';
   $('st-overview').setAttribute('aria-selected',tab==='overview'); $('st-metrics').setAttribute('aria-selected',tab==='metrics'); $('st-success').setAttribute('aria-selected',tab==='success');
-  $('sum-intro').innerHTML = tab==='success' ? 'Each project\'s success metrics come from its charter. Ondatrace checks whether the team still measures what the charter promised. Select a project to see the metrics and any suggested changes.'
+  $('sum-intro').innerHTML = tab==='success' ? '<b>Is each project achieving what it was for?</b> Success metrics come from the project\'s charter. Ondatrace checks whether the team still measures what the charter promised, and how close they are. Select a project to see its metrics and any suggested changes.'
+    : tab==='metrics' ? '<b>Is the work on track?</b> Schedule, spending and pace, measured from each project\'s own tools. Whether the project is achieving its goals is on the Outcomes tab. Select a project for milestones and budget detail.'
     : 'Select a project for milestones, budget detail and findings. <b>Reported</b> is what the project\'s own tool says. <b>Ondatrace findings</b> come from reading across all tools.';
   renderNewProject();
   const head = tab==='overview'
     ? ['Project','Lead','Reported','Ondatrace findings','Budget','Due']
-    : tab==='metrics' ? ['Project','Schedule','Budget burn','Throughput (2 wks)','Scope change','Blockers','Key metric']
+    : tab==='metrics' ? ['Project','Schedule','Budget burn','Throughput (2 wks)','Scope change','Blockers']
     : ['Project','Charter goal','Success metrics','Progress','Fits the charter?'];
   const rows=PROJECTS.map(p=>{
     const {f,worst}=health(p,list); const b=p.budget; const exp=S.lens===p.id;
@@ -1234,8 +1235,7 @@ function renderSummary(){
       <td class="num">${burn}% spent<span class="cell-sub ${burn-p.pct>5?'bad':''}">at ${p.pct}% done</span></td>
       <td class="num">${m.thr[0]} ${esc(m.thr[2])}<span class="cell-sub ${dt<0?'bad':'good'}">${dt>=0?'▲':'▼'} ${Math.abs(dt)} vs. prior 2 wks</span></td>
       <td class="num"><span class="${m.scope>=10?'gap':''}">+${m.scope}%</span><span class="cell-sub">since baseline</span></td>
-      <td class="num">${m.blockers?`<span class="gap">${m.blockers} open</span>`:'<span class="muted">None</span>'}</td>
-      <td><b class="num">${esc(fmt(m.kpi[1]))}</b><span class="cell-sub">${esc(m.kpi[0])} · ${esc(fmt(m.kpi[2]))}</span></td>`;
+      <td class="num">${m.blockers?`<span class="gap">${m.blockers} open</span>`:'<span class="muted">None</span>'}</td>`;
     }
     return `<tr class="proj" tabindex="0" data-lens="${p.id}" aria-expanded="${exp}">${cells}<td aria-hidden="true" class="muted">${exp?'▴':'▾'}</td></tr>`+(exp?`<tr class="sdetail"><td colspan="${head.length+1}">${tab==='success'?successDetail(p):projDetail(p,f)}</td></tr>`:'');
   }).join('');
@@ -1254,13 +1254,13 @@ function projDetail(p,f){
       ${b.why?`<p class="cell-sub" style="margin-top:8px">${esc(fmt(b.why))}</p>`:''}
       <h3 style="margin-top:16px">Where this comes from</h3><div class="srcs">${p.src.filter(on).map(chip).join('')}</div></div>
     <div><h3>What Ondatrace found</h3><div class="sfind">${f.length?f.map(i=>`<button type="button" data-open="${i.id}"><span class="pill ${SEV[i.sev][0]}" style="justify-self:start">${esc(i.kind)}</span><span>${esc(fmt(i.title))}</span></button>`).join(''):'<p class="muted" style="font-size:13.5px">Nothing needs attention on this project.</p>'}</div>
-      <h3 style="margin-top:16px">Key metric</h3><p style="font-size:13.5px">${esc(p.m.kpi[0])}: <b>${esc(fmt(p.m.kpi[1]))}</b> (${esc(fmt(p.m.kpi[2]))})</p></div>
+      <p class="cell-sub" style="margin-top:16px">Success metrics for this project are on the Outcomes tab.</p></div>
   </div>`;
 }
 function toggleLens(id){ S.lens=S.lens===id?null:id; if(S.lens) logOnce('lens'+id,`Opened the summary for ${PROJECTS.find(p=>p.id===id).name}.`); renderSummary(); document.querySelector(`[data-lens="${id}"]`)?.focus(); }
 $('sum-table').addEventListener('click',e=>{ if(e.target.closest('[data-open]')) return; const r=e.target.closest('[data-lens]'); if(r) toggleLens(r.dataset.lens); });
 $('sum-table').addEventListener('keydown',e=>{ const r=e.target.closest('[data-lens]'); if(r&&e.target===r&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); toggleLens(r.dataset.lens); } });
-['overview','metrics','success'].forEach(k=>$('st-'+k).addEventListener('click',()=>{ S.sumTab=k; if(k==='metrics') logOnce('metrics','Looked at portfolio metrics.'); if(k==='success') logOnce('success','Looked at success metrics.'); renderSummary(); }));
+['overview','metrics','success'].forEach(k=>$('st-'+k).addEventListener('click',()=>{ S.sumTab=k; if(k==='metrics') logOnce('metrics','Looked at portfolio delivery.'); if(k==='success') logOnce('success','Looked at portfolio outcomes.'); renderSummary(); }));
 
 /* success metrics */
 const FIT = {match:['ok','Matches charter'],partial:['watch','Partly matches'],drift:['warn','Drifted from charter']};
