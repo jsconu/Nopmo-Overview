@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <title>Ondatrace — Program intelligence across projects</title>
-  <meta name="description" content="Ondatrace organizes the messy world of work and finds the few things that actually need management attention.">
+  <title>Ondatrace — See project risks no single tool shows</title>
+  <meta name="description" content="Ondatrace reads your project tools, email, chat, calendars and meeting recordings together and shows you the few things that need your attention.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,9 +20,9 @@
       <a href="#top" class="brand">Ondatrace</a>
       <nav class="topnav">
         <a href="#how">How it works</a>
-        <a href="#different">What is different</a>
-        <a href="demo/">Demo</a>
-        <a href="PRODUCT_THESIS.md">Product thesis</a>
+        <a href="thesis/">Product thesis</a>
+        <a href="decisions/">Design decisions</a>
+        <a href="try/" class="btn btn-small">Try the demo</a>
       </nav>
     </div>
   </header>
@@ -30,154 +30,138 @@
   <main id="top" tabindex="-1">
     <section class="hero">
       <div class="wrap hero-inner">
-        <p class="hero-eyebrow">Program intelligence for messy work</p>
-        <h1>Ondatrace organizes fragmented work for you — then finds what actually needs attention.</h1>
+        <p class="hero-eyebrow">For teams whose work is spread across many tools</p>
+        <h1>See the project risks that no single tool shows you.</h1>
         <p class="hero-sub">
-          Work rarely starts as a clean project model. Ondatrace begins with the systems where it
-          already lives — project tools, email, chat, meetings, calendars, and documents — and
-          proposes the initiatives, relationships, conflicting commitments, and gaps it thinks are there.
+          A promise to a customer in someone's email. A ticket that slipped two sprints. A date
+          changed in a meeting and never written down. Each one looks fine on its own.
         </p>
         <p class="hero-sub">
-          People confirm or correct the structure instead of rebuilding it by hand. Ondatrace is not
-          trying to replace Jira, Smartsheet, Monday, or another system of record; it is the
-          management-intelligence layer above the messy reality those systems collectively represent.
+          Ondatrace reads your project tools, email, chat, calendars and meeting recordings together
+          and tells you what needs your attention. You keep using Jira, Smartsheet, Monday or whatever
+          your teams use today.
         </p>
         <div class="hero-ctas">
-          <a href="demo/" class="btn btn-primary btn-large">Try the interactive demo</a>
-          <a href="DESIGN_DECISIONS.md" class="btn btn-ghost btn-large">Read design decisions</a>
+          <a href="try/" class="btn btn-primary btn-large">Try the demo</a>
+          <a href="thesis/" class="btn btn-ghost btn-large">Read the product thesis</a>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt">
+    <section class="section section-alt" id="demo">
       <div class="wrap">
-        <h2>Start with evidence, not setup</h2>
+        <h2>Try it with a sample company</h2>
         <p class="section-lede">
-          Connect sources first. Ondatrace groups related signals, preserves alternate names, proposes
-          likely project boundaries, and surfaces ambiguity when it cannot tell whether two labels
-          describe the same work.
+          The demo takes about 10 minutes and needs no sign-up. You play the VP of Delivery at a
+          made-up healthcare software company with six projects and nine tools. Here's some of what
+          you'll find:
         </p>
         <div class="cards cards-3">
           <div class="card">
-            <h3>Discover work</h3>
-            <p>Find substantial initiatives already underway, even when nobody created them in Ondatrace.</p>
+            <h3>A customer promise engineering can't keep</h3>
+            <p>Sales promised a date for a feature. The work behind it slipped two sprints, and the project plan still says it's on track.</p>
           </div>
           <div class="card">
-            <h3>Resolve identity</h3>
-            <p>Recognize that “Customer Portal,” “Portal Phase 2,” and a recurring meeting may describe the same initiative — without silently merging them.</p>
+            <h3>A spending freeze the team never heard about</h3>
+            <p>The CFO paused new vendor contracts in a leadership meeting. Another team is about to sign one.</p>
           </div>
           <div class="card">
-            <h3>Ask only where judgment matters</h3>
-            <p>Humans confirm, correct, decide, and authorize. Ondatrace should avoid asking them to retype facts available in source evidence.</p>
+            <h3>One engineer, three deadlines, one week off</h3>
+            <p>Three separate plans depend on the same person during the week she's on leave. None of them knows about the others.</p>
           </div>
+        </div>
+        <div class="hero-ctas" style="margin-top:28px">
+          <a href="try/" class="btn btn-primary btn-large">Start the demo</a>
         </div>
       </div>
     </section>
 
     <section class="section" id="different">
       <div class="wrap">
-        <h2>What Ondatrace is built to notice</h2>
+        <h2>What it looks for</h2>
         <div class="cards cards-3">
           <div class="card">
-            <h3>Consequences across projects</h3>
-            <p>
-              A delivery problem in one initiative can expose testing, launch, training, or
-              customer commitments elsewhere. Ondatrace models those relationships explicitly.
-            </p>
+            <h3>Problems that cross projects</h3>
+            <p>A slip in one project can put a launch, a training session or a customer promise at risk in another. Ondatrace connects them.</p>
           </div>
           <div class="card">
-            <h3>Disagreement between sources</h3>
-            <p>
-              If Jira, email, and a meeting contain incompatible dates or commitments, Ondatrace
-              surfaces the conflict instead of quietly choosing one and pretending certainty.
-            </p>
+            <h3>Sources that disagree</h3>
+            <p>When the plan, an email and a meeting give different dates, Ondatrace shows you the conflict. It doesn't quietly pick one.</p>
           </div>
           <div class="card">
             <h3>Whether a decision worked</h3>
-            <p>
-              A recommendation is not success. Ondatrace can retain the expected outcome of a decision
-              and later compare it with evidence from execution.
-            </p>
+            <p>It remembers what a decision was meant to achieve and checks later whether it did.</p>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt" id="how">
-      <div class="wrap">
-        <h2>From fragmented signals to management attention</h2>
-        <p class="section-lede">
-          The underlying system preserves evidence and project state, but the user experience is
-          intentionally simpler: show the small number of things that deserve attention, explain
-          why they matter, and make the next decision or action clear.
-        </p>
-        <div class="cards cards-3">
-          <div class="card">
-            <p class="eyebrow">1. Observe</p>
-            <h3>Read the systems where execution already happens</h3>
-            <p>Source identity, timestamps, freshness, and provenance are retained.</p>
-          </div>
-          <div class="card">
-            <p class="eyebrow">2. Connect</p>
-            <h3>Reason across project boundaries</h3>
-            <p>
-              Relationships, shared resources, commitments, risks, and conflicting claims change
-              the meaning of otherwise local signals.
-            </p>
-          </div>
-          <div class="card">
-            <p class="eyebrow">3. Intervene</p>
-            <h3>Surface a decision, bounded action, or outcome check</h3>
-            <p>
-              Consequential actions stay behind deterministic policy and human review. Model
-              confidence never grants authority.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap">
-        <h2>Representative demo</h2>
-        <p class="section-lede">
-          Platform API → Customer Launch → Training &amp; Enablement.
-        </p>
-        <div class="cards cards-3">
-          <div class="card">
-            <h3>A blocked API delivery</h3>
-            <p>The problem originates in Platform API and threatens the downstream test window.</p>
-          </div>
-          <div class="card">
-            <h3>A launch-date conflict</h3>
-            <p>An executive email and a readiness meeting contain different working launch dates.</p>
-          </div>
-          <div class="card">
-            <h3>An outcome still to verify</h3>
-            <p>A previous decision aimed to preserve regression testing. Ondatrace keeps tracking whether it did.</p>
-          </div>
-        </div>
-        <div class="hero-ctas">
-          <a href="DEMO_WALKTHROUGH.md" class="btn btn-primary">Walk through the scenario</a>
         </div>
       </div>
     </section>
 
     <section class="section section-alt">
       <div class="wrap">
-        <h2>Inspectable by design</h2>
+        <h2>No setup before it's useful</h2>
+        <p class="section-lede">
+          Connect your tools and Ondatrace works out which projects exist, even when different teams
+          call the same work by different names. When it isn't sure, it asks.
+        </p>
         <div class="cards cards-3">
           <div class="card">
-            <h3>Evidence before assertion</h3>
-            <p>Material findings stay traceable to the source signals that support them.</p>
+            <h3>Finds work already underway</h3>
+            <p>It spots projects in your tools, including ones nobody has set up in Ondatrace.</p>
           </div>
           <div class="card">
-            <h3>Rules before authority</h3>
-            <p>LLMs can interpret and recommend; deterministic application policy decides what may execute.</p>
+            <h3>Knows when two names mean one project</h3>
+            <p>“Customer Portal,” “Portal Phase 2” and a weekly portal meeting may be the same work. Ondatrace suggests the link and you confirm it.</p>
           </div>
           <div class="card">
-            <h3>Silence is not resolution</h3>
-            <p>Risks do not disappear simply because a later update fails to mention them.</p>
+            <h3>Asks only when it needs you</h3>
+            <p>You confirm, correct and decide. You don't retype what's already in your tools.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <p class="section-lede">
+          Ondatrace keeps the full record behind the scenes. What you see is short: the few things
+          that need you, why they matter, and what to do next.
+        </p>
+        <div class="cards cards-3">
+          <div class="card">
+            <p class="eyebrow">1. Read</p>
+            <h3>Reads the tools your teams already use</h3>
+            <p>It keeps track of where every fact came from and when.</p>
+          </div>
+          <div class="card">
+            <p class="eyebrow">2. Connect</p>
+            <h3>Links projects, people and dates</h3>
+            <p>A detail in one project shows its effect on the others.</p>
+          </div>
+          <div class="card">
+            <p class="eyebrow">3. Suggest</p>
+            <h3>Proposes a decision or next step</h3>
+            <p>Anything with real consequences waits for a person to approve it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="wrap">
+        <h2>Built so you can check it</h2>
+        <div class="cards cards-3">
+          <div class="card">
+            <h3>Every finding shows its sources</h3>
+            <p>You can see the messages, tickets and meeting moments behind each one.</p>
+          </div>
+          <div class="card">
+            <h3>The AI suggests, the rules decide</h3>
+            <p>AI can recommend an action. Rules your organization sets decide what Ondatrace is allowed to do.</p>
+          </div>
+          <div class="card">
+            <h3>Silence doesn't close a risk</h3>
+            <p>A risk stays open until something shows it was fixed, not just because nobody mentioned it again.</p>
           </div>
         </div>
       </div>
@@ -185,12 +169,14 @@
 
     <section class="section">
       <div class="wrap">
-        <h2>Prototype status</h2>
+        <h2>Where it stands</h2>
         <p class="section-lede">
-          Ondatrace is a private working prototype beginning design-partner testing. This public
-          repository shares the product model, architecture decisions, and demo flow without
-          publishing the private application source.
+          Ondatrace is a working prototype. We're looking for project and delivery leaders to try the
+          demo and tell us what would be useful for their own work.
         </p>
+        <div class="hero-ctas">
+          <a href="try/" class="btn btn-primary">Try the demo</a>
+        </div>
       </div>
     </section>
   </main>

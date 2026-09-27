@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Design decisions — Ondatrace</title>
+  <meta name="description" content="Choices made in the Ondatrace prototype, and the reasons behind them.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <a href="#top" class="skip-link">Skip to main content</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a href="../" class="brand">Ondatrace</a>
+      <nav class="topnav">
+        <a href="../#how">How it works</a>
+        <a href="../thesis/">Product thesis</a>
+        <a href="../decisions/" aria-current="page">Design decisions</a>
+        <a href="../try/" class="btn btn-small">Try the demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" tabindex="-1">
+    <section class="doc-hero">
+      <div class="wrap">
+        <p class="hero-eyebrow">Design decisions</p>
+        <h1>The choices behind Ondatrace, and why we made them</h1>
+        <p class="doc-lede">A selection of decisions from the prototype. Each one is meant to keep Ondatrace's findings accurate, checkable and under people's control.</p>
+        <nav class="doc-toc" aria-label="Decision groups">
+          <a href="#trust">Evidence and trust</a>
+          <a href="#people">People stay in charge</a>
+          <a href="#reliability">Reliability and security</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="section" id="trust">
+      <div class="wrap">
+        <h2>Evidence and trust</h2>
+        <div class="decisions">
+          <article class="card decision">
+            <h3>Rules decide a project's health before AI writes about it</h3>
+            <p>Where a clear rule can say whether a project is healthy, Ondatrace applies the rule first. The AI writes the explanation afterward.</p>
+            <dl>
+              <dt>Why</dt><dd>The same facts should give the same answer every time. The answer shouldn't change because the AI worded things differently.</dd>
+              <dt>Tradeoff</dt><dd>Rules miss things and can be too strict. The AI still handles unclear cases, and Ondatrace says when it isn't sure.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>Every finding keeps its sources</h3>
+            <p>Each finding links back to the messages, tickets and records behind it.</p>
+            <dl>
+              <dt>Why</dt><dd>Leaders should be able to check the evidence themselves, not just take the AI's word for it.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>A risk stays open until something closes it</h3>
+            <p>A risk isn't marked resolved just because later updates stop mentioning it.</p>
+            <dl>
+              <dt>Why</dt><dd>Teams often leave unsolved problems out of later updates. Closing a risk needs new evidence that it was fixed.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>Automation settings never change the facts</h3>
+            <p>Your settings decide whether a suggestion waits for approval or happens automatically. They never change the evidence or a project's health.</p>
+            <dl>
+              <dt>Why</dt><dd>How much you let the tool do on its own shouldn't change what's true.</dd>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="people">
+      <div class="wrap">
+        <h2>People stay in charge</h2>
+        <div class="decisions">
+          <article class="card decision">
+            <h3>Changes to promised milestones need a person</h3>
+            <p>Small task updates can be automated. Changes to committed milestones always wait for someone to review them.</p>
+            <dl>
+              <dt>Why</dt><dd>A milestone is a promise to someone, and moving it often has effects well outside the project.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>The AI can suggest an action, not authorize it</h3>
+            <p>The AI can recommend an action. Fixed rules decide whether it's allowed to happen.</p>
+            <dl>
+              <dt>Why</dt><dd>How confident the AI sounds should never decide what it's allowed to do.</dd>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reliability">
+      <div class="wrap">
+        <h2>Reliability and security</h2>
+        <div class="decisions">
+          <article class="card decision">
+            <h3>Access control lives in the application, not the AI</h3>
+            <p>Which organization and projects someone can see is enforced by the application and its database.</p>
+            <dl>
+              <dt>Why</dt><dd>Instructions given to an AI are not a security control.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>Only do work when something has changed</h3>
+            <p>Recurring background work runs only when something meaningful has changed.</p>
+            <dl>
+              <dt>Why</dt><dd>A project that hasn't changed shouldn't cost more AI time or send new notifications just because a day passed.</dd>
+              <dt>But</dt><dd>Time passing can matter on its own. A milestone that becomes overdue is a real change, even if no data moved.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>One failure doesn't stop the rest</h3>
+            <p>If one project or tool connection fails during a background run, the others keep going.</p>
+            <dl>
+              <dt>Why</dt><dd>Nobody is watching background jobs as they run. One error should be visible without breaking unrelated work.</dd>
+            </dl>
+          </article>
+          <article class="card decision">
+            <h3>Renewed tool logins are saved on their own</h3>
+            <p>When Ondatrace renews its access to a connected tool, it saves the new login right away, separately from the work that follows.</p>
+            <dl>
+              <dt>Why</dt><dd>Some tools replace the old login when they issue a new one. If a later error undid the save, the stored login would stop working for good.</dd>
+            </dl>
+          </article>
+        </div>
+        <div class="hero-ctas" style="margin-top:36px">
+          <a href="../try/" class="btn btn-primary">Try the demo</a>
+          <a href="../thesis/" class="btn btn-ghost">Read the product thesis</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p>&copy; 2026 Ondatrace. Prototype under active development.</p>
+    </div>
+  </footer>
+</body>
+</html>

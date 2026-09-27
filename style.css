@@ -599,3 +599,78 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
   .topnav { gap: 10px; }
   .topnav a:not(.btn) { display: none; }
 }
+
+/* ---------- document pages (product thesis, design decisions) ---------- */
+.topnav a[aria-current="page"] { color: var(--accent-ink); }
+
+.doc-hero {
+  background: var(--hero-gradient);
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--border);
+}
+.doc-hero h1 { font-size: 2.3rem; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 18px; max-width: 780px; }
+.doc-lede { font-size: 1.1rem; color: var(--ink-soft); max-width: 680px; margin: 0 0 14px; }
+.doc-toc { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.doc-toc a {
+  border: 1px solid var(--border); background: var(--white); color: var(--ink);
+  border-radius: 999px; padding: 6px 14px; font-size: 0.9rem; font-weight: 500; text-decoration: none;
+}
+.doc-toc a:hover { border-color: var(--accent-ink); color: var(--accent-ink); }
+
+.hypotheses { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 16px; }
+.hypotheses > li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 18px; align-items: start; }
+.hypotheses > li p + p, .hypotheses > li p + ol, .hypotheses > li ol + p { margin-top: 10px; }
+.hyp-num {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent-ink-bg); color: var(--accent-ink);
+  font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
+}
+
+.ladder { list-style: none; counter-reset: step; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ladder li {
+  counter-increment: step; font-size: 0.9rem; color: var(--ink);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
+  background: color-mix(in srgb, var(--primary) calc(var(--lvl, 1) * 1%), var(--white));
+}
+.ladder li::before { content: counter(step) ". "; color: var(--accent-ink); font-weight: 600; }
+.ladder li:nth-child(1) { --lvl: 4; } .ladder li:nth-child(2) { --lvl: 8; } .ladder li:nth-child(3) { --lvl: 12; }
+.ladder li:nth-child(4) { --lvl: 16; } .ladder li:nth-child(5) { --lvl: 20; }
+
+.flows { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 18px 0; }
+.flows .eyebrow { margin-bottom: 6px; }
+.flow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.flow li {
+  font-size: 0.92rem; font-weight: 500; padding: 6px 12px; border-radius: 999px;
+  background: var(--accent-ink-bg); color: var(--accent-ink);
+}
+.flow li + li::before { content: "→"; margin-right: 8px; color: var(--ink-soft); font-weight: 400; }
+.flow-not li { background: transparent; border: 1px dashed var(--border); color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--ink-soft); }
+.flow-not li + li::before { text-decoration: none; display: inline-block; }
+
+.pull { margin: 18px 0; padding: 16px 20px; border-left: 4px solid var(--primary); background: var(--bg-alt); border-radius: 0 10px 10px 0; }
+.pull p:last-child { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin: 0; }
+
+.falsify { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 900px; }
+.falsify li {
+  background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px 14px 44px; position: relative; color: var(--ink);
+}
+.falsify li::before {
+  content: "✕"; position: absolute; left: 16px; top: 14px; color: var(--accent); font-weight: 700;
+}
+
+.decisions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.decision > p { color: var(--ink); }
+.decision dl { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--border); display: grid; gap: 8px; }
+.decision dt {
+  font-family: var(--font-display); font-weight: 600; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-ink);
+}
+.decision dd { margin: -4px 0 4px; color: var(--ink-soft); }
+
+@media (max-width: 760px) {
+  .doc-hero { padding: 52px 0 40px; }
+  .doc-hero h1 { font-size: 1.8rem; }
+  .hypotheses > li { grid-template-columns: 1fr; gap: 10px; }
+  .falsify, .decisions { grid-template-columns: 1fr; }
+}
