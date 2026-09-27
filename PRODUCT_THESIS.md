@@ -8,7 +8,7 @@ Teams already have systems of record. The harder problem is that management atte
 
 Nopmo is an attempt to build the intelligence and operating layer across those systems.
 
-## Five hypotheses
+## Six hypotheses
 
 ### 1. The useful unit is a signal, not a prompt
 A prompt is ephemeral. A project signal has source, time, ownership, project context, and provenance. Normalizing signals makes reasoning source-agnostic and allows the system to preserve history.
@@ -36,27 +36,14 @@ Refreshing a source is different from editing a task. Editing a task is differen
 The system should earn autonomy behavior by behavior, with deterministic boundaries, review, auditability, and a fallback to human action.
 
 ### 6. Nopmo should infer structure before asking for structure
-Organizations rarely present a clean project model. The same work may appear under different names
-across email, chat, meetings, ticketing tools, spreadsheets, and executive conversations.
+Organizations are messy before software sees them. The same work may appear under different names
+across email, chat, meetings, ticketing tools, spreadsheets, and executive conversations. Dates
+conflict. Dependencies are implied in meetings but absent from trackers. Important work may not have
+a clean project object at all.
 
-Nopmo should therefore start with evidence, propose the project/program structure it thinks exists,
-and ask people to confirm or correct that structure. It should not require teams to recreate clean
+Nopmo should therefore connect to the world as it exists, propose the project/program structure it
+thinks exists, and ask people to confirm or correct it. It should not require teams to recreate clean
 metadata inside Nopmo before the system can become useful.
-
-A useful design test is:
-
-> Could Nopmo retrieve or responsibly infer this before asking a person to enter it?
-
-Human effort should be concentrated on ambiguity, correction, decisions, and authorization.
-
-### 6. Nopmo should adapt to the work
-
-Organizations are messy before software sees them. Project names differ across systems. Dates conflict.
-Dependencies are implied in meetings but absent from trackers. Important work may not have a clean
-project object at all.
-
-Nopmo should therefore connect to the world as it exists, reconstruct a coherent working model, and
-ask humans mainly where ambiguity or consequence requires judgment.
 
 The default interaction should be:
 
@@ -66,10 +53,11 @@ not:
 
 **create structure → maintain it manually → ask AI to analyze it**
 
-A practical design test follows from this: before adding a required field or setup step, ask whether
-Nopmo can derive a useful hypothesis from existing evidence instead.
+A useful design test is:
 
-Humans should spend their time confirming, correcting, deciding, and authorizing—not acting as
+> Could Nopmo retrieve or responsibly infer this before asking a person to enter it?
+
+Humans should spend their time on ambiguity, correction, decisions, and authorization—not acting as
 Nopmo's data-entry layer.
 
 ## What would falsify the thesis?
