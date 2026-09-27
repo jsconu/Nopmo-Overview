@@ -3,7 +3,7 @@
 These are selected decisions from the private prototype that illustrate the kind of judgment the project is designed to make inspectable.
 
 ## Deterministic health before narrative
-Where project-health rules can be made explicit, Nopmo computes those signals before asking an LLM to write narrative.
+Where project-health rules can be made explicit, Ondatrace computes those signals before asking an LLM to write narrative.
 
 **Reason:** the same evidence should not produce a different health classification because a model phrased its reasoning differently on Tuesday.
 

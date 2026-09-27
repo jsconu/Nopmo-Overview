@@ -1,12 +1,12 @@
 # Product Thesis
 
-## Nopmo is not “AI project management software”
+## Ondatrace is not “AI project management software”
 
 The long-term opportunity is not another task tracker with an AI sidebar.
 
 Teams already have systems of record. The harder problem is that management attention is fragmented: the evidence that a project is drifting may be spread across an overdue Jira item, a customer email, a meeting transcript, a calendar dependency, and a status update written three days later.
 
-Nopmo is an attempt to build the intelligence and operating layer across those systems.
+Ondatrace is an attempt to build the intelligence and operating layer across those systems.
 
 ## Six hypotheses
 
@@ -26,7 +26,7 @@ State and trajectory are product features, not implementation details.
 ### 4. The output should be a management action or decision
 Summaries are useful, but managers ultimately need to know what deserves attention, who needs to decide, what is blocked, and what options are available.
 
-Nopmo therefore treats decisions, dependencies, risks, and suggested actions as first-class objects rather than prose hidden in a status paragraph.
+Ondatrace therefore treats decisions, dependencies, risks, and suggested actions as first-class objects rather than prose hidden in a status paragraph.
 
 ### 5. Autonomy should be graduated
 The safe automation level depends on consequence.
@@ -35,15 +35,15 @@ Refreshing a source is different from editing a task. Editing a task is differen
 
 The system should earn autonomy behavior by behavior, with deterministic boundaries, review, auditability, and a fallback to human action.
 
-### 6. Nopmo should infer structure before asking for structure
+### 6. Ondatrace should infer structure before asking for structure
 Organizations are messy before software sees them. The same work may appear under different names
 across email, chat, meetings, ticketing tools, spreadsheets, and executive conversations. Dates
 conflict. Dependencies are implied in meetings but absent from trackers. Important work may not have
 a clean project object at all.
 
-Nopmo should therefore connect to the world as it exists, propose the project/program structure it
+Ondatrace should therefore connect to the world as it exists, propose the project/program structure it
 thinks exists, and ask people to confirm or correct it. It should not require teams to recreate clean
-metadata inside Nopmo before the system can become useful.
+metadata inside Ondatrace before the system can become useful.
 
 The default interaction should be:
 
@@ -55,10 +55,10 @@ not:
 
 A useful design test is:
 
-> Could Nopmo retrieve or responsibly infer this before asking a person to enter it?
+> Could Ondatrace retrieve or responsibly infer this before asking a person to enter it?
 
 Humans should spend their time on ambiguity, correction, decisions, and authorization—not acting as
-Nopmo's data-entry layer.
+Ondatrace's data-entry layer.
 
 ## What would falsify the thesis?
 

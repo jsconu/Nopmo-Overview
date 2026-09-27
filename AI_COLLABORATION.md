@@ -1,6 +1,6 @@
 # How I Build With AI Coding Agents
 
-AI coding agents are a major part of how Nopmo is implemented.
+AI coding agents are a major part of how Ondatrace is implemented.
 
 I want that to be explicit because the project is partly about learning what changes when an experienced program leader can use AI as implementation leverage.
 

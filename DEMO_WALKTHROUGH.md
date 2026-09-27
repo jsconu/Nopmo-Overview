@@ -22,7 +22,7 @@ The first view should answer:
 
 ### Cross-project impact
 
-Nopmo should show that the Platform API problem affects Customer Launch because regression testing waits on it.
+Ondatrace should show that the Platform API problem affects Customer Launch because regression testing waits on it.
 
 The point is not that two projects are independently yellow. The insight exists because of the relationship between them.
 
@@ -30,7 +30,7 @@ The point is not that two projects are independently yellow. The insight exists 
 
 Two sources contain incompatible launch dates.
 
-Nopmo should surface the disagreement rather than silently selecting the newest value.
+Ondatrace should surface the disagreement rather than silently selecting the newest value.
 
 The user should be able to inspect the sources and establish the working truth.
 
@@ -50,9 +50,9 @@ The user can record whether the expected result is improving, achieved, mixed, o
 
 The project view exists to inspect status, evidence, risks/issues, sources, commitments, and project relationships.
 
-Detailed backlog/schedule/resource views are secondary. When a source system such as Jira is connected, Nopmo is not trying to replace that system.
+Detailed backlog/schedule/resource views are secondary. When a source system such as Jira is connected, Ondatrace is not trying to replace that system.
 
-## 3. Show why Nopmo reached the conclusion
+## 3. Show why Ondatrace reached the conclusion
 
 A reviewer should be able to distinguish:
 
@@ -68,7 +68,7 @@ The model never grants itself authority.
 
 ## What the demo should prove
 
-A design partner should leave understanding that Nopmo:
+A design partner should leave understanding that Ondatrace:
 
 - detects implications that only exist across projects,
 - surfaces disagreement instead of inventing certainty,

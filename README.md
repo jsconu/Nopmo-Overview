@@ -1,30 +1,30 @@
-# Nopmo — Program Intelligence Across Projects
+# Ondatrace — Program Intelligence Across Projects
 
 **A public product and architecture case study for a private working prototype.**
 
-Nopmo starts with the messy systems where work already happens, organizes what they collectively say, and surfaces the few things across projects that deserve management attention.
+Ondatrace starts with the messy systems where work already happens, organizes what they collectively say, and surfaces the few things across projects that deserve management attention.
 
 It is designed for situations where the important conclusion does not live in one Jira issue, one status report, or even one project. A delivery change in one initiative may expose a launch elsewhere, consume a shared resource, contradict a stakeholder commitment, or create a decision that needs leadership attention.
 
 ## Source-first by design
 
-Nopmo should not require a team to build a pristine project model before it can help.
+Ondatrace should not require a team to build a pristine project model before it can help.
 
 The intended first-use experience is:
 
 **connect sources → discover work → resolve ambiguity → confirm structure → keep reconciling it**
 
 If Jira calls something one name, email calls it another, and a meeting implies a dependency nobody
-documented, Nopmo should preserve those signals and propose the structure it thinks exists. Humans
+documented, Ondatrace should preserve those signals and propose the structure it thinks exists. Humans
 confirm or correct the model instead of reconstructing the evidence by hand.
 
 Those corrections should become durable organizational knowledge. If a reviewer confirms that
-“Customer Portal,” “Portal Phase 2,” and “CX Portal” refer to the same initiative, Nopmo remembers
+“Customer Portal,” “Portal Phase 2,” and “CX Portal” refer to the same initiative, Ondatrace remembers
 those names when future signals arrive instead of repeatedly asking the same identity question.
 
-## What Nopmo is trying to do
+## What Ondatrace is trying to do
 
-Nopmo connects project signals from tools such as Jira, email, chat, calendars, meetings, and documents, then maintains an evidence-backed view of execution over time.
+Ondatrace connects project signals from tools such as Jira, email, chat, calendars, meetings, and documents, then maintains an evidence-backed view of execution over time.
 
 The product is built to answer questions such as:
 
@@ -92,7 +92,7 @@ The focused demo uses three related initiatives:
 
 **Platform API → Customer Launch → Training & Enablement**
 
-A blocked API deliverable appears local at first. Nopmo traces the dependency into the customer launch, then into the downstream training commitment. At the same time, two sources disagree about the intended launch date.
+A blocked API deliverable appears local at first. Ondatrace traces the dependency into the customer launch, then into the downstream training commitment. At the same time, two sources disagree about the intended launch date.
 
 The Today experience surfaces:
 
@@ -105,7 +105,7 @@ See [DEMO_WALKTHROUGH.md](DEMO_WALKTHROUGH.md).
 
 ## Product thesis
 
-Nopmo is not intended to replace Jira, Smartsheet, Monday, or other systems of record.
+Ondatrace is not intended to replace Jira, Smartsheet, Monday, or other systems of record.
 
 Its thesis is that the missing layer is **management intelligence across those systems**: preserving evidence, connecting consequences, identifying disagreement, focusing scarce human attention, and closing the loop after decisions.
 
@@ -121,4 +121,4 @@ See [AI_COLLABORATION.md](AI_COLLABORATION.md).
 
 ## Status
 
-Nopmo is a prototype under active development and is beginning design-partner testing.
+Ondatrace is a prototype under active development and is beginning design-partner testing.
