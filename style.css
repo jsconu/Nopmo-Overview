@@ -233,11 +233,9 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
 
 .brand-mark {
   display: inline-block;
-  width: 0.7em;
-  height: 0.7em;
-  border-radius: 3px;
-  background: var(--primary);
-  cursor: pointer;
+  width: 1.35em;
+  height: 1.35em;
+  flex-shrink: 0;
 }
 
 .topnav { display: flex; align-items: center; gap: 18px; }
