@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Interactive Ondatrace demo: a fictional company, nine connected tools, and the cross-project risks no single tool shows.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Ondatrace Sample Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f3f6f5;--surface:#ffffff;--surface-2:#eaf0ee;--ink:#12211e;--ink-2:#40504c;--muted:#65756f;--line:#d5dfdc;--line-strong:#b3c4bf;
+  --brand:#0f766e;--brand-ink:#ffffff;--brand-soft:#dcefeb;--brand-text:#0b5c55;
+  --rail:#0c2f2c;--rail-ink:#d6ebe7;--rail-muted:#8fb3ad;--rail-hi:#17504a;--rail-done:#5fd0b8;
+  --crit:#b42318;--crit-soft:#fbe9e7;--warn:#9a5806;--warn-soft:#fbf0dc;--watch:#35648a;--watch-soft:#e5eef5;--ok:#1f7444;--ok-soft:#e3f2e8;
+  --ask:#7a3aa8;--ask-soft:#f5edfb;--ask-line:#c7a5e0;
+  --mark:#fde7a6;--mark-ink:#3b2c00;--shadow:0 1px 2px rgba(12,47,44,.06),0 6px 20px rgba(12,47,44,.06);
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;--sans:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#0d1614;--surface:#141f1d;--surface-2:#1a2926;--ink:#e3eeeb;--ink-2:#b3c3bf;--muted:#8a9d98;--line:#263834;--line-strong:#3a524d;
+  --brand:#2bb3a4;--brand-ink:#04211e;--brand-soft:#123b36;--brand-text:#6fd8c9;
+  --rail:#08110f;--rail-ink:#d6ebe7;--rail-muted:#7fa39d;--rail-hi:#153f3a;--rail-done:#5fd0b8;
+  --crit:#f28b80;--crit-soft:#3a1714;--warn:#e9ad55;--warn-soft:#33250e;--watch:#86b6dc;--watch-soft:#15263a;--ok:#6cc995;--ok-soft:#11301e;
+  --ask:#cfa6f2;--ask-soft:#241831;--ask-line:#5b3f78;
+  --mark:#5b4812;--mark-ink:#fff4d0;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#0d1614;--surface:#141f1d;--surface-2:#1a2926;--ink:#e3eeeb;--ink-2:#b3c3bf;--muted:#8a9d98;--line:#263834;--line-strong:#3a524d;
+  --brand:#2bb3a4;--brand-ink:#04211e;--brand-soft:#123b36;--brand-text:#6fd8c9;
+  --rail:#08110f;--rail-ink:#d6ebe7;--rail-muted:#7fa39d;--rail-hi:#153f3a;--rail-done:#5fd0b8;
+  --crit:#f28b80;--crit-soft:#3a1714;--warn:#e9ad55;--warn-soft:#33250e;--watch:#86b6dc;--watch-soft:#15263a;--ok:#6cc995;--ok-soft:#11301e;
+  --ask:#cfa6f2;--ask-soft:#241831;--ask-line:#5b3f78;
+  --mark:#5b4812;--mark-ink:#fff4d0;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans)}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--brand-text)}
+:focus-visible{outline:3px solid var(--warn);outline-offset:2px;border-radius:4px}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font:700 clamp(28px,3.6vw,40px)/1.1 var(--display);letter-spacing:-.02em}
+h2{font:600 20px/1.25 var(--display);letter-spacing:-.01em}
+h3{font-size:15px;font-weight:600}
+p{margin:0}
+mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:2px}
+.mono{font-family:var(--mono);font-size:12.5px}
+.muted{color:var(--muted)}
+.sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.eyebrow{font:500 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.section{margin-top:32px}
+.section > h2{margin-bottom:6px}
+.section-intro{color:var(--muted);font-size:14px;margin-bottom:14px;max-width:70ch}
+
+/* shell */
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.rail{background:var(--rail);color:var(--rail-ink);padding:22px 16px;display:flex;flex-direction:column;gap:20px;position:sticky;top:0;height:100vh;overflow:auto}
+.logo{display:flex;align-items:center;gap:10px;padding:0 6px;font:700 22px/1 var(--display);letter-spacing:-.03em;color:#fff}
+.persona{padding:12px;border-radius:10px;background:var(--rail-hi);font-size:13px;line-height:1.45}
+.persona b{display:block;color:#fff;font-weight:600}
+.persona span{color:var(--rail-muted)}
+.nav{display:grid;gap:2px}
+.nav button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:0;background:transparent;color:var(--rail-ink);text-align:left;padding:9px 10px;border-radius:8px;font-size:14px;font-weight:500}
+.nav button:hover:not(:disabled),.nav button[aria-current="page"]{background:var(--rail-hi);color:#fff}
+.nav button:disabled{opacity:.4;cursor:not-allowed}
+.nav .count{font:500 11px var(--mono);background:rgba(255,255,255,.12);padding:2px 7px;border-radius:99px}
+.nav .fb-nav{margin-top:8px;border:1px dashed #b88fd8;color:#e8d4f7}
+.nav .fb-nav:hover:not(:disabled),.nav .fb-nav[aria-current="page"]{background:#3a2550;color:#fff}
+.guide{border-top:1px solid rgba(255,255,255,.1);padding-top:16px;display:grid;gap:8px}
+.guide .eyebrow{color:var(--rail-muted);padding:0 6px}
+.guide ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:g}
+.guide li{counter-increment:g;display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:5px 6px;font-size:13px;line-height:1.35;color:var(--rail-muted)}
+.guide li::before{content:counter(g);display:grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--rail-muted);font:500 11px var(--mono)}
+.guide li.done{color:var(--rail-ink)}
+.guide li.done::before{content:"✓";background:var(--rail-done);border-color:var(--rail-done);color:var(--rail)}
+.rail-foot{margin-top:auto;font-size:12px;color:var(--rail-muted);line-height:1.45;padding:0 6px}
+
+.main{min-width:0}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px clamp(16px,3.5vw,44px)}
+.topbar-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.ask{flex:1;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:4px 4px 4px 12px;min-width:0}
+.ask svg{flex:none;color:var(--muted)}
+.ask input{flex:1;min-width:0;border:0;background:transparent;padding:8px 0;outline:none}
+.ask:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.clock{font:500 12px var(--mono);color:var(--muted);white-space:nowrap}
+.wrap{max-width:1120px;margin:0 auto;padding:28px clamp(16px,3.5vw,44px) 96px}
+.demo-flag{display:inline-flex;gap:6px;align-items:center;font:500 11.5px var(--mono);color:var(--muted);border:1px dashed var(--line-strong);border-radius:99px;padding:3px 10px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 14px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font-weight:600;font-size:14px;text-decoration:none}
+.btn:hover:not(:disabled){border-color:var(--brand);color:var(--brand-text)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.08);color:var(--brand-ink)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--ink-2)}
+.btn.small{min-height:32px;padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.askbtn{background:var(--ask);border-color:var(--ask);color:var(--surface)}
+.btn.askbtn:hover:not(:disabled){filter:brightness(1.08);color:var(--surface)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* chips */
+.src{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.dot{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:5px;color:#fff;font:600 11px/1 var(--sans);flex:none}
+.pill{display:inline-flex;align-items:center;gap:5px;font:600 11.5px/1 var(--sans);letter-spacing:.02em;padding:5px 8px;border-radius:99px;white-space:nowrap}
+.pill.crit{background:var(--crit-soft);color:var(--crit)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.watch{background:var(--watch-soft);color:var(--watch)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.neutral{background:var(--surface-2);color:var(--ink-2)}
+.tag{font:500 11px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid var(--line-strong);color:var(--muted);white-space:nowrap}
+.tag.inf{color:var(--watch);border-color:currentColor}
+.tag.ev{color:var(--ok);border-color:currentColor}
+.tag.pol{color:var(--warn);border-color:currentColor}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.status{margin:0 0 18px;padding:10px 14px;border-radius:8px;background:var(--brand-soft);color:var(--brand-text);font-size:14px}
+
+/* tester zone: feedback questions, never product UI */
+.tester{border:1.5px dashed var(--ask-line);background:var(--ask-soft);border-radius:12px;padding:16px 18px}
+.tester-label{display:flex;align-items:center;gap:8px;font:600 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ask);margin-bottom:6px}
+.tester-label svg{flex:none}
+.tester p.note{font-size:13px;color:var(--muted);margin-bottom:10px}
+.tester .choice:has(input:checked),.tester .react button[aria-pressed="true"]{border-color:var(--ask);background:var(--ask);color:var(--surface)}
+.tester .btn:hover:not(:disabled){border-color:var(--ask);color:var(--ask)}
+.tester .react button[aria-pressed="true"]:hover{color:var(--surface)}
+.tester input[type=text],.tester textarea{width:100%;border:1px solid var(--ask-line);border-radius:8px;padding:9px 10px;background:var(--surface)}
+.tester input:focus,.tester textarea:focus{outline:2px solid var(--ask);outline-offset:0}
+
+/* start */
+.start{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:start}
+.start .lede{font-size:18px;color:var(--ink-2);max-width:58ch;margin-top:14px}
+.start ul{margin:18px 0 24px;padding-left:20px;color:var(--ink-2)}
+.start li{margin:6px 0}
+.scatter{display:grid;gap:10px}
+.frag{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:13px;box-shadow:var(--shadow)}
+.frag:nth-child(2){margin-left:22px}.frag:nth-child(3){margin-left:6px}.frag:nth-child(4){margin-left:30px}.frag:nth-child(5){margin-left:12px}.frag:nth-child(6){margin-left:26px}
+.frag small{display:block;font:500 11.5px var(--mono);color:var(--muted);margin-bottom:2px}
+.scatter-cap{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* connect */
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
+.tool{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;padding:14px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+.tool .dot{width:32px;height:32px;border-radius:8px;font-size:14px}
+.tool b{display:block;font-weight:600}
+.tool small{color:var(--muted);font-size:12.5px}
+.tool .sw{width:34px;height:20px;border-radius:99px;background:var(--line-strong);position:relative;transition:background .15s}
+.tool .sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--surface);transition:transform .15s}
+.tool[aria-pressed="true"]{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+.tool[aria-pressed="true"] .sw{background:var(--brand)}
+.tool[aria-pressed="true"] .sw::after{transform:translateX(14px)}
+.tool[aria-pressed="false"]{opacity:.7}
+.connect-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:18px}
+.scan{margin-top:20px;display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px}
+.scanlog{font:13px/1.6 var(--mono);height:260px;overflow:auto;background:var(--surface-2);border-radius:10px;padding:12px 14px;color:var(--ink-2)}
+.scanlog div{display:flex;gap:10px}
+.scanlog .t{color:var(--muted);flex:none;min-width:64px}
+.scanlog .hit{color:var(--brand-text);font-weight:500}
+.counters{display:grid;gap:10px;align-content:start}
+.counter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.counter strong{display:block;font:700 28px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.counter span{font-size:13px;color:var(--muted)}
+.progress{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress span{display:block;height:100%;width:0;background:var(--brand);transition:width .25s linear}
+.result{margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.result .counter strong{font-size:34px}
+
+/* today */
+.summary{margin-top:8px;color:var(--ink-2);max-width:72ch}
+.filterbar{margin-top:20px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);display:grid;gap:10px}
+.filterbar .row{gap:6px}
+.fchip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:99px;border:1px solid var(--line-strong);background:var(--surface);font-size:13px;font-weight:500}
+.fchip .dot{width:22px;height:22px;border-radius:50%}
+.fchip[aria-pressed="false"]{opacity:.5;text-decoration:line-through;background:var(--surface-2)}
+.fchip[aria-pressed="false"] .dot{background:var(--muted)!important}
+.filter-note{font-size:13px;color:var(--muted)}
+.queue{margin-top:20px;display:grid;gap:12px}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px 16px 24px;box-shadow:var(--shadow);display:grid;gap:10px}
+.card::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:0 3px 3px 0;background:var(--sev)}
+.card[data-sev="crit"]{--sev:var(--crit)}.card[data-sev="warn"]{--sev:var(--warn)}.card[data-sev="watch"]{--sev:var(--watch)}.card[data-sev="ok"]{--sev:var(--ok)}
+.card.clickable{cursor:pointer;transition:border-color .15s,transform .15s}
+.card.clickable:hover{border-color:var(--brand);transform:translateY(-1px)}
+.card.clickable:hover .open-btn{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.card-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.card h3{font:600 18px/1.3 var(--display);letter-spacing:-.005em}
+.card .why{color:var(--ink-2);font-size:14.5px;max-width:78ch}
+.card-foot{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--line)}
+.srcs{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.span-note{font:500 12px var(--mono);color:var(--muted)}
+.foot-right{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.card.missing{background:transparent;box-shadow:none;border-style:dashed}
+.card.missing::before{display:none}
+.card.missing p{color:var(--muted);font-size:14px}
+.new-badge{font:600 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--brand-text)}
+.morning{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-top:18px;padding:16px 18px;border-radius:12px;background:var(--surface-2)}
+.morning p{max-width:62ch;font-size:14px;color:var(--ink-2)}
+details.fine{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0}
+details.fine summary{cursor:pointer;padding:14px 18px;font-weight:600;list-style-position:inside}
+details.fine ul{margin:0;padding:0 18px 14px;list-style:none;display:grid;gap:8px}
+details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px}
+.dismissed{margin-top:14px;font-size:13px;color:var(--muted)}
+
+/* detail */
+.back{margin-bottom:16px}
+.detail-head{max-width:860px}
+.detail-head h1{font-size:clamp(24px,3vw,34px);margin:10px 0 12px}
+.detail-head .lede{font-size:16px;color:var(--ink-2);max-width:72ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13px;color:var(--muted)}
+.facts b{color:var(--ink);font-weight:600}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.actions .panel{padding:18px}
+.actions h3{font:600 16px/1.3 var(--display)}
+.actions p{font-size:13.5px;color:var(--ink-2);margin-top:4px}
+.actions .wide{grid-column:1/-1}
+.field{display:grid;gap:5px;font-size:13px;font-weight:600;margin-top:10px}
+.field input,.field textarea{width:100%;border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;background:var(--surface);font-weight:400;font-size:13.5px;line-height:1.5}
+.field textarea{min-height:200px;resize:vertical}
+.field .ro{font-weight:400;font-size:13.5px;color:var(--ink-2)}
+.diff{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.diff th,.diff td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.diff th{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.diff del{color:var(--crit);text-decoration-thickness:1px}
+.diff ins{color:var(--ok);text-decoration:none;font-weight:600}
+.done-note{margin-top:10px;font-size:13px;padding:8px 10px;border-radius:8px;background:var(--ok-soft);color:var(--ok)}
+.wrongbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:13px;color:var(--muted)}
+.timeline{list-style:none;margin:0;padding:0;position:relative;display:grid;gap:12px}
+.timeline::before{content:"";position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--line-strong)}
+.ev{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;position:relative}
+.ev .dot{width:32px;height:32px;border-radius:50%;font-size:13px;box-shadow:0 0 0 4px var(--bg)}
+.ev-body{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.ev-body.fresh{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+.ev-meta{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.ev-meta b{color:var(--ink);font-weight:600}
+.ev-text{font-size:14.5px}
+.alone-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+.talks{display:grid;gap:12px}
+.talk{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.talk-head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface-2);font-size:13px}
+.talk-head b{font-weight:600}
+.talk-lines{padding:12px 14px;display:grid;gap:10px}
+.tline{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;font-size:14.5px}
+.tline .ts{font:500 12px/1.9 var(--mono);color:var(--muted)}
+.tline b{font-weight:600;margin-right:4px}
+.reason{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:r}
+.reason li{counter-increment:r;display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:14.5px}
+.reason li::before{content:counter(r);display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand-soft);color:var(--brand-text);font:600 12px var(--mono)}
+.reason .tag{margin-left:6px;vertical-align:1px}
+.unknown{margin-top:18px;padding:14px 16px;border-left:3px solid var(--watch);background:var(--watch-soft);border-radius:0 8px 8px 0;font-size:14px}
+.unknown b{display:block;margin-bottom:2px}
+.react{display:flex;gap:6px;flex-wrap:wrap}
+.cite{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line-strong);border-radius:6px;padding:0 6px;font:500 12px var(--mono);color:var(--brand-text);background:var(--surface);cursor:pointer;vertical-align:1px}
+
+/* risks */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.tiles .counter strong{font-size:30px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.rtable{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+.rtable th{text-align:left;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--line)}
+.rtable td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.rtable tr.proj{cursor:pointer}
+.rtable tr.proj:hover td{background:var(--surface-2)}
+.rtable tr.proj[aria-expanded="true"] td{background:var(--surface-2)}
+.rtable td.name b{display:block;font-weight:600}
+.rtable td.name span{font-size:12.5px;color:var(--muted)}
+.rtable .gap{font:500 12px var(--mono);color:var(--crit)}
+.lens td{background:var(--bg);padding:12px 14px 16px}
+.lens-list{display:grid;gap:8px}
+.lens-list button{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;font-size:14px}
+.lens-list button:hover{border-color:var(--brand)}
+.upcoming{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.upcoming li{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.upcoming li:last-child{border-bottom:0}
+.upcoming .when{font:500 12.5px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.upcoming .when b{display:block;color:var(--ink);font-weight:500}
+.upcoming li.sep{background:var(--surface-2);grid-template-columns:1fr;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 14px}
+
+/* coaching */
+.coach{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.coach > div{background:var(--brand-soft);border-radius:10px;padding:14px 16px}
+.coach b{display:block;color:var(--brand-text);font-weight:600;margin-bottom:4px}
+.coach p{font-size:13.5px;color:var(--ink-2)}
+.coach-warn{color:var(--warn);font-weight:500}
+@media (max-width:860px){.coach{grid-template-columns:1fr}}
+.charter{margin:0;padding:10px 14px;border-left:3px solid var(--line-strong);background:var(--surface);border-radius:0 8px 8px 0;font-size:14px;color:var(--ink-2)}
+.np-list{display:grid;gap:8px}
+.np-item{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.4fr) minmax(0,1fr) auto auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.np-item.removed{opacity:.5}
+.np-item.removed b{text-decoration:line-through}
+.np-item input{display:block;width:100%;margin-top:3px;border:1px solid var(--line-strong);border-radius:6px;padding:5px 8px;background:var(--surface);color:var(--ink);font-size:13.5px}
+@media (max-width:760px){.np-item{grid-template-columns:1fr 1fr}}
+
+/* summary */
+.meter{position:relative;height:6px;width:120px;max-width:100%;background:var(--surface-2);border-radius:99px;margin:6px 0 4px}
+.meter span{display:block;height:100%;border-radius:99px;background:var(--brand)}
+.meter i{position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:1px;background:var(--ink)}
+.cell-sub{font-size:12.5px;color:var(--muted);display:block}
+.cell-sub.bad{color:var(--crit)}
+.cell-sub.good{color:var(--ok)}
+.num{font-variant-numeric:tabular-nums}
+.health{display:grid;gap:4px;justify-items:start}
+.sdetail td{background:var(--bg);padding:16px 18px 20px}
+.sgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.sgrid h3{font:600 14px/1.3 var(--sans);margin-bottom:8px}
+.sgrid ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:13.5px}
+.sgrid li{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.kv{display:grid;grid-template-columns:auto auto;justify-content:space-between;gap:5px 16px;font-size:13.5px;margin:0}
+.kv dt{color:var(--muted)}.kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.mismatch{margin-bottom:14px;padding:10px 14px;border-radius:8px;background:var(--warn-soft);color:var(--warn);font-size:14px}
+.sfind{display:grid;gap:6px}
+.sfind button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;font-size:13px;display:grid;gap:4px}
+.sfind button:hover{border-color:var(--brand)}
+@media (max-width:980px){.sgrid{grid-template-columns:1fr}}
+
+/* ask */
+.answer{margin-top:18px}
+.answer .q{font:600 20px/1.3 var(--display)}
+.answer .a{margin-top:12px;display:grid;gap:10px;font-size:15.5px;max-width:74ch;white-space:pre-wrap}
+.ask-mode{margin-top:10px;font-size:13px;color:var(--muted)}
+.suggest{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.suggest button{border:1px solid var(--line-strong);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:13.5px}
+.suggest button:hover{border-color:var(--brand);color:var(--brand-text)}
+.thinking{color:var(--muted)}
+.thinking::after{content:"▍";color:var(--brand);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* tabs */
+.seg{display:inline-flex;margin:20px 0 0;padding:3px;border-radius:10px;background:var(--surface-2);gap:3px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:7px 14px;border-radius:8px;font-weight:600;font-size:14px;color:var(--ink-2)}
+.seg button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+/* feedback */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.q-block{display:grid;gap:8px;padding:18px 0;border-top:1px dashed var(--ask-line)}
+.q-block legend,.q-block .ql{font-weight:600;font-size:15px;padding:0}
+.q-block fieldset,fieldset.q-block{border:0;margin:0;padding:18px 0 0;display:grid;gap:8px}
+fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid var(--ask-line);border-radius:8px;background:var(--surface);font-size:14px;cursor:pointer}
+.choice input{accent-color:var(--ask)}
+.q-block textarea{min-height:80px;resize:vertical}
+.react-table{width:100%;border-collapse:collapse;font-size:14px}
+.react-table td{padding:8px 6px;border-bottom:1px solid var(--ask-line);vertical-align:middle}
+.react-table td:last-child{white-space:nowrap;text-align:right}
+.log{margin:0;padding-left:20px;font-size:13.5px;color:var(--ink-2);display:grid;gap:4px}
+.log .mono{color:var(--muted);margin-right:6px}
+.copy-out{width:100%;min-height:140px;margin-top:10px;font:12.5px/1.5 var(--mono);border:1px solid var(--line-strong);border-radius:8px;padding:10px;background:var(--surface-2)}
+.responses{display:grid;gap:10px;margin-top:12px}
+.resp{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;display:grid;gap:6px}
+.resp-head{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:space-between}
+.resp-head b{font-weight:600}
+.tally{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--surface);border-radius:10px;overflow:hidden}
+.tally th,.tally td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+.tally td.n{text-align:right;font-variant-numeric:tabular-nums;width:64px}
+
+.view[hidden]{display:none!important}
+@media (max-width:980px){.start{grid-template-columns:1fr}.scan{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;height:auto;padding:12px 16px;gap:10px}
+  .persona,.guide,.rail-foot{display:none}
+  .nav{display:flex;flex-wrap:wrap;gap:4px}
+  .nav button{width:auto;padding:7px 10px}
+  .nav .fb-nav{margin-top:0}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .tools,.result,.tiles{grid-template-columns:1fr}
+  .clock{display:none}
+  .card{padding:16px 16px 14px 20px}
+  .upcoming li{grid-template-columns:1fr;gap:4px}
+  .tline{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="logo" aria-label="Ondatrace">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="6" cy="7" r="3.2" fill="#5fd0b8"/><circle cx="20" cy="6" r="3.2" fill="#5fd0b8" opacity=".7"/><circle cx="13" cy="20" r="3.8" fill="#fff"/><path d="M6 7 13 20 20 6" stroke="#5fd0b8" stroke-width="1.6" fill="none" stroke-dasharray="2.4 2"/></svg>
+      ondatrace
+    </div>
+    <div class="persona"><b>You are Morgan Reyes</b><span>VP of Delivery at Kestrel Health (fictional). Six projects, nine tools, one week of updates.</span></div>
+    <nav class="nav" aria-label="Demo sections">
+      <button type="button" data-go="start">Start</button>
+      <button type="button" data-go="connect">Connect tools</button>
+      <button type="button" data-go="today" disabled>Today <span class="count" id="nav-count">6</span></button>
+      <button type="button" data-go="summary" disabled>Portfolio summary</button>
+      <button type="button" data-go="risks" disabled>Portfolio risks</button>
+      <button type="button" data-go="ask" disabled>Ask</button>
+      <button type="button" data-go="wrap" class="fb-nav" disabled>Give feedback</button>
+    </nav>
+    <div class="guide">
+      <div class="eyebrow">Things to try</div>
+      <ol id="guide">
+        <li data-step="connect">Connect the sample tools</li>
+        <li data-step="open">Open the top finding</li>
+        <li data-step="act">Approve a note or change</li>
+        <li data-step="filter">Turn a tool off on Today</li>
+        <li data-step="morning">Jump to tomorrow morning</li>
+        <li data-step="risks">Open the portfolio summary</li>
+        <li data-step="ask">Ask your own question</li>
+        <li data-step="feedback">Give feedback</li>
+      </ol>
+    </div>
+    <p class="rail-foot">Fictional company and data. Nothing is connected and no messages are sent. Purple dashed boxes are questions for you, not part of Ondatrace.</p>
+  </aside>
+
+  <div class="main">
+    <div class="topbar" id="topbar" hidden>
+      <div class="topbar-inner">
+        <form class="ask" id="ask-form" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h9M4 6h16M4 18h6M16 15l4 4m-1.5-6.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+          <label for="ask-input" class="sr">Ask Ondatrace about Kestrel's projects</label>
+          <input id="ask-input" type="text" autocomplete="off" placeholder="Ask about Kestrel's projects, people or dates…">
+          <button class="btn primary small" type="submit">Ask</button>
+        </form>
+        <span class="clock" id="clock"></span>
+      </div>
+    </div>
+
+    <main class="wrap">
+      <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+
+      <!-- START -->
+      <section class="view" id="v-start" aria-labelledby="h-start">
+        <div class="start">
+          <div>
+            <span class="demo-flag">Interactive demo · fictional data</span>
+            <h1 id="h-start" style="margin-top:14px">The problems that sink projects are rarely in one tool.</h1>
+            <p class="lede">A slipped ticket in Jira. A promise in someone's sent mail. A decision said out loud in a meeting and never written down. Each one looks fine where it lives. Ondatrace reads across your tools and your meetings and shows you what they add up to.</p>
+            <ul>
+              <li>Step into Morgan's morning at a fictional healthcare software company.</li>
+              <li>Connect a week of sample work from nine tools.</li>
+              <li>See what Ondatrace finds, check the evidence, and decide what to do.</li>
+            </ul>
+            <div class="row">
+              <button class="btn primary" type="button" data-go="connect">Start the demo</button>
+              <span class="muted" style="font-size:13px">About 10 minutes</span>
+            </div>
+          </div>
+          <div>
+            <div class="scatter" aria-label="Examples of scattered updates">
+              <div class="frag"><span class="dot" style="background:#2456c9">J</span><div><small>Jira · 9 days ago</small>PLAT-412 moved from Sprint 23 to Sprint 25</div></div>
+              <div class="frag"><span class="dot" style="background:#0b7fb3">Z</span><div><small>Zoom · sprint review</small>"Does anyone downstream care?" "Just move it."</div></div>
+              <div class="frag"><span class="dot" style="background:#2f7d54">S</span><div><small>Smartsheet · Portal 2.0</small>SSO login live · Status: Green</div></div>
+              <div class="frag"><span class="dot" style="background:#c43d2f">G</span><div><small>Gmail · Tom's sent mail</small>"SSO will be live for your team by <span data-d="14"></span>."</div></div>
+              <div class="frag"><span class="dot" style="background:#3f8fd0">S</span><div><small>Salesforce · Acme Corp</small>Renewal $420,000 · closes <span data-d="25"></span></div></div>
+            </div>
+            <p class="scatter-cap">Five updates, four teams, none of them wrong. Together they put a $420K renewal at risk.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONNECT -->
+      <section class="view" id="v-connect" aria-labelledby="h-connect" hidden>
+        <span class="eyebrow">Step 1</span>
+        <h1 id="h-connect" style="margin-top:6px">Connect a week of sample work</h1>
+        <p class="summary">These are Kestrel's tools, including recorded meetings. Ondatrace finds the most when it can read everything a project touches, so all nine are connected.</p>
+        <div class="coach">
+          <div><b>Connect every tool, not just the project ones</b><p>The biggest risk in this sample week started in a salesperson's email and a CFO's remark in a meeting. Project tools alone would have missed both.</p></div>
+          <div><b>Record every project meeting</b><p>Decisions, new dates and promises are often said out loud and never written down. All six findings this week include something people said in a meeting, and one exists only because a steering meeting was recorded.</p></div>
+          <div><b>More sources, earlier warnings</b><p>Each finding here needs at least two tools, and the most valuable ones draw on five or six. Every tool you leave out hides connections Ondatrace can't see.</p></div>
+        </div>
+        <div class="tools" id="tools"></div>
+        <div class="connect-bar">
+          <span class="muted" id="tool-summary" role="status" aria-live="polite"></span>
+          <button class="btn primary" type="button" id="run">Read the sample week</button>
+        </div>
+        <div id="scan" hidden>
+          <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+          <div class="scan">
+            <div class="scanlog" id="scanlog" aria-live="off"></div>
+            <div class="counters">
+              <div class="counter"><strong id="c-read">0</strong><span>updates read</span></div>
+              <div class="counter"><strong id="c-link">0</strong><span>links between tools</span></div>
+              <div class="counter"><strong id="c-find">0</strong><span>findings that need you</span></div>
+            </div>
+          </div>
+        </div>
+        <div id="scan-done" hidden>
+          <div class="result">
+            <div class="counter"><strong id="r-read">1,284</strong><span>updates read since Friday</span></div>
+            <div class="counter"><strong id="r-find">6</strong><span>findings no single tool shows</span></div>
+            <div class="counter"><strong id="r-fine">41</strong><span>items checked and fine</span></div>
+          </div>
+          <div class="row" style="margin-top:18px"><button class="btn primary" type="button" data-go="today">Open Today</button><span class="muted" style="font-size:13px">Today is the one page Morgan opens each morning.</span></div>
+        </div>
+      </section>
+
+      <!-- TODAY -->
+      <section class="view" id="v-today" aria-labelledby="h-today" hidden>
+        <span class="eyebrow" id="today-eyebrow">Monday morning</span>
+        <h1 id="h-today" style="margin-top:6px">Good morning, Morgan.</h1>
+        <p class="summary" id="today-summary"></p>
+        <div class="filterbar">
+          <div class="row" id="filters" aria-label="Tools Ondatrace can read"></div>
+          <p class="filter-note">To see what you'd miss without a tool, turn it off here and watch which findings disappear.</p>
+        </div>
+        <div class="queue" id="queue"></div>
+        <p class="dismissed" id="dismissed" hidden></p>
+        <div class="morning" id="morning">
+          <p id="morning-text"></p>
+          <button class="btn" type="button" id="morning-btn">Jump to tomorrow morning</button>
+        </div>
+        <details class="fine"><summary id="fine-sum">41 items checked and fine</summary><ul id="fine"></ul></details>
+      </section>
+
+      <!-- DETAIL -->
+      <section class="view" id="v-detail" aria-labelledby="h-detail" hidden>
+        <button class="btn ghost small back" type="button" id="back">← Back</button>
+        <div class="detail-head">
+          <div class="card-top" id="d-top"></div>
+          <h1 id="h-detail" tabindex="-1"></h1>
+          <p class="lede" id="d-lede"></p>
+          <div class="facts" id="d-facts"></div>
+        </div>
+
+        <div class="section">
+          <h2>Suggested next steps</h2>
+          <p class="section-intro">Ondatrace drafts these from the evidence below. Nothing goes out or changes until you approve it.</p>
+          <div class="actions">
+            <div class="panel" id="p-note"></div>
+            <div class="panel" id="p-prop"></div>
+          </div>
+          <div class="wrongbar" id="p-wrong"></div>
+        </div>
+
+        <div class="section">
+          <h2>The evidence</h2>
+          <p class="section-intro">Each item is shown with what it looked like on its own, in the tool where it lives.</p>
+          <ol class="timeline" id="d-timeline"></ol>
+        </div>
+
+        <div class="section" id="d-talk-sec">
+          <h2>What people said in meetings</h2>
+          <p class="section-intro" id="d-talk-intro">From recorded meeting transcripts. Nobody wrote these down anywhere else.</p>
+          <div class="talks" id="d-talk"></div>
+        </div>
+
+        <div class="section">
+          <h2>How Ondatrace connected them</h2>
+          <ol class="reason" id="d-reason" style="margin-top:12px"></ol>
+          <div class="unknown" id="d-unknown"></div>
+          <p id="d-linked" style="margin-top:16px;font-size:14px" hidden></p>
+        </div>
+
+        <div class="section tester" id="d-tester"></div>
+      </section>
+
+      <!-- SUMMARY -->
+      <section class="view" id="v-summary" aria-labelledby="h-summary" hidden>
+        <span class="eyebrow">Portfolio summary</span>
+        <h1 id="h-summary" style="margin-top:6px">Six projects at a glance</h1>
+        <p class="summary" id="sum-summary"></p>
+        <div class="tiles" id="sum-tiles"></div>
+        <div class="seg" role="tablist" aria-label="Summary view">
+          <button type="button" role="tab" id="st-overview" aria-selected="true" aria-controls="sum-table">Overview</button>
+          <button type="button" role="tab" id="st-metrics" aria-selected="false" aria-controls="sum-table">Metrics</button>
+          <button type="button" role="tab" id="st-success" aria-selected="false" aria-controls="sum-table">Success metrics</button>
+        </div>
+        <p class="section-intro" style="margin-top:12px" id="sum-intro"></p>
+        <div class="panel" id="sum-new" style="margin-bottom:14px" hidden></div>
+        <div class="tablewrap"><table class="rtable" id="sum-table"></table></div>
+      </section>
+
+      <!-- RISKS -->
+      <section class="view" id="v-risks" aria-labelledby="h-risks" hidden>
+        <span class="eyebrow">Portfolio risks</span>
+        <h1 id="h-risks" style="margin-top:6px">Where the portfolio is exposed</h1>
+        <p class="summary" id="risk-summary"></p>
+        <div class="tiles" id="tiles"></div>
+        <p style="margin-top:14px;font-size:14px">For health, budget and metrics by project, see the <button type="button" class="cite" data-go="summary">Portfolio summary ↗</button></p>
+        <div class="section">
+          <h2>When the risks land</h2>
+          <p class="section-intro">Dates from across all tools where a finding turns into a missed commitment.</p>
+          <ul class="upcoming" id="upcoming"></ul>
+        </div>
+      </section>
+
+      <!-- ASK -->
+      <section class="view" id="v-ask" aria-labelledby="h-ask" hidden>
+        <span class="eyebrow">Ask</span>
+        <h1 id="h-ask" style="margin-top:6px">Ask anything about Kestrel's portfolio</h1>
+        <p class="summary">Type in the bar at the top of any page. Answers come only from the sample week's evidence and point to the findings behind them.</p>
+        <p class="ask-mode" id="ask-mode">Checking whether free-form questions are available…</p>
+        <div class="suggest" id="suggest"></div>
+        <div class="answer" id="answer" aria-live="polite"></div>
+      </section>
+
+      <!-- WRAP -->
+      <section class="view" id="v-wrap" aria-labelledby="h-wrap" hidden>
+        <div class="tester" style="padding:22px">
+          <div class="tester-label"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>For testers · not part of Ondatrace</div>
+          <h1 id="h-wrap">What did you think?</h1>
+          <p class="summary">Straight answers help most, including "I'd never use this."</p>
+          <div class="stats" id="stats"></div>
+          <form id="fb" style="margin-top:14px">
+            <div class="q-block" style="border-top:0">
+              <span class="ql">Would you act on each finding?</span>
+              <table class="react-table" id="react-table"></table>
+            </div>
+            <fieldset class="q-block"><legend>Which findings would you have missed with the tools you use today?</legend><div class="choices" id="missed"></div></fieldset>
+            <fieldset class="q-block"><legend>How would you mainly use Ondatrace?</legend><div class="choices">
+              <label class="choice"><input type="radio" name="scope" value="Across my whole portfolio">Across my whole portfolio</label>
+              <label class="choice"><input type="radio" name="scope" value="On individual projects">On individual projects</label>
+              <label class="choice"><input type="radio" name="scope" value="Both equally">Both equally</label>
+            </div></fieldset>
+            <fieldset class="q-block"><legend>Where would you want to track your projects day to day?</legend><div class="choices">
+              <label class="choice"><input type="radio" name="track" value="In Ondatrace">In Ondatrace</label>
+              <label class="choice"><input type="radio" name="track" value="In my current tools, with Ondatrace reading across them">In my current tools, with Ondatrace reading across them</label>
+              <label class="choice"><input type="radio" name="track" value="Not sure yet">Not sure yet</label>
+            </div></fieldset>
+            <label class="q-block"><span class="ql">What does Ondatrace show you that your current tools don't?</span><textarea id="fb-project"></textarea></label>
+            <label class="q-block"><span class="ql">What evidence would you need before acting on a finding like these?</span><textarea id="fb-evidence"></textarea></label>
+            <label class="q-block"><span class="ql">What would turn this into another inbox you stop checking?</span><textarea id="fb-inbox"></textarea></label>
+            <label class="q-block"><span class="ql">Which actions would you let Ondatrace take without asking you first?</span><textarea id="fb-auto"></textarea></label>
+            <label class="q-block"><span class="ql">Which of your own tools or projects would you want to try this on first?</span><textarea id="fb-next"></textarea></label>
+            <label class="q-block"><span class="ql">Anything else you want to tell us?</span><textarea id="fb-other" placeholder="What confused you, what you'd change, what you'd pay for, anything at all"></textarea></label>
+            <label class="q-block"><span class="ql">Your name and role (optional)</span><input id="fb-name" type="text"></label>
+            <div class="row" style="padding-top:8px"><button class="btn askbtn" type="submit" id="fb-submit">Copy my feedback</button><span class="muted" id="copy-state" role="status" style="font-size:13px"></span></div>
+            <textarea class="copy-out" id="copy-out" aria-label="Your feedback as text" readonly hidden></textarea>
+          </form>
+        </div>
+
+        <div class="section" id="responses-sec" hidden>
+          <h2>Tester responses</h2>
+          <p class="section-intro">Only you, the owner, can see this. It updates live as testers send feedback.</p>
+          <div id="responses-sum"></div>
+          <div class="responses" id="responses"></div>
+        </div>
+
+        <details class="fine" style="margin-top:18px"><summary>What you did in this session</summary><ol class="log" id="log" style="padding:0 18px 16px 38px"></ol></details>
+        <div class="row" style="margin-top:18px"><button class="btn" type="button" id="restart">Start over</button></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const base = new Date(); base.setHours(12,0,0,0);
+const day = n => { const d = new Date(base); d.setDate(d.getDate()+n); return d; };
+const fmtD = n => day(n).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+const fmtWD = n => day(n).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+const fmt = s => String(s).replace(/\{d([+-]\d+)\}/g,(_,n)=>fmtD(+n));
+const ago = n => n===0?'Today':n===1?'Overnight':n===-1?'Yesterday':n<0?`${-n} days ago`:`in ${n} days`;
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const strip = s => String(s).replace(/<[^>]+>/g,'');
+document.querySelectorAll('[data-d]').forEach(e=>e.textContent=fmtD(+e.dataset.d));
+
+const TOOLS = {
+  slack:{name:'Slack',m:'S',c:'#8b3d88',n:612,unit:'messages'},
+  gmail:{name:'Gmail',m:'G',c:'#c43d2f',n:188,unit:'emails'},
+  jira:{name:'Jira',m:'J',c:'#2456c9',n:243,unit:'ticket changes'},
+  smartsheet:{name:'Smartsheet',m:'S',c:'#2f7d54',n:96,unit:'plan rows changed'},
+  docs:{name:'Google Docs',m:'D',c:'#4f5bd5',n:37,unit:'docs edited'},
+  zoom:{name:'Zoom',m:'Z',c:'#0b7fb3',n:9,unit:'meeting transcripts'},
+  calendar:{name:'Google Calendar',m:'C',c:'#0f8a80',n:64,unit:'events'},
+  salesforce:{name:'Salesforce',m:'S',c:'#3f8fd0',n:22,unit:'deal updates'},
+  monday:{name:'Monday',m:'M',c:'#c24f72',n:13,unit:'board changes'}
+};
+const ALL = Object.keys(TOOLS);
+const dot = t => `<span class="dot" style="background:${TOOLS[t].c}" aria-hidden="true">${TOOLS[t].m}</span>`;
+const chip = t => `<span class="src">${dot(t)}${TOOLS[t].name}</span>`;
+const SEV = {crit:['crit','Needs a decision'],warn:['warn','Needs attention'],watch:['watch','Worth a look'],ok:['ok','Resolved']};
+const ORDER = {crit:0,warn:1,watch:2,ok:3};
+
+const PROJECTS = [
+  {id:'api',name:'Platform API v3',owner:'Kevin Doyle',tool:'jira',plan:'On track',purpose:'New authentication and API layer, including SSO',due:60,
+   budget:{total:1200000,spent:740000,committed:95000,forecast:1310000,why:'Two extra sprints for PLAT-412'},pct:58,elapsed:62,
+   m:{thr:[21,26,'story points'],blockers:2,scope:8,kpi:['p95 sign-in latency','180 ms','150 ms target']},
+   ms:[[-20,'Token service design','done'],[22,'PLAT-412 SSO token service (Sprint 25)','acme'],[60,'API v3 general availability','on']],
+   team:'Kevin Doyle, Priya Shah + 5 engineers', src:['jira','slack','zoom']},
+  {id:'portal',name:'Portal 2.0',owner:'Leo Park',tool:'smartsheet',plan:'Green',purpose:'Redesigned customer portal with single sign-on',due:21,
+   budget:{total:850000,spent:540000,committed:60000,forecast:910000,why:'Launch likely moves to {d+38}'},pct:71,elapsed:78,
+   m:{thr:[34,33,'story points'],blockers:1,scope:3,kpi:['Beta satisfaction','4.3 / 5','38 beta customers']},
+   ms:[[-6,'Beta with 38 customers','done'],[14,'SSO login live (promised to Acme)','acme'],[21,'Go-live (plan) vs. {d+38} (steering)','dates']],
+   team:'Leo Park + 6', src:['smartsheet','docs','zoom']},
+  {id:'mig',name:'Data Migration',owner:'Ana Ruiz',tool:'smartsheet',plan:'Green',purpose:'Move the data warehouse to a new vendor (Stratus)',due:75,
+   budget:{total:640000,spent:210000,committed:186000,forecast:640000,why:'Committed includes the unsigned $186K Stratus contract'},pct:34,elapsed:40,
+   m:{thr:[18,16,'story points'],blockers:0,scope:0,kpi:['Records validated','62%','14 of 14 test runs passed']},
+   ms:[[2,'Sign Stratus contract ($186K)','hold'],[10,'Cutover rehearsal (owner: Priya)','priya'],[75,'Final cutover','on']],
+   team:'Ana Ruiz, Raj Mehta + 3', src:['smartsheet','docs','gmail']},
+  {id:'support',name:'Support Readiness',owner:'Marcus Bell',tool:'calendar',plan:'Ready',purpose:'Train support agents for the Portal 2.0 launch',due:25,
+   budget:{total:120000,spent:64000,committed:18000,forecast:118000},pct:55,elapsed:60,
+   m:{thr:[12,9,'tasks'],blockers:1,scope:0,kpi:['Agents trained','0 / 40','training on {d+4}']},
+   ms:[[-5,'Training deck finished','done'],[4,'Portal 2.0 training, 40 agents','training'],[25,'Support go-live','on']],
+   team:'Marcus Bell, Carla Nguyen', src:['calendar','docs']},
+  {id:'pon',name:'Partner Onboarding Modernization',owner:'Sam Okafor',tool:'jira',plan:'On track',purpose:'Self-service partner sign-up, invites and tax forms',due:50,
+   budget:{total:480000,spent:205000,committed:20000,forecast:470000,why:'Overlaps with Partner Launch'},pct:44,elapsed:45,
+   m:{thr:[19,20,'story points'],blockers:0,scope:2,kpi:['Partners in pilot','0 / 12','pilot starts {d+30}']},
+   ms:[[-12,'Invite flow prototype','done'],[30,'Partner pilot','dup'],[50,'Launch to all partners','on']],
+   team:'Sam Okafor + 4 engineers', src:['jira','docs']},
+  {id:'pl',name:'Partner Launch',owner:'Jess Lin',tool:'monday',plan:'On track',purpose:'Partner invite emails and tax form collection',due:40,
+   budget:{total:260000,spent:162000,committed:10000,forecast:255000,why:'Overlaps with Partner Onboarding'},pct:60,elapsed:58,
+   m:{thr:[11,10,'tasks'],blockers:0,scope:12,kpi:['Partners onboarded','3 / 12','by hand, via email']},
+   ms:[[11,'API security review (owner: Priya)','priya'],[20,'Tax form collection live','dup'],[40,'All 12 partners onboarded','on']],
+   team:'Jess Lin + 2', src:['monday','docs']}
+];
+const money = v => v>=1e6?'$'+(v/1e6).toFixed(2).replace(/0$/,'')+'M':'$'+Math.round(v/1000)+'K';
+
+const INSIGHTS = [
+{ id:'acme', sev:'crit', kind:'Customer commitment at risk', money:420000,
+  title:'Acme was promised SSO by {d+14}. The work behind it slipped to {d+22}.',
+  why:'Sales promised a date that engineering had already moved. The Portal plan still shows green because nothing links the two.',
+  lede:'Tom Reilly told Acme\'s CIO that single sign-on would be live by {d+14}, ahead of their $420K renewal on {d+25}. The engineering ticket that delivers SSO was pushed two sprints nine days ago. In the sprint review, the team asked whether anyone downstream cared and decided nobody did. The Portal 2.0 plan still shows the SSO milestone as green.',
+  pids:['api','portal'], people:'Priya Shah, Kevin Doyle, Leo Park, Tom Reilly', needs:['jira','smartsheet','gmail'], extra:['slack','salesforce','zoom'], span:'6 tools · 3 teams · 12 days', stake:'$420K renewal',
+  ev:[
+    {t:'smartsheet',d:-12,where:'Portal 2.0 launch plan · row 18',who:'Leo Park',text:'SSO login live · due {d+14} · Status: <mark>Green</mark> · Predecessors: <mark>none</mark>'},
+    {t:'jira',d:-9,where:'PLAT-412 · SSO token service',who:'Priya Shah',text:'Sprint changed: Sprint 23 → <mark>Sprint 25</mark> (ends {d+22}). Comment: "Pushing to 25, identity provider edge cases."'},
+    {t:'slack',d:-6,where:'#platform-eng',who:'Priya Shah',text:'"Realistically the SSO token service is <mark>3 more weeks, maybe 4</mark>. The edge cases are worse than we scoped."'},
+    {t:'gmail',d:-3,where:'Sent · to Acme CIO',who:'Tom Reilly',text:'"Confirming <mark>SSO will be live for your team by {d+14}</mark>, well ahead of your renewal."'},
+    {t:'salesforce',d:-3,where:'Acme Corp · Renewal',who:'Tom Reilly',text:'Amount <mark>$420,000 ARR</mark> · close date {d+25} · next step: "SSO live {d+14}"'}
+  ],
+  alone:{smartsheet:['Looks fine','The SSO milestone is green. The row was last touched 12 days ago.'],jira:['Looks routine','One of 38 tickets re-planned in sprint review.'],slack:['Buried','One of 612 messages this week, in a channel Morgan doesn\'t follow.'],gmail:['Not visible','In Tom\'s sent mail. Morgan wasn\'t copied.'],salesforce:['Looks fine','Renewal on track at 80% probability.']},
+  talk:[
+    {title:'Platform sprint 23 review',d:-9,len:'45 min',lines:[
+      ['00:31:10','Priya Shah','PLAT-412 isn\'t making 23. The identity provider edge cases are ugly. <mark>Honestly, 25.</mark>'],
+      ['00:31:22','Kevin Doyle','<mark>Does anyone downstream care?</mark>'],
+      ['00:31:25','Priya Shah','Portal, maybe? It\'s not linked to anything in their plan.'],
+      ['00:31:29','Kevin Doyle','Then <mark>just move it</mark>. Next one.']]},
+    {title:'Acme quarterly business review',d:-3,len:'52 min',lines:[
+      ['00:18:40','Acme CIO','SSO is the <mark>one thing blocking our renewal decision</mark>. We have 1,200 people waiting on it.'],
+      ['00:18:52','Tom Reilly','Understood. Our team has it for the {d+14}. <mark>I\'ll confirm in writing today.</mark>'],
+      ['00:19:05','Acme CIO','Good. We\'ll plan our rollout around that.']]}
+  ],
+  reason:[
+    ['Matched "SSO token service" in Jira, "SSO login live" in Smartsheet and "SSO" in Tom\'s email as the same feature under three names.','inf'],
+    ['Portal 2.0 cannot ship SSO before PLAT-412 is done. The plan lists no predecessor, so its green status never saw the slip. In the sprint review, the team moved the ticket because they believed nothing depended on it.','inf'],
+    ['Earliest realistic date is the end of Sprint 25, {d+22}. Priya\'s own estimate points the same way or later.','ev'],
+    ['That is 8 days after the date promised to Acme and 3 days before the renewal closes. Acme told Tom the renewal depends on it.','ev']
+  ],
+  unknown:'Whether a partial SSO release could ship for Acme alone, and whether Tom has made other SSO promises that aren\'t in Salesforce.',
+  linked:['training'],
+  note:{to:'Priya Shah, Leo Park, Tom Reilly',subject:'Acme SSO: promised {d+14}, work now ends {d+22}',body:'Hi all,\n\nTom confirmed to Acme that SSO will be live by {d+14}. PLAT-412 moved to Sprint 25, which ends {d+22}, and the Portal plan doesn\'t show that dependency. Acme told Tom SSO is the one thing blocking their renewal.\n\nBefore Tom talks to Acme again, can we agree on:\n1. A date engineering will stand behind\n2. Whether a limited SSO release for Acme is possible sooner\n3. What Tom tells Acme, and by when\n\n15 minutes today or tomorrow?\n\nMorgan'},
+  prop:{tool:'smartsheet',target:'Portal 2.0 launch plan · row 18',rows:[['Predecessors','none','PLAT-412 (Jira)'],['Status','Green','At risk'],['Comment','—','SSO work moved to Sprint 25 (ends {d+22})']]}
+},
+{ id:'hold', sev:'crit', kind:'Decision never reached the team', money:186000,
+  title:'A $186K vendor contract is about to be signed during a spending hold.',
+  why:'The CFO paused new vendor spend in a leadership meeting. The Data Migration team never heard and plans to sign in two days.',
+  lede:'Eight days ago the CFO paused new vendor commitments over $50K until the Q4 review on {d+10}. The Data Migration team still plans to sign the $186K Stratus contract by {d+2}, and in their weekly meeting they agreed nobody else needed to sign off. The hold was announced in a leadership meeting and a Slack channel the team isn\'t in.',
+  pids:['mig'], people:'Dana Whitfield, Ana Ruiz, Raj Mehta', needs:['slack','docs'], extra:['gmail','zoom'], span:'4 tools · 2 teams · 7 days', stake:'$186K commitment',
+  ev:[
+    {t:'slack',d:-8,where:'#leadership',who:'Dana Whitfield, CFO',text:'"Until the Q4 review on {d+10}, <mark>no new vendor commitments over $50K</mark>. Route anything pending to me."'},
+    {t:'docs',d:-2,where:'Data Migration plan · Next steps',who:'Ana Ruiz',text:'"<mark>Sign Stratus SOW ($186,000) by {d+2}</mark> to hold pricing."'},
+    {t:'gmail',d:-1,where:'Stratus Sales → Ana Ruiz',who:'Stratus Sales',text:'"The agreement is out for signature. <mark>Pricing is held through {d+3}</mark>."'}
+  ],
+  alone:{slack:['Not visible to the team','Posted in #leadership. Ana isn\'t a member.'],docs:['Looks fine','Plan is current and on schedule.'],gmail:['Looks routine','A normal vendor follow-up.']},
+  talk:[
+    {title:'Leadership staff meeting',d:-8,len:'60 min',lines:[
+      ['00:12:02','Dana Whitfield','Until the Q4 review, <mark>anything over fifty K waits</mark>. I\'ll post it in the channel.'],
+      ['00:12:15','CEO','Does that include the migration vendor?'],
+      ['00:12:18','Dana Whitfield','<mark>Anything that isn\'t signed yet.</mark>']]},
+    {title:'Data Migration weekly',d:-2,len:'30 min',lines:[
+      ['00:04:40','Ana Ruiz','Stratus pricing is only good through the {d+3}, so <mark>we sign on the {d+2}</mark>.'],
+      ['00:04:51','Raj Mehta','Do we need anyone\'s sign-off?'],
+      ['00:04:55','Ana Ruiz','<mark>It\'s in the approved budget, so no.</mark>']]}
+  ],
+  reason:[
+    ['$186K is above the $50K threshold the CFO set.','ev'],
+    ['Signing by {d+2} would happen before the review on {d+10}. The CFO said the hold covers anything not yet signed.','ev'],
+    ['Ana isn\'t a member of #leadership, and in her own meeting she said no sign-off was needed. She almost certainly never saw the hold.','inf'],
+    ['Stratus pricing expires {d+3}, a week before the review. Someone needs to ask for an extension or an exception.','inf']
+  ],
+  unknown:'Whether Dana already granted Data Migration an exception somewhere Ondatrace can\'t see, such as a phone call.',
+  note:{to:'Dana Whitfield, Ana Ruiz',subject:'Stratus SOW ($186K) vs. the vendor hold',body:'Dana, Ana,\n\nThe Data Migration plan has the Stratus SOW ($186K) signing on {d+2}. That falls inside the hold on new vendor commitments until the {d+10} review, and I don\'t think the team knew about the hold.\n\nStratus is holding pricing only through {d+3}. Options:\n1. Dana grants an exception now\n2. Ana asks Stratus to hold pricing to {d+12}\n3. We accept the price risk and wait\n\nWhich would you like?\n\nMorgan'},
+  prop:{tool:'docs',target:'Data Migration plan · Next steps',rows:[['Next step','Sign Stratus SOW by {d+2}','Hold signature pending CFO decision'],['Decision log','—','Vendor hold until {d+10} (CFO, leadership meeting {d-8})']]}
+},
+{ id:'dates', sev:'warn', kind:'Sources disagree',
+  title:'Portal 2.0 has two go-live dates: {d+21} and {d+38}.',
+  why:'Leadership agreed on a new date in a meeting. The plan and the customer launch email still use the old one.',
+  lede:'In last week\'s steering meeting, Leo said go-live moves to {d+38} and that he would update the plan and tell marketing. Neither happened. The plan and launch brief still say {d+21}, and marketing\'s email to all customers is scheduled for that day. Ondatrace won\'t pick a date for you.',
+  pids:['portal'], people:'Leo Park, Maya Chen, Nina Alvarez', needs:['zoom','smartsheet'], extra:['docs'], span:'3 tools · 2 teams · 10 days', stake:'Email to every customer',
+  ev:[
+    {t:'smartsheet',d:-12,where:'Portal 2.0 launch plan · row 2',who:'Leo Park',text:'Go-live: <mark>{d+21}</mark>'},
+    {t:'docs',d:-2,where:'Portal 2.0 launch brief',who:'Nina Alvarez, Marketing',text:'"Launch email to all customers: <mark>{d+21}</mark>, 9:00 AM."'}
+  ],
+  alone:{smartsheet:['Looks fine','Go-live {d+21}. No edits since the steering meeting.'],docs:['Looks fine','The brief matches the plan.']},
+  talk:[
+    {title:'Portal 2.0 steering committee',d:-4,len:'58 min',lines:[
+      ['00:41:30','Leo Park','Given the SSO work, I don\'t want to launch on the {d+21}.'],
+      ['00:41:44','Maya Chen','What\'s the realistic date?'],
+      ['00:42:15','Leo Park','<mark>{d+38}.</mark> I\'ll update the plan this week.'],
+      ['00:42:20','Maya Chen','And marketing?'],
+      ['00:42:22','Leo Park','<mark>I\'ll let them know.</mark>']]},
+    {title:'Marketing launch sync',d:-2,len:'25 min',lines:[
+      ['00:03:05','Nina Alvarez','Portal email is <mark>locked for the {d+21}</mark>. Nobody\'s told us otherwise.']]}
+  ],
+  reason:[
+    ['Three sources give a go-live date for the same launch.','ev'],
+    ['The newest statement ({d+38}) was said in a meeting. The written sources ({d+21}) were never updated, and marketing confirmed nobody told them.','ev'],
+    ['Ondatrace treats this as a conflict to resolve, not a new fact. The plan stays unchanged until the owner confirms.','pol']
+  ],
+  unknown:'Whether the steering decision was reversed later in a conversation Ondatrace can\'t read.',
+  note:{to:'Leo Park, Nina Alvarez',subject:'Portal 2.0 go-live: {d+21} or {d+38}?',body:'Leo, Nina,\n\nIn steering, Leo said go-live moves to {d+38}. The plan and the launch brief still say {d+21}, and the customer email is locked for {d+21}.\n\nLeo, can you confirm the date? If it\'s {d+38}, Nina, please hold the email until we reschedule.\n\nMorgan'},
+  prop:{tool:'smartsheet',target:'Portal 2.0 launch plan · row 2',needs:'Waits for Leo to confirm',rows:[['Go-live','{d+21}','{d+38}'],['Source','—','Steering committee, {d-4}']]}
+},
+{ id:'priya', sev:'warn', kind:'One person, several critical paths',
+  title:'Priya is on the critical path of three projects during the week she\'s out.',
+  why:'Three plans each name her for work due that week. None of them knows about the others or about her leave.',
+  lede:'Priya Shah owns key work in Platform API v3, Data Migration and Partner Launch, all due between {d+8} and {d+12}. Her calendar shows her out of office for exactly those days. Someone raised it in a meeting, and nobody followed up.',
+  pids:['api','mig','pl'], people:'Priya Shah, Ana Ruiz, Jess Lin', needs:['calendar','smartsheet','monday'], extra:['jira','zoom'], span:'5 tools · 3 teams · 3 plans', stake:'3 deadlines',
+  ev:[
+    {t:'calendar',d:-20,where:'Priya Shah · calendar',who:'Priya Shah',text:'Out of office <mark>{d+8} – {d+12}</mark>'},
+    {t:'jira',d:-9,where:'PLAT-412 · SSO token service',who:'Sprint 25',text:'Assignee: <mark>Priya Shah</mark> · only engineer on the ticket'},
+    {t:'smartsheet',d:-7,where:'Data Migration · cutover rehearsal',who:'Ana Ruiz',text:'Owner: <mark>Priya Shah</mark> · due {d+10}'},
+    {t:'monday',d:-5,where:'Partner Launch · API security review',who:'Jess Lin',text:'Owner: <mark>P. Shah</mark> · due {d+11}'}
+  ],
+  alone:{calendar:['Not visible to planners','A personal calendar entry.'],jira:['Looks fine','Assigned and in progress.'],smartsheet:['Looks fine','Owner assigned.'],monday:['Looks fine','Owner assigned.']},
+  talk:[
+    {title:'Data Migration weekly',d:-2,len:'30 min',lines:[
+      ['00:09:12','Ana Ruiz','Priya\'s running the cutover rehearsal on the {d+10}.'],
+      ['00:09:18','Raj Mehta','<mark>Isn\'t she out that week?</mark>'],
+      ['00:09:21','Ana Ruiz','Hm. <mark>I\'ll check.</mark>']]},
+    {title:'Partner Launch standup',d:-5,len:'15 min',lines:[
+      ['00:02:40','Jess Lin','Security review is with Priya, due the {d+11}. <mark>She\'s the only one who knows the auth code.</mark>']]}
+  ],
+  reason:[
+    ['Matched "Priya Shah", "pshah" and "P. Shah" to one person across four tools.','inf'],
+    ['Three tasks need her: PLAT-412 in Sprint 25, the cutover rehearsal on {d+10}, and the security review on {d+11}.','ev'],
+    ['Her out-of-office covers all three dates. Raj asked about it, and there\'s no sign anyone checked.','ev']
+  ],
+  unknown:'Whether someone is quietly covering. Backup owners are often agreed in conversation and never written down.',
+  note:{to:'Priya Shah, Ana Ruiz, Jess Lin',subject:'Coverage while Priya is out {d+8}–{d+12}',body:'Hi all,\n\nPriya is out {d+8}–{d+12}. Three plans have her on critical work that week:\n- PLAT-412 (Sprint 25)\n- Data Migration cutover rehearsal, {d+10}\n- Partner Launch API security review, {d+11}\n\nCan we name a backup for each, or move dates? Priya, what should happen before you leave?\n\nMorgan'},
+  prop:{tool:'smartsheet',target:'Data Migration · cutover rehearsal',rows:[['Constraint','—','Owner out {d+8}–{d+12}'],['Backup owner','—','To confirm']]}
+},
+{ id:'training', sev:'warn', kind:'Knock-on effect',
+  title:'Support training on {d+4} will demo an SSO flow that isn\'t built.',
+  why:'40 agents are booked to learn a login screen that depends on the slipped SSO ticket.',
+  lede:'40 support agents are booked for Portal 2.0 training on {d+4}. The training deck walks through signing in with SSO on the staging site. That depends on PLAT-412, which slipped to Sprint 25 and isn\'t on staging. The trainer was told it would be ready.',
+  pids:['support','portal'], people:'Marcus Bell, Carla Nguyen', needs:['calendar','docs','jira'], extra:['zoom'], span:'4 tools · 2 teams · 4 days out', stake:'40 people, 1 day',
+  ev:[
+    {t:'calendar',d:-15,where:'Support Readiness · event',who:'Marcus Bell',text:'Portal 2.0 training · {d+4} · <mark>40 attendees</mark>, all accepted'},
+    {t:'jira',d:-9,where:'PLAT-412 · SSO token service',who:'Priya Shah',text:'Status: In progress · <mark>not deployed to staging</mark>'},
+    {t:'docs',d:-5,where:'Training deck · slides 6–14',who:'Marcus Bell',text:'"<mark>Walkthrough: signing in with SSO</mark> (live on staging)"'}
+  ],
+  alone:{calendar:['Looks fine','Booked, all 40 accepted.'],jira:['Looks routine','In progress.'],docs:['Looks fine','Deck is finished.']},
+  talk:[
+    {title:'Support Readiness sync',d:-5,len:'30 min',lines:[
+      ['00:06:15','Marcus Bell','Slides 6 to 14 are the SSO walkthrough. <mark>We\'ll do it live on staging.</mark>'],
+      ['00:06:24','Carla Nguyen','Is SSO actually on staging?'],
+      ['00:06:28','Marcus Bell','<mark>Engineering said it would be by then.</mark>']]}
+  ],
+  reason:[
+    ['Slides 6–14 need SSO working on staging.','ev'],
+    ['PLAT-412 isn\'t deployed anywhere. Earliest is {d+22}. The "by then" Marcus heard came before the ticket moved.','inf'],
+    ['This follows from the Acme finding. Settling the SSO date settles this too.','inf']
+  ],
+  unknown:'Whether a recorded demo or mock-up of the SSO screens would be good enough for training.',
+  linked:['acme'],
+  note:{to:'Marcus Bell',subject:'Portal 2.0 training on {d+4}: SSO isn\'t on staging',body:'Marcus,\n\nSlides 6–14 rely on SSO working on staging. That work moved to Sprint 25 (ends {d+22}) and isn\'t deployed yet.\n\nOptions:\n1. Run the non-SSO modules on {d+4} and add a short SSO session after {d+22}\n2. Move the whole training\n\nWhich works better for your team?\n\nMorgan'},
+  prop:{tool:'calendar',target:'Portal 2.0 training · {d+4}',rows:[['Agenda','Full walkthrough','Modules 1–5 only'],['New event','—','SSO walkthrough · after {d+22}']]}
+},
+{ id:'dup', sev:'watch', kind:'Duplicate effort',
+  title:'Two teams are building partner onboarding under different names.',
+  why:'"Partner Onboarding Modernization" in Jira and "Partner Launch" in Monday share 11 of 14 requirements.',
+  lede:'Sam\'s team calls it Partner Onboarding Modernization in Jira. Jess\'s team calls it Partner Launch in Monday. Both include a partner invite flow and tax-form upload, and together they have seven people on it. Jess\'s team started their own version to avoid waiting on engineering.',
+  pids:['pon','pl'], people:'Sam Okafor, Jess Lin', needs:['jira','monday'], extra:['docs','zoom'], span:'4 tools · 2 teams · 2 names', stake:'About 5 engineer-weeks',
+  ev:[
+    {t:'jira',d:-30,where:'PARTNER-88 · epic',who:'Sam Okafor',text:'Partner Onboarding Modernization · 4 engineers · stories include <mark>"Partner invite flow"</mark> and <mark>"W-9 upload"</mark>'},
+    {t:'monday',d:-21,where:'Partner Launch board',who:'Jess Lin',text:'3 people · items include <mark>"Partner invite emails"</mark> and <mark>"Tax form collection"</mark>'},
+    {t:'docs',d:-14,where:'Two requirement docs',who:'Sam Okafor, Jess Lin',text:'<mark>11 of 14 requirements</mark> describe the same behavior in different words.'}
+  ],
+  alone:{jira:['Looks healthy','Steady velocity, on schedule.'],monday:['Looks healthy','On schedule.'],docs:['Looks normal','Two docs with different owners.']},
+  talk:[
+    {title:'Platform planning',d:-30,len:'50 min',lines:[
+      ['00:22:10','Sam Okafor','PARTNER-88 covers <mark>invites and W-9 uploads end to end</mark>.']]},
+    {title:'Partner Launch kickoff',d:-21,len:'40 min',lines:[
+      ['00:14:30','Jess Lin','<mark>We\'ll build the invite flow ourselves.</mark> Faster than waiting on engineering.'],
+      ['00:14:41','Partner manager','Is anyone else working on partner invites?'],
+      ['00:14:44','Jess Lin','<mark>Not that I know of.</mark>']]}
+  ],
+  reason:[
+    ['Matched the two efforts by what they build, not what they\'re called. Both names are kept.','inf'],
+    ['11 of 14 requirements overlap, including the two largest pieces of work.','ev'],
+    ['Estimated 5 engineer-weeks of overlap at current staffing.','inf']
+  ],
+  unknown:'Whether the two efforts serve different partner types for a reason that isn\'t written down.',
+  note:{to:'Sam Okafor, Jess Lin',subject:'Partner onboarding: are we building this twice?',body:'Sam, Jess,\n\nPARTNER-88 in Jira and the Partner Launch board in Monday look like the same work: invite flow, tax forms, and 11 of 14 matching requirements.\n\nCould you two compare notes this week and tell me whether they should be combined, or why they need to stay separate?\n\nMorgan'},
+  prop:{tool:'ondatrace',target:'Ondatrace project records',rows:[['Relationship','Separate projects','One initiative, two names'],['Tool changes','—','None. Jira and Monday stay as they are.']]}
+}
+];
+
+const FINE = [
+  ['jira','Data Migration test runs: 14 of 14 passed'],
+  ['gmail','Portal 2.0 beta: no open customer escalations'],
+  ['monday','Partner Launch budget: 62% spent at 60% complete'],
+  ['jira','Platform API v3 code review turnaround steady at 1.2 days'],
+  ['calendar','Support Readiness: all 40 invitees accepted'],
+  ['salesforce','3 other renewals this quarter have no delivery dependencies'],
+  ['zoom','Data Migration weekly: no new risks raised beyond those above']
+];
+
+const UPCOMING = [
+  [2,'Stratus contract signing planned ($186K)','hold'],[3,'Stratus pricing expires','hold'],[4,'Support training, 40 agents, SSO walkthrough','training'],
+  [8,'Priya out of office begins','priya'],[10,'Cutover rehearsal (owner: Priya) · CFO Q4 review','priya'],[11,'API security review (owner: Priya)','priya'],
+  [14,'SSO promised to Acme','acme'],[15,'Acme rollout to 1,200 users','acme',1],[21,'Portal go-live in plan · launch email to all customers','dates'],
+  [22,'Sprint 25 ends (PLAT-412)','acme'],[25,'Acme renewal closes ($420K)','acme'],[38,'Portal go-live agreed in steering','dates']
+];
+
+const SCANLOG = [
+  ['jira','Reading 243 ticket changes'],['slack','Reading 612 messages in 31 channels'],['gmail','Reading 188 emails from 6 mailboxes'],
+  ['smartsheet','Reading 4 plans'],['docs','Reading 37 edited documents'],['zoom','Reading 9 meeting transcripts (6.5 hours)'],['calendar','Reading 64 events'],
+  ['salesforce','Reading 22 deal updates'],['monday','Reading 13 board changes'],
+  ['*','Matched "SSO token service" ↔ "SSO login live" ↔ "SSO"',1],['*','Resolved "Priya Shah" = "pshah" = "P. Shah"',1],
+  ['*','Linked PLAT-412 → Portal 2.0 row 18 (no predecessor recorded)',1],['*','Found a go-live date said in steering but never written down',1],
+  ['*','Compared vendor hold ($50K) with Stratus SOW ($186K)',1],['*','Matched PARTNER-88 with Partner Launch by requirements',1],
+  ['*','Checked 41 items that turned out fine'],['*','Ranking by consequence and deadline']
+];
+
+const S = {tools:new Set(ALL), scanTools:null, scanned:false, view:'start', prev:'today', cur:null, morning:false, holdResolved:false,
+  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null};
+
+/* runtime capabilities (only inside the Claude viewer) */
+const CAP = {sample:null, db:null, uid:null, owner:false, canWrite:null, askOff:false};
+
+/* Google Form for feedback on the public site. Paste the pre-filled link logged by the
+   setup script; its answers are Q1..Q17 in the order of formFields() below. Empty = copy only. */
+const FEEDBACK_FORM_PREFILL = 'https://docs.google.com/forms/d/e/1FAIpQLSf00LgMYFCrwuAOchjxEPtG2Boq2zg1bRnjV0PU8sQjAQDmsQ/viewform?usp=pp_url&entry.801738912=Q1&entry.1581008441=Q2&entry.1159748307=Q3&entry.232757956=Q4&entry.1984446793=Q5&entry.369863657=Q6&entry.400948781=Q7&entry.1663259058=Q8&entry.19873489=Q9&entry.747145015=Q10&entry.1950989772=Q11&entry.795047573=Q12&entry.589733179=Q13&entry.2128679422=Q14&entry.434758439=Q15&entry.1077996523=Q16&entry.634001927=Q17';
+const FORM = (() => {
+  try{
+    if(!FEEDBACK_FORM_PREFILL) return null;
+    const u=new URL(FEEDBACK_FORM_PREFILL); const map={};
+    u.searchParams.forEach((v,k)=>{ const m=/^Q(\d+)$/.exec(v); if(k.startsWith('entry.')&&m) map[+m[1]]=k; });
+    if(!Object.keys(map).length) return null;
+    return {action:u.origin+u.pathname.replace(/\/viewform$/,'/formResponse'), map};
+  }catch(e){ return null; }
+})();
+
+/* helpers */
+const status = t => { const s=$('status'); s.hidden=false; s.textContent=t; clearTimeout(status.t); status.t=setTimeout(()=>s.hidden=true,6000); };
+const log = t => { S.log.push([new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}),t]); };
+const once = new Set(); const logOnce = (k,t) => { if(!once.has(k)){ once.add(k); log(t); } };
+const step = k => { if(S.guide.has(k)) return; S.guide.add(k); document.querySelector(`#guide [data-step="${k}"]`)?.classList.add('done'); };
+const byId = id => INSIGHTS.find(i=>i.id===id);
+const on = t => S.tools.has(t) && S.scanTools && S.scanTools.has(t);
+const visible = i => i.needs.every(on);
+const toolsOf = i => [...i.needs, ...i.extra].filter(on);
+const OVERNIGHT = {
+  acme:()=>({fresh:'Stakes went up overnight',
+    title:'Acme scheduled 1,200 users for {d+15}. SSO work ends {d+22}.',
+    why:'Acme replied to Tom overnight and planned their rollout around the promised date. The gap is now a customer-visible failure.',
+    addEv:[{t:'gmail',d:1,where:'Acme CIO → Tom Reilly',who:'Acme CIO',text:'"Great. We\'ve scheduled our <mark>1,200-user rollout for {d+15}</mark>."',fresh:1},{t:'jira',d:1,where:'PLAT-412 · subtask "Token refresh"',who:'QA',text:'Status: Done → <mark>Reopened</mark>',fresh:1}]}),
+  priya:()=>({fresh:'Improved overnight', sev:'watch',
+    title:'Priya is still the only owner for two projects during her leave.',
+    why:'Ana named a backup for the cutover rehearsal overnight. PLAT-412 and the security review still have no cover.',
+    addEv:[{t:'slack',d:1,where:'#data-migration',who:'Ana Ruiz',text:'"Checked with Priya. <mark>Raj will run the cutover rehearsal</mark> while she\'s out."',fresh:1}]}),
+  hold:()=> S.holdResolved
+    ? {fresh:'Resolved overnight', sev:'ok', kind:'Resolved', title:'Stratus signature is on hold until the CFO review.',
+       why:'Dana replied to your note. Ana asked Stratus to extend pricing. Ondatrace will check the review outcome on {d+10}.',
+       addEv:[{t:'slack',d:1,where:'DM · Dana Whitfield',who:'Dana Whitfield, CFO',text:'"Good catch. <mark>Hold Stratus</mark>. Ana, ask them to extend pricing to {d+12}."',fresh:1}]}
+    : {fresh:'Still open, one day less',
+       why:'No reply yet. Stratus followed up overnight, and pricing expires in 2 days.',
+       addEv:[{t:'gmail',d:1,where:'Stratus Sales → Ana Ruiz',who:'Stratus Sales',text:'"Just checking the agreement reached you? <mark>Pricing expires {d+3}</mark>."',fresh:1}]}
+};
+const current = i => {
+  if(!S.morning || !OVERNIGHT[i.id]) return i;
+  const o = OVERNIGHT[i.id]();
+  return {...i,...o, ev:[...i.ev,...(o.addEv||[])]};
+};
+const openList = () => INSIGHTS.map(current).filter(i=>visible(i) && !S.dismissed[i.id]).sort((a,b)=>ORDER[a.sev]-ORDER[b.sev]);
+
+/* navigation */
+const VIEWS=['start','connect','today','detail','summary','risks','ask','wrap'];
+function go(v){
+  if(['today','summary','risks','ask','wrap','detail'].includes(v) && !S.scanned) return;
+  if(v==='detail' && S.view!=='detail') S.prev=S.view;
+  S.view=v;
+  VIEWS.forEach(n=>$('v-'+n).hidden = n!==v);
+  document.querySelectorAll('.nav [data-go]').forEach(b=>{ const cur = b.dataset.go===v || (v==='detail'&&b.dataset.go===S.prev); cur ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'); });
+  $('topbar').hidden=!S.scanned;
+  if(v==='today') renderToday();
+  if(v==='summary'){ step('risks'); renderSummary(); }
+  if(v==='risks') renderRisks();
+  if(v==='ask') renderAsk();
+  if(v==='wrap') renderWrap();
+  window.scrollTo(0,0);
+  const h=$('v-'+v).querySelector('h1'); if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}
+}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]'); if(g && !g.disabled){ go(g.dataset.go); return; }
+  const o=e.target.closest('[data-open]'); if(o){ openInsight(o.dataset.open); return; }
+});
+$('back').addEventListener('click',()=>go(S.prev||'today'));
+
+/* connect */
+function renderTools(){
+  $('tools').innerHTML = ALL.map(t=>`<button type="button" class="tool" data-tool="${t}" aria-pressed="${S.tools.has(t)}">${dot(t)}<span><b>${TOOLS[t].name}</b><small>${TOOLS[t].n} ${TOOLS[t].unit}</small></span><span class="sw" aria-hidden="true"></span></button>`).join('');
+  const offT=ALL.filter(t=>!S.tools.has(t));
+  $('tool-summary').innerHTML = offT.length ? `<span class="coach-warn">${offT.includes('zoom')?'Without meeting recordings, Ondatrace can\'t hear decisions and promises made out loud. ':''}${offT.length} ${offT.length===1?'tool is':'tools are'} off, so findings that need ${offT.length===1?'it':'them'} won't appear.</span>` : 'All 9 tools connected.';
+  $('run').disabled = S.tools.size===0;
+}
+$('tools').addEventListener('click',e=>{ const b=e.target.closest('[data-tool]'); if(!b||b.disabled) return; const t=b.dataset.tool; S.tools.has(t)?S.tools.delete(t):S.tools.add(t); renderTools(); });
+$('run').addEventListener('click',()=>{
+  S.scanTools = new Set(S.tools);
+  $('run').disabled=true; document.querySelectorAll('.tool').forEach(b=>b.disabled=true);
+  $('scan').hidden=false; $('scan-done').hidden=true; $('scanlog').innerHTML='';
+  const lines = SCANLOG.filter(([t])=>t==='*'||S.scanTools.has(t));
+  const found = INSIGHTS.filter(visible).length;
+  const total = [...S.scanTools].reduce((a,t)=>a+TOOLS[t].n,0);
+  const links = found*4+3;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dur = reduce?300:4200; const start=performance.now(); let shown=0;
+  const tick = () => {
+    const p=Math.min(1,(performance.now()-start)/dur);
+    $('bar').style.width=(p*100)+'%';
+    $('c-read').textContent=Math.round(total*Math.min(1,p*1.6)).toLocaleString();
+    $('c-link').textContent=Math.round(links*Math.max(0,(p-.45)/.55));
+    $('c-find').textContent=Math.round(found*Math.max(0,(p-.6)/.4));
+    const want=Math.floor(p*lines.length);
+    while(shown<want){ const [t,txt,hit]=lines[shown++]; const d=document.createElement('div'); d.innerHTML=`<span class="t">${t==='*'?'ondatrace':esc(TOOLS[t].name.split(' ').pop().toLowerCase())}</span><span class="${hit?'hit':''}">${esc(txt)}</span>`; $('scanlog').append(d); $('scanlog').scrollTop=1e6; }
+    if(p<1) setTimeout(tick,60); else finishScan(total,found);
+  };
+  tick();
+});
+function finishScan(total,found){
+  S.scanned=true; step('connect');
+  document.querySelectorAll('.nav [data-go]').forEach(b=>b.disabled=false);
+  $('r-read').textContent=total.toLocaleString(); $('r-find').textContent=found; $('r-fine').textContent=Math.max(8,Math.round(41*total/1284));
+  $('scan-done').hidden=false; $('run').textContent='Read again'; $('run').disabled=false;
+  document.querySelectorAll('.tool').forEach(b=>b.disabled=false);
+  $('topbar').hidden=false;
+  const off=ALL.filter(t=>!S.scanTools.has(t));
+  log(`Read ${total.toLocaleString()} sample updates from ${S.scanTools.size} tools${off.length?` (left out: ${off.map(t=>TOOLS[t].name).join(', ')})`:''}. ${found} findings.`);
+  status(found?`${found} findings across ${S.scanTools.size} tools. Open Today to see them.`:'No findings. Every finding needs at least two tools. Turn more tools on and read again.');
+  $('scan-done').scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+/* today */
+function renderToday(){
+  $('today-eyebrow').textContent = S.morning?`${fmtWD(1)} · 8:05 AM`:`${fmtWD(0)} · 8:10 AM`;
+  $('clock').textContent = S.morning?`${fmtWD(1)} 8:05 AM`:`${fmtWD(0)} 8:10 AM`;
+  $('filters').innerHTML = ALL.filter(t=>S.scanTools.has(t)).map(t=>`<button type="button" class="fchip" data-f="${t}" aria-pressed="${S.tools.has(t)}">${dot(t)}${TOOLS[t].name}</button>`).join('');
+  const vis = openList();
+  const hid = INSIGHTS.filter(i=>!visible(i));
+  const open = vis.filter(i=>i.sev!=='ok').length;
+  const nOn = ALL.filter(on).length;
+  $('nav-count').textContent=open;
+  $('today-summary').innerHTML = S.morning
+    ? `Overnight, Ondatrace read 214 new updates. <b>${open} ${open===1?'finding needs':'findings need'} you</b>, and ${vis.filter(i=>i.fresh).length} changed since yesterday.`
+    : `Since Friday, Ondatrace read ${ALL.filter(on).reduce((a,t)=>a+TOOLS[t].n,0).toLocaleString()} updates across ${nOn} tools. <b>${open} ${open===1?'finding needs':'findings need'} you.</b> None of them shows up in any single tool.`;
+  const missing = [...new Set(hid.flatMap(i=>i.needs.filter(t=>!on(t))))];
+  $('queue').innerHTML = vis.map(cardHTML).join('') +
+    (hid.length?`<div class="card missing"><p><b>${hid.length} ${hid.length===1?'finding is':'findings are'} hidden</b> because ${hid.length===1?'it needs':'they need'} a tool that's off: ${missing.map(t=>TOOLS[t].name).join(', ')}. Without it, the connection doesn't exist.</p></div>`:'') +
+    (!vis.length && !hid.length ? `<div class="card missing"><p>Nothing needs you right now.</p></div>`:'');
+  const dis = Object.keys(S.dismissed);
+  $('dismissed').hidden=!dis.length;
+  $('dismissed').innerHTML = dis.length?`Marked not an issue: ${dis.map(id=>`${esc(fmt(byId(id).title))} <button class="btn ghost small" type="button" data-undo="${id}">Undo</button>`).join(' · ')}`:'';
+  $('morning-btn').disabled=S.morning;
+  $('morning-text').innerHTML = S.morning?'<b>It\'s tomorrow morning.</b> Findings with a green label changed overnight. Ondatrace keeps state between days, so it knows what\'s new, what improved and what got worse.':'<b>See how findings change over time.</b> Ondatrace keeps watching. Jump ahead a day and new updates arrive overnight.';
+  const fine = FINE.filter(([t])=>on(t));
+  $('fine-sum').textContent = `${Math.max(fine.length, Math.round(41*nOn/9))} items checked and fine`;
+  $('fine').innerHTML = fine.map(([t,x])=>`<li>${chip(t)}<span>${esc(x)}</span></li>`).join('') + `<li class="muted" style="font-size:13px">Showing ${fine.length}. Ondatrace checks these so that a quiet Today means something.</li>`;
+}
+function cardHTML(i){
+  const [cls,label]=SEV[i.sev];
+  return `<article class="card clickable" data-sev="${cls}" data-card="${i.id}">
+    <div class="card-top"><span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}${S.note[i.id]==='approved'?'<span class="pill neutral">Note approved</span>':''}${S.prop[i.id]==='approved'?'<span class="pill neutral">Change approved</span>':''}</div>
+    <h3>${esc(fmt(i.title))}</h3>
+    <p class="why">${esc(fmt(i.why))}</p>
+    <div class="card-foot"><div class="srcs">${toolsOf(i).map(chip).join('')}</div><div class="foot-right"><span class="span-note">${esc(i.span)}</span><button type="button" class="btn small open-btn" data-open="${i.id}">Review finding →</button></div></div>
+  </article>`;
+}
+$('queue').addEventListener('click',e=>{ if(e.target.closest('button')) return; const c=e.target.closest('[data-card]'); if(c) openInsight(c.dataset.card); });
+$('filters').addEventListener('click',e=>{
+  const b=e.target.closest('[data-f]'); if(!b) return; const t=b.dataset.f;
+  const before=INSIGHTS.filter(visible).length;
+  S.tools.has(t)?S.tools.delete(t):S.tools.add(t);
+  const after=INSIGHTS.filter(visible).length;
+  step('filter');
+  const d=Math.abs(after-before);
+  status(S.tools.has(t)?`${TOOLS[t].name} back on. ${d} ${d===1?'finding':'findings'} returned.`:d?`Without ${TOOLS[t].name}, ${d} ${d===1?'finding disappears':'findings disappear'}.`:`Without ${TOOLS[t].name}, findings lose supporting evidence but none disappear.`);
+  log(`${S.tools.has(t)?'Turned on':'Turned off'} ${TOOLS[t].name} on Today: ${after} findings visible.`);
+  renderToday(); renderTools();
+  document.querySelector(`[data-f="${t}"]`)?.focus();
+});
+$('dismissed').addEventListener('click',e=>{ const b=e.target.closest('[data-undo]'); if(!b) return; delete S.dismissed[b.dataset.undo]; log('Restored a finding marked not an issue.'); renderToday(); });
+$('morning-btn').addEventListener('click',()=>{
+  S.morning=true; S.holdResolved=S.note.hold==='approved'; step('morning');
+  log(`Jumped to tomorrow morning. Overnight updates changed 3 findings${S.holdResolved?'; the vendor hold was resolved after your note':''}.`);
+  status('Tomorrow morning. Three findings changed overnight.');
+  renderToday();
+});
+
+/* detail */
+function openInsight(id){
+  S.cur=id; S.opened.add(id); step('open');
+  logOnce('open'+id,`Opened "${fmt(byId(id).title)}".`);
+  go('detail'); renderDetail();
+}
+function renderDetail(){
+  const i=current(byId(S.cur)); const [cls,label]=SEV[i.sev];
+  $('back').textContent = '← Back to '+({today:'Today',summary:'Portfolio summary',risks:'Portfolio risks',ask:'Ask',wrap:'feedback'}[S.prev]||'Today');
+  $('d-top').innerHTML=`<span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}`;
+  $('h-detail').textContent=fmt(i.title);
+  $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]?i.why+' '+i.lede:i.lede);
+  $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span><span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
+  renderNote(i); renderProp(i); renderWrong(i);
+  const seen=new Set();
+  const ev=i.ev.filter(e=>on(e.t)).sort((a,b)=>a.d-b.d);
+  $('d-timeline').innerHTML=ev.map(e=>{
+    const first=!seen.has(e.t); seen.add(e.t); const al=i.alone[e.t];
+    return `<li class="ev">${dot(e.t)}<div class="ev-body${e.fresh?' fresh':''}"><div class="ev-meta"><span><b>${TOOLS[e.t].name}</b> · ${esc(fmt(e.where))}</span><span class="mono">${ago(e.d)} · ${fmtD(e.d)}</span></div><div class="ev-text">${fmt(e.text)}</div><div class="muted" style="font-size:12.5px;margin-top:4px">${esc(e.who)}</div>${first&&al?`<div class="alone-line"><span>On its own in ${TOOLS[e.t].name}:</span><span class="pill ${/fine|healthy|routine|normal/i.test(al[0])?'ok':'neutral'}">${esc(al[0])}</span><span>${esc(fmt(al[1]))}</span></div>`:''}${e.fresh?'<div class="alone-line"><span class="new-badge">New overnight</span></div>':''}</div></li>`;
+  }).join('');
+  const zoomOn=on('zoom');
+  $('d-talk-intro').textContent = zoomOn?'From recorded meeting transcripts. None of this was written down anywhere else.':'Zoom is turned off, so Ondatrace can\'t read meeting transcripts. Turn it back on from Today to see what people said.';
+  $('d-talk').innerHTML = zoomOn ? i.talk.map(m=>`<div class="talk"><div class="talk-head"><span>${chip('zoom')} · <b>${esc(m.title)}</b></span><span class="mono">${ago(m.d)} · ${fmtD(m.d)} · ${esc(m.len)}</span></div><div class="talk-lines">${m.lines.map(([ts,who,tx])=>`<div class="tline"><span class="ts">${ts}</span><span><b>${esc(who)}:</b>${fmt(tx)}</span></div>`).join('')}</div></div>`).join('') : '';
+  const tagName={inf:['inf','Inference'],ev:['ev','From evidence'],pol:['pol','Policy']};
+  $('d-reason').innerHTML=i.reason.map(([t,k])=>`<li><span>${esc(fmt(t))}<span class="tag ${tagName[k][0]}">${tagName[k][1]}</span></span></li>`).join('');
+  $('d-unknown').innerHTML=`<b>What Ondatrace can't see</b>${esc(fmt(i.unknown))}`;
+  const lk=(i.linked||[]).filter(l=>visible(byId(l)));
+  $('d-linked').hidden=!lk.length;
+  $('d-linked').innerHTML=lk.length?`Related finding: ${lk.map(l=>`<button type="button" class="cite" data-open="${l}">${esc(fmt(current(byId(l)).title))}</button>`).join(' ')}`:'';
+  renderTester(i);
+}
+function renderNote(i){
+  const st=S.note[i.id]||'none'; const n=i.note;
+  let h=`<h3>Talk to the people involved</h3><p>A note to ${esc(n.to)}, drafted from the evidence.</p>`;
+  if(st==='none') h+=`<p style="margin-top:8px;font-style:italic">"${esc(fmt(n.subject))}"</p><div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-note="draft">Review draft</button></div>`;
+  if(st==='draft') h+=`<div class="field">To<span class="ro">${esc(n.to)}</span></div>
+    <label class="field" for="n-subj">Subject<input id="n-subj" value="${esc(fmt(n.subject))}"></label>
+    <label class="field" for="n-body">Message<textarea id="n-body">${esc(fmt(n.body))}</textarea></label>
+    <div class="row" style="margin-top:10px"><button class="btn primary" type="button" data-note="approve">Approve and send</button><button class="btn ghost" type="button" data-note="discard">Discard</button></div>`;
+  if(st==='approved') h+=`<p class="done-note">Approved. This is a demo, so nothing was sent. In the product it would go to ${esc(n.to)} from your account.</p><div class="row" style="margin-top:8px"><button class="btn ghost small" type="button" data-note="discard">Undo</button></div>`;
+  $('p-note').innerHTML=h;
+}
+function renderProp(i){
+  const st=S.prop[i.id]||'pending'; const p=i.prop;
+  const where = p.tool==='ondatrace'?'Ondatrace':TOOLS[p.tool].name;
+  let h=`<h3>Update ${esc(where)}</h3><p>${esc(fmt(p.target))}.${p.needs?' '+esc(p.needs)+'.':''}</p>
+    <table class="diff"><thead><tr><th scope="col">Field</th><th scope="col">Now</th><th scope="col">Proposed</th></tr></thead><tbody>${p.rows.map(([f,a,b])=>`<tr><td>${esc(f)}</td><td><del>${esc(fmt(a))}</del></td><td><ins>${esc(fmt(b))}</ins></td></tr>`).join('')}</tbody></table>`;
+  if(st==='pending') h+=`<div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-prop="approved">Approve change</button><button class="btn ghost" type="button" data-prop="rejected">Reject</button></div>`;
+  else h+=`<p class="done-note" ${st==='rejected'?'style="background:var(--surface-2);color:var(--ink-2)"':''}>${st==='approved'?`Approved. In the product, Ondatrace writes this to ${esc(where)} and records that you approved it. Nothing changed in this demo.`:'Rejected. Ondatrace won\'t propose this again unless the evidence changes.'}</p><div class="row" style="margin-top:8px"><button class="btn ghost small" type="button" data-prop="pending">Undo</button></div>`;
+  $('p-prop').innerHTML=h;
+}
+function renderWrong(){
+  $('p-wrong').innerHTML=`<span>Is Ondatrace wrong about this? Tell it why and it will learn:</span>${['Already handled','Wrong connection','Not important'].map(x=>`<button class="btn small" type="button" data-dismiss="${x}">${x}</button>`).join('')}`;
+}
+const TESTER_LABEL = `<div class="tester-label"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Question for you · not part of Ondatrace</div>`;
+function renderTester(i){
+  const r=S.react[i.id];
+  $('d-tester').innerHTML=`${TESTER_LABEL}<h2>If this showed up for your projects, would you act on it?</h2><p class="note">Your answer goes into your feedback at the end.</p>
+    <div class="react" role="group" aria-label="Would you act on this">${['Yes','Maybe','No'].map(x=>`<button class="btn small" type="button" data-react="${x}" aria-pressed="${r===x}">${x}</button>`).join('')}</div>
+    <label class="field" for="why-in" style="margin-top:12px">Why? (optional)<input id="why-in" type="text" value="${esc(S.why[i.id]||'')}" placeholder="What would you need to trust it, or why doesn't it matter?"></label>`;
+}
+$('v-detail').addEventListener('input',e=>{ if(e.target.id==='why-in'){ S.why[S.cur]=e.target.value; save(); } });
+$('v-detail').addEventListener('click',e=>{
+  const i=byId(S.cur); const t=e.target.closest('[data-note],[data-prop],[data-react],[data-dismiss]'); if(!t) return;
+  if(t.dataset.note){ const a=t.dataset.note;
+    if(a==='draft'){S.note[i.id]='draft'; renderNote(i); $('n-body').focus(); return;}
+    if(a==='approve'){ const edited=$('n-body').value.trim()!==fmt(i.note.body).trim(); S.note[i.id]='approved'; step('act'); log(`Approved a note to ${i.note.to}${edited?' (edited)':''}. Nothing was sent.`); status('Note approved. Nothing was sent in this demo.'); }
+    if(a==='discard'){ S.note[i.id]='none'; log('Discarded a draft note.'); }
+    renderNote(i); return; }
+  if(t.dataset.prop){ const a=t.dataset.prop; S.prop[i.id]=a;
+    if(a==='approved'){step('act'); log(`Approved a proposed change to ${fmt(i.prop.target)}.`); status('Change approved. Nothing changed in the real tool.');}
+    if(a==='rejected') log(`Rejected a proposed change to ${fmt(i.prop.target)}.`);
+    renderProp(i); return; }
+  if(t.dataset.react){ S.react[i.id]=t.dataset.react; save(); log(`Would act on "${fmt(i.title)}": ${t.dataset.react}.`); renderTester(i); return; }
+  if(t.dataset.dismiss){ S.dismissed[i.id]=t.dataset.dismiss; log(`Marked "${fmt(i.title)}" not an issue: ${t.dataset.dismiss}.`); status(`Marked "${t.dataset.dismiss}". Ondatrace uses this to tune what it shows you.`); go('today'); }
+});
+
+/* risks */
+function renderRisks(){
+  const list=openList().filter(i=>i.sev!=='ok');
+  const money=list.reduce((a,i)=>a+(i.money||0),0);
+  const affected=new Set(list.flatMap(i=>i.pids));
+  const greenButRisk=PROJECTS.filter(p=>affected.has(p.id)).length;
+  const soon=UPCOMING.filter(([d,,id,m])=>d<=14 && (!m||S.morning) && list.some(i=>i.id===id)).length;
+  $('risk-summary').textContent = greenButRisk?`Every project reports healthy in its own tool. Ondatrace found risk in ${greenButRisk} of ${PROJECTS.length}, and most of it comes from how projects affect each other.`:'No open risks across the portfolio.';
+  $('tiles').innerHTML=[[money?'$'+Math.round(money/1000)+'K':'$0','revenue and spend exposed'],[`${greenButRisk} of ${PROJECTS.length}`,'"healthy" projects at risk'],[list.length,'open findings'],[soon,'commitments at risk in the next 14 days']].map(([a,b])=>`<div class="counter"><strong>${a}</strong><span>${b}</span></div>`).join('');
+  const up=UPCOMING.filter(([d,,id,m])=>(!m||S.morning) && list.some(i=>i.id===id));
+  let lastBucket='';
+  $('upcoming').innerHTML=up.map(([d,t,id])=>{ const i=list.find(x=>x.id===id); const b=d<=7?'This week':d<=14?'Next week':'Later';
+    const sep=b!==lastBucket?`<li class="sep">${b}</li>`:''; lastBucket=b;
+    return `${sep}<li><span class="when"><b>${fmtWD(d)}</b>in ${d} days</span><span>${esc(t)}</span><button type="button" class="btn small" data-open="${id}"><span class="pill ${SEV[i.sev][0]}" style="padding:3px 6px">${esc(i.kind)}</span></button></li>`; }).join('') || '<li>No dated risks.</li>';
+}
+/* summary */
+function health(p,list){
+  const f=list.filter(i=>i.pids.includes(p.id));
+  const worst=f.length?f.reduce((w,i)=>ORDER[i.sev]<ORDER[w]?i.sev:w,'ok'):null;
+  return {f,worst};
+}
+function renderSummary(){
+  const list=openList().filter(i=>i.sev!=='ok');
+  const tot=PROJECTS.reduce((a,p)=>a+p.budget.total,0), sp=PROJECTS.reduce((a,p)=>a+p.budget.spent,0), fc=PROJECTS.reduce((a,p)=>a+p.budget.forecast,0);
+  const flagged=PROJECTS.filter(p=>health(p,list).f.length).length;
+  $('sum-summary').textContent=`All ${PROJECTS.length} projects report healthy in their own tools. Ondatrace found problems in ${flagged}.`;
+  $('sum-tiles').innerHTML=[[money(tot),'approved budget'],[money(sp),`spent (${Math.round(sp/tot*100)}%)`],[money(fc),`forecast at completion (${fc>=tot?'+':''}${((fc-tot)/tot*100).toFixed(1)}%)`],[`${PROJECTS.length-flagged} of ${PROJECTS.length}`,'with no Ondatrace findings']].map(([a,b])=>`<div class="counter"><strong class="num">${a}</strong><span>${b}</span></div>`).join('');
+  const tab=S.sumTab||'overview';
+  $('st-overview').setAttribute('aria-selected',tab==='overview'); $('st-metrics').setAttribute('aria-selected',tab==='metrics'); $('st-success').setAttribute('aria-selected',tab==='success');
+  $('sum-intro').innerHTML = tab==='success' ? 'Each project\'s success metrics come from its charter. Ondatrace checks whether the team still measures what the charter promised. Select a project to see the metrics and any suggested changes.'
+    : 'Select a project for milestones, budget detail and findings. <b>Reported</b> is what the project\'s own tool says. <b>Ondatrace findings</b> come from reading across all tools.';
+  renderNewProject();
+  const head = tab==='overview'
+    ? ['Project','Lead','Reported','Ondatrace findings','Budget','Due']
+    : tab==='metrics' ? ['Project','Schedule','Budget burn','Throughput (2 wks)','Scope change','Blockers','Key metric']
+    : ['Project','Charter goal','Success metrics','Progress','Fits the charter?'];
+  const rows=PROJECTS.map(p=>{
+    const {f,worst}=health(p,list); const b=p.budget; const exp=S.lens===p.id;
+    const nop = worst?`<span class="pill ${SEV[worst][0]}">${SEV[worst][1]}</span><span class="cell-sub">${f.length} ${f.length===1?'finding':'findings'}</span>`:'<span class="pill ok">Healthy</span><span class="cell-sub">No findings</span>';
+    const over=b.forecast-b.total;
+    let cells;
+    if(tab==='overview'){
+      cells=`<td class="name"><b>${esc(p.name)}</b><span>${esc(p.purpose)}</span></td>
+      <td>${esc(p.owner)}</td>
+      <td><div class="health"><span class="pill ok">${esc(p.plan)}</span><span class="cell-sub">in ${TOOLS[p.tool].name}</span></div></td>
+      <td><div class="health">${nop}</div></td>
+      <td class="num">${money(b.spent)} of ${money(b.total)}<div class="meter" role="img" aria-label="${Math.round(b.spent/b.total*100)}% of budget spent"><span style="width:${Math.min(100,b.spent/b.total*100)}%"></span></div><span class="cell-sub ${over>0?'bad':''}">Forecast ${money(b.forecast)}${over>0?` (+${money(over)})`:''}</span></td>
+      <td class="num">${fmtD(p.due)}<span class="cell-sub">in ${p.due} days</span></td>`;
+    } else if(tab==='success'){
+      cells=successCells(p);
+    } else {
+      const sv=p.pct-p.elapsed, burn=Math.round(b.spent/b.total*100), m=p.m, dt=m.thr[0]-m.thr[1];
+      cells=`<td class="name"><b>${esc(p.name)}</b><span>${esc(p.owner)}</span></td>
+      <td class="num">${p.pct}% done<div class="meter" role="img" aria-label="${p.pct}% complete, ${p.elapsed}% of time used"><span style="width:${p.pct}%"></span><i style="left:${p.elapsed}%"></i></div><span class="cell-sub ${sv<-3?'bad':sv>=0?'good':''}">${p.elapsed}% of time used (${sv>=0?'+':''}${sv} pts)</span></td>
+      <td class="num">${burn}% spent<span class="cell-sub ${burn-p.pct>5?'bad':''}">at ${p.pct}% done</span></td>
+      <td class="num">${m.thr[0]} ${esc(m.thr[2])}<span class="cell-sub ${dt<0?'bad':'good'}">${dt>=0?'▲':'▼'} ${Math.abs(dt)} vs. prior 2 wks</span></td>
+      <td class="num"><span class="${m.scope>=10?'gap':''}">+${m.scope}%</span><span class="cell-sub">since baseline</span></td>
+      <td class="num">${m.blockers?`<span class="gap">${m.blockers} open</span>`:'<span class="muted">None</span>'}</td>
+      <td><b class="num">${esc(fmt(m.kpi[1]))}</b><span class="cell-sub">${esc(m.kpi[0])} · ${esc(fmt(m.kpi[2]))}</span></td>`;
+    }
+    return `<tr class="proj" tabindex="0" data-lens="${p.id}" aria-expanded="${exp}">${cells}<td aria-hidden="true" class="muted">${exp?'▴':'▾'}</td></tr>`+(exp?`<tr class="sdetail"><td colspan="${head.length+1}">${tab==='success'?successDetail(p):projDetail(p,f)}</td></tr>`:'');
+  }).join('');
+  $('sum-table').innerHTML=`<thead><tr>${head.map(h=>`<th scope="col">${h}</th>`).join('')}<th scope="col"><span class="sr">Expand</span></th></tr></thead><tbody>${rows}</tbody>`;
+}
+function projDetail(p,f){
+  const b=p.budget; const find=id=>f.find(i=>i.id===id);
+  const msState=st=>st==='done'?['ok','Done']:find(st)?[SEV[find(st).sev][0],'At risk']:['neutral','On track'];
+  const varc=b.forecast-b.total;
+  const mismatch=f.length?`<p class="mismatch">Reported "${esc(p.plan)}" in ${TOOLS[p.tool].name}. Ondatrace found ${f.length} ${f.length===1?'problem':'problems'} the plan doesn't show.</p>`:'';
+  return `${mismatch}<div class="sgrid">
+    <div><h3>Milestones</h3><ul>${p.ms.map(([d,name,st])=>{const [c,l]=msState(st);return `<li><span><span class="mono muted">${fmtD(d)}</span> ${esc(fmt(name))}</span><span class="pill ${c}">${l}</span></li>`;}).join('')}</ul>
+      <h3 style="margin-top:16px">Team</h3><p style="font-size:13.5px">${esc(p.team)}</p></div>
+    <div><h3>Budget</h3><dl class="kv"><dt>Approved</dt><dd>${money(b.total)}</dd><dt>Spent</dt><dd>${money(b.spent)}</dd><dt>Committed, not yet spent</dt><dd>${money(b.committed)}</dd><dt>Forecast at completion</dt><dd>${money(b.forecast)}</dd><dt>Variance</dt><dd class="${varc>0?'gap':''}">${varc===0?'$0':(varc>0?'+':'−')+money(Math.abs(varc))}</dd></dl>
+      ${b.why?`<p class="cell-sub" style="margin-top:8px">${esc(fmt(b.why))}</p>`:''}
+      <h3 style="margin-top:16px">Where this comes from</h3><div class="srcs">${p.src.filter(on).map(chip).join('')}</div></div>
+    <div><h3>What Ondatrace found</h3><div class="sfind">${f.length?f.map(i=>`<button type="button" data-open="${i.id}"><span class="pill ${SEV[i.sev][0]}" style="justify-self:start">${esc(i.kind)}</span><span>${esc(fmt(i.title))}</span></button>`).join(''):'<p class="muted" style="font-size:13.5px">Nothing needs attention on this project.</p>'}</div>
+      <h3 style="margin-top:16px">Key metric</h3><p style="font-size:13.5px">${esc(p.m.kpi[0])}: <b>${esc(fmt(p.m.kpi[1]))}</b> (${esc(fmt(p.m.kpi[2]))})</p></div>
+  </div>`;
+}
+function toggleLens(id){ S.lens=S.lens===id?null:id; if(S.lens) logOnce('lens'+id,`Opened the summary for ${PROJECTS.find(p=>p.id===id).name}.`); renderSummary(); document.querySelector(`[data-lens="${id}"]`)?.focus(); }
+$('sum-table').addEventListener('click',e=>{ if(e.target.closest('[data-open]')) return; const r=e.target.closest('[data-lens]'); if(r) toggleLens(r.dataset.lens); });
+$('sum-table').addEventListener('keydown',e=>{ const r=e.target.closest('[data-lens]'); if(r&&e.target===r&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); toggleLens(r.dataset.lens); } });
+['overview','metrics','success'].forEach(k=>$('st-'+k).addEventListener('click',()=>{ S.sumTab=k; if(k==='metrics') logOnce('metrics','Looked at portfolio metrics.'); if(k==='success') logOnce('success','Looked at success metrics.'); renderSummary(); }));
+
+/* success metrics */
+const FIT = {match:['ok','Matches charter'],partial:['watch','Partly matches'],drift:['warn','Drifted from charter']};
+const MST = {on:['ok','On track'],behind:['warn','Behind'],none:['neutral','Not measured'],pending:['neutral','Starts later']};
+const SUCCESS = {
+  api:{charter:'Enterprise customers sign in with single sign-on, sign-in is fast (p95 under 150 ms), and authentication incidents stop.', src:'docs', approved:-120, fit:'match',
+    fitNote:'The team measures what the charter asks for. All three are behind.',
+    metrics:[['Enterprise customers on SSO','0','12','0','behind','Salesforce'],['p95 sign-in latency','240 ms','150 ms','180 ms','behind','Jira dashboard'],['Auth Sev1 incidents per quarter','3','0','1','behind','Jira']]},
+  portal:{charter:'Cut login-related support tickets by 40% and raise the share of customers who make account changes themselves to 70%.', src:'docs', approved:-150, fit:'drift',
+    fitNote:'The team reports beta satisfaction and story points. Neither charter goal is being measured.', tracked:'Beta satisfaction (4.3 / 5) and story points',
+    metrics:[['Login-related support tickets per week','212','127 (−40%)','—','none','Not tracked'],['Customers self-serving account changes','48%','70%','—','none','Not tracked']],
+    sugg:{why:'Ondatrace found both charter numbers in data Kestrel already has: login tickets in the support inbox and account changes in Salesforce. It can measure them weekly with no extra work for the team.',
+      rows:[['Add','Login-related support tickets per week','Baseline 212 (support inbox, last 8 weeks) → target 127','gmail'],['Add','Customers self-serving account changes','Baseline 48% (Salesforce cases) → target 70%','salesforce'],['Keep','Beta satisfaction','A useful early signal, reported alongside','docs'],['Remove','Story points as a success measure','Measures activity, not the outcome the charter promised','jira']]}},
+  mig:{charter:'Retire the old warehouse by {d+75}, save $220K a year in license costs, and lose no data.', src:'docs', approved:-200, fit:'partial',
+    fitNote:'Data quality is tracked. The savings goal isn\'t, and the new vendor contract changes the math.', tracked:'Records validated',
+    metrics:[['Records validated with no loss','0%','100%','62%','on','Smartsheet'],['Annual license savings','$0','$220K','—','none','Not tracked']],
+    sugg:{why:'The charter assumed $220K a year in savings. The Stratus proposal in Ana\'s email adds a $64K yearly platform fee the charter didn\'t include, so real savings are closer to $156K. This is an inference; finance should confirm before the target changes.',
+      rows:[['Add','Net annual savings','Target $220K → proposed $156K after the Stratus platform fee','gmail'],['Keep','Records validated with no loss','Matches the charter','smartsheet'],['Add','Queries still hitting the old warehouse','Baseline 4,100 a day → 0. Shows when it is safe to switch off','docs']]}},
+  support:{charter:'All 40 agents certified before launch, and 90% of Portal 2.0 questions solved on first contact in the launch month.', src:'docs', approved:-60, fit:'match',
+    fitNote:'Both charter goals are set up. First-contact resolution starts measuring at launch.',
+    metrics:[['Agents certified','0','40','0','behind','Google Calendar'],['First-contact resolution','—','90%','—','pending','Support inbox, from launch']]},
+  pon:{charter:'Partners onboard themselves in under 5 days, down from 21, starting with 12 pilot partners.', src:'docs', approved:-90, fit:'match',
+    fitNote:'Tracked as chartered. Partner Launch is chasing the same partners with a different measure.',
+    metrics:[['Days from invite to first transaction','21','5','—','pending','Salesforce, from pilot'],['Pilot partners live','0','12','0','pending','Jira']]},
+  pl:{charter:'12 launch partners transacting by {d+40}.', src:'monday', approved:-45, fit:'drift',
+    fitNote:'The team counts partners onboarded by hand. That meets its own number but works against the self-service goal in Partner Onboarding Modernization.', tracked:'Partners onboarded by hand, via email',
+    metrics:[['Launch partners transacting','0','12','3','behind','Monday']],
+    sugg:{why:'Partner Launch and Partner Onboarding Modernization serve the same partners with different success measures. One shared measure shows whether onboarding by hand is a stopgap or the plan.',
+      rows:[['Change','Launch partners transacting','Also report how many onboarded themselves vs. by hand','monday'],['Add','Days from invite to first transaction','Same measure as Partner Onboarding Modernization: 21 → 5 days','salesforce']]}}
+};
+const NEWPROJ = {
+  name:'Unified Partner Onboarding',
+  charter:'Combine Partner Onboarding Modernization and Partner Launch into one effort. Partners sign themselves up, invite their teams and submit tax forms, and start transacting within 5 days instead of 21.',
+  from:'Draft charter · Google Docs · Sam Okafor and Jess Lin, today',
+  metrics:[
+    {name:'Days from invite to first transaction',why:'The charter\'s headline promise.',base:'21 days (Salesforce, last 20 partners)',target:'5 days',src:'salesforce'},
+    {name:'Partners who onboard with no manual help',why:'Separates real self-service from onboarding by hand over email.',base:'0% (Monday)',target:'80%',src:'monday'},
+    {name:'Tax forms accepted on the first try',why:'Tax forms caused 40% of partner support emails last quarter.',base:'64% (support inbox)',target:'95%',src:'gmail'},
+    {name:'Support emails per new partner',why:'Shows whether self-service removes work or just moves it.',base:'9.5 (support inbox)',target:'3',src:'gmail'}
+  ],
+  skipped:[['Story points completed','measures how busy the team is, not whether partners onboard faster'],['Number of features shipped','the charter promises an outcome for partners, not a feature count']]
+};
+function successCells(p){
+  const s=SUCCESS[p.id]; const n=s.metrics.length; const onT=s.metrics.filter(m=>m[4]==='on').length; const unm=s.metrics.filter(m=>m[4]==='none').length;
+  const st=S.msugg[p.id];
+  return `<td class="name"><b>${esc(p.name)}</b><span>${esc(p.owner)}</span></td>
+    <td style="max-width:320px">${esc(fmt(s.charter))}</td>
+    <td>${s.metrics.map(m=>`<span class="cell-sub" style="color:var(--ink-2)">${esc(m[0])}</span>`).join('')}</td>
+    <td class="num">${onT} of ${n} on track${unm?`<span class="cell-sub bad">${unm} not measured</span>`:''}</td>
+    <td><div class="health"><span class="pill ${FIT[s.fit][0]}">${FIT[s.fit][1]}</span>${s.sugg?`<span class="cell-sub">${st==='approved'?'Change approved':st==='rejected'?'Suggestion rejected':'Ondatrace suggests a change'}</span>`:''}</div></td>`;
+}
+function successDetail(p){
+  const s=SUCCESS[p.id]; const st=S.msugg[p.id]||'pending';
+  let h=`<div class="sgrid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)">
+    <div><h3>Charter</h3><blockquote class="charter">${esc(fmt(s.charter))}</blockquote><p class="cell-sub" style="margin-top:6px">${TOOLS[s.src].name} · approved ${fmtD(s.approved)}</p>
+      <h3 style="margin-top:16px">How it fits</h3><p style="font-size:13.5px"><span class="pill ${FIT[s.fit][0]}">${FIT[s.fit][1]}</span> ${esc(s.fitNote)}</p>
+      ${s.tracked?`<p class="cell-sub" style="margin-top:8px">What the team reports today: ${esc(s.tracked)}</p>`:''}</div>
+    <div><h3>Success metrics from the charter</h3><div class="tablewrap" style="border:0"><table class="diff" style="margin-top:0;min-width:460px"><thead><tr><th>Metric</th><th>Baseline</th><th>Target</th><th>Now</th><th>Status</th><th>Measured in</th></tr></thead><tbody>
+      ${s.metrics.map(([n,b,t,c,stt,src])=>`<tr><td>${esc(n)}</td><td class="num">${esc(b)}</td><td class="num">${esc(t)}</td><td class="num">${esc(c)}</td><td><span class="pill ${MST[stt][0]}">${MST[stt][1]}</span></td><td class="cell-sub">${esc(src)}</td></tr>`).join('')}</tbody></table></div></div>
+  </div>`;
+  if(s.sugg){
+    h+=`<div class="panel" style="margin-top:16px;padding:16px"><h3 style="font:600 16px/1.3 var(--display)">Ondatrace suggests adjusting these metrics</h3><p style="font-size:13.5px;color:var(--ink-2);margin-top:4px">${esc(s.sugg.why)}</p>
+      <table class="diff"><thead><tr><th>Change</th><th>Metric</th><th>Detail</th><th>Data from</th></tr></thead><tbody>${s.sugg.rows.map(([a,m,d,t])=>`<tr><td><span class="pill ${a==='Remove'?'crit':a==='Keep'?'neutral':'ok'}">${a}</span></td><td>${esc(m)}</td><td>${esc(d)}</td><td>${chip(t)}</td></tr>`).join('')}</tbody></table>
+      ${st==='pending'?`<div class="row" style="margin-top:12px"><button class="btn primary small" type="button" data-msugg="approved" data-pid="${p.id}">Approve and send to ${esc(p.owner)}</button><button class="btn ghost small" type="button" data-msugg="rejected" data-pid="${p.id}">Reject</button></div>`
+      :`<p class="done-note" ${st==='rejected'?'style="background:var(--surface-2);color:var(--ink-2)"':''}>${st==='approved'?`Approved. In the product, ${esc(p.owner)} would review the change, and Ondatrace would start measuring the new metrics from the sources shown. Nothing changed in this demo.`:'Rejected. The charter metrics stay as they are.'}</p><div class="row" style="margin-top:8px"><button class="btn ghost small" type="button" data-msugg="pending" data-pid="${p.id}">Undo</button></div>`}</div>`;
+  }
+  return h;
+}
+function renderNewProject(){
+  const box=$('sum-new'); if(!box) return;
+  box.hidden = (S.sumTab||'overview')!=='success';
+  const np=S.np;
+  if(!np.open){
+    box.innerHTML=`<div class="row" style="justify-content:space-between;gap:14px"><div style="max-width:70ch"><h3 style="font:600 16px/1.3 var(--display)">Starting a new project?</h3><p style="font-size:13.5px;color:var(--ink-2);margin-top:4px">Ondatrace reads the draft charter, suggests success metrics that measure its promises, and finds a baseline for each in your tools.</p></div><button class="btn primary" type="button" id="np-open">Set up metrics for a sample project</button></div>`;
+    return;
+  }
+  const kept=np.metrics.filter(m=>!m.removed).length;
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><h3 style="font:600 18px/1.3 var(--display)">New project: ${esc(NEWPROJ.name)}</h3><button class="btn ghost small" type="button" id="np-close">Close</button></div>
+    <blockquote class="charter" style="margin-top:10px">${esc(NEWPROJ.charter)}</blockquote><p class="cell-sub" style="margin-top:6px">${chip('docs')} ${esc(NEWPROJ.from)}</p>
+    <h3 style="margin-top:18px;font-size:14px">Suggested success metrics</h3>
+    <p class="cell-sub" style="margin-bottom:8px">Each measures a promise in the charter. Baselines come from what Ondatrace already reads. Edit any target before you save.</p>
+    <div class="np-list">${np.metrics.map((m,n)=>`<div class="np-item${m.removed?' removed':''}">
+      <div><b>${esc(m.name)}</b><span class="cell-sub">${esc(m.why)}</span></div>
+      <div class="cell-sub">Baseline<br><span style="color:var(--ink)">${esc(m.base)}</span></div>
+      <label class="cell-sub" for="np-t-${n}">Target<input id="np-t-${n}" data-npt="${n}" value="${esc(m.target)}" ${m.removed||np.saved?'disabled':''}></label>
+      <div>${m.src?chip(m.src):'<span class="cell-sub">You\'ll set the source</span>'}</div>
+      <div>${np.saved?'':`<button class="btn ghost small" type="button" data-npr="${n}">${m.removed?'Restore':'Remove'}</button>`}</div></div>`).join('')}</div>
+    ${np.saved?'':`<form class="row" id="np-add" style="margin-top:10px"><label class="sr" for="np-new">Add your own metric</label><input id="np-new" placeholder="Add your own metric" style="flex:1;min-width:200px;border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;background:var(--surface)"><button class="btn small" type="submit">Add</button></form>`}
+    <details style="margin-top:12px;font-size:13.5px"><summary style="cursor:pointer;color:var(--muted)">Left out on purpose (${NEWPROJ.skipped.length})</summary><ul style="margin:8px 0 0;padding-left:18px">${NEWPROJ.skipped.map(([a,b])=>`<li><b>${esc(a)}</b>: ${esc(b)}</li>`).join('')}</ul></details>
+    ${np.saved?`<p class="done-note">Saved ${kept} metrics in the demo. In the product, Ondatrace would start measuring them from the sources shown and report progress on this page and in Today.</p>`:`<div class="row" style="margin-top:14px"><button class="btn primary" type="button" id="np-save">Save ${kept} metrics</button></div>`}
+    <div id="np-own-wrap" ${CAP.sample&&!CAP.askOff?'':'hidden'} style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)">
+      <h3 style="font-size:14px">Try it with one of your own projects</h3>
+      <p class="cell-sub" style="margin-bottom:8px">Paste or describe a charter. Nothing is saved, and don't include confidential details.</p>
+      <label class="sr" for="np-own">Your project charter</label><textarea id="np-own" style="width:100%;min-height:90px;border:1px solid var(--line-strong);border-radius:8px;padding:10px;background:var(--surface)" placeholder="e.g. Move our billing system to a new provider by March, cut failed payments in half, and don't lose any customer data."></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn" type="button" id="np-own-go">Suggest metrics</button><span class="cell-sub" id="np-own-state" role="status"></span></div>
+      <div class="np-list" id="np-own-out" style="margin-top:10px"></div>
+    </div>`;
+}
+$('sum-new').addEventListener('click',async e=>{
+  const t=e.target;
+  if(t.id==='np-open'){ S.np.open=true; logOnce('npopen','Started setting up metrics for a new project.'); renderNewProject(); return; }
+  if(t.id==='np-close'){ S.np.open=false; renderNewProject(); return; }
+  if(t.dataset.npr){ const m=S.np.metrics[+t.dataset.npr]; m.removed=!m.removed; renderNewProject(); return; }
+  if(t.id==='np-save'){ S.np.saved=true; const k=S.np.metrics.filter(m=>!m.removed); log(`Saved ${k.length} success metrics for ${NEWPROJ.name}: ${k.map(m=>m.name+' → '+m.target).join('; ')}.`); status('Metrics saved in the demo.'); renderNewProject(); return; }
+  if(t.id==='np-own-go'){
+    const txt=$('np-own').value.trim(); if(!txt||!CAP.sample) return;
+    t.disabled=true; $('np-own-state').textContent='Reading your charter…'; $('np-own-out').innerHTML='';
+    try{
+      const res=await CAP.sample.json(`You help a project leader set success metrics from a project charter. Suggest 3 to 5 outcome metrics that measure whether the charter's promises came true. Prefer outcomes over activity measures such as story points or tasks completed.\n\nReply with only a JSON array of objects: {"metric": string, "why": string (one short sentence tying it to the charter), "baseline": string (how to find today's value), "target": string, "source": string (the kind of tool that would hold the data)}.\n\nCharter:\n${txt.slice(0,4000)}`,{modelTier:'quick'});
+      const arr=Array.isArray(res)?res.slice(0,6):[];
+      $('np-own-out').innerHTML=arr.map(m=>`<div class="np-item" style="grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) minmax(0,1fr) minmax(0,1.2fr)"><div><b>${esc(m.metric||'')}</b><span class="cell-sub">${esc(m.why||'')}</span></div><div class="cell-sub">Baseline<br><span style="color:var(--ink)">${esc(m.baseline||'')}</span></div><div class="cell-sub">Target<br><span style="color:var(--ink)">${esc(m.target||'')}</span></div><div class="cell-sub">From<br><span style="color:var(--ink)">${esc(m.source||'')}</span></div></div>`).join('')||'<p class="cell-sub">No suggestions came back. Try describing the goals in more detail.</p>';
+      $('np-own-state').textContent=arr.length?'Suggestions are a starting point. In the product, Ondatrace would also fill in real baselines from your tools.':'';
+      log('Asked for metric suggestions on their own project.');
+    }catch(err){
+      if(err&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(err.code)){ CAP.askOff=true; $('np-own-wrap').hidden=true; }
+      else $('np-own-state').textContent=err&&err.code==='rate_limited'?'Too many requests. Wait a minute and try again.':'That didn\'t work. Try again.';
+    }
+    t.disabled=false; return;
+  }
+});
+$('sum-new').addEventListener('input',e=>{ if(e.target.dataset.npt) S.np.metrics[+e.target.dataset.npt].target=e.target.value; });
+$('sum-new').addEventListener('submit',e=>{ if(e.target.id!=='np-add') return; e.preventDefault(); const v=$('np-new').value.trim(); if(!v) return; S.np.metrics.push({name:v,why:'Added by you.',base:'To be found',target:'Set a target',src:null}); renderNewProject(); $('np-new')?.focus(); });
+$('sum-table').addEventListener('click',e=>{ const b=e.target.closest('[data-msugg]'); if(!b) return; const pid=b.dataset.pid, v=b.dataset.msugg; S.msugg[pid]=v; if(v!=='pending'){ log(`${v==='approved'?'Approved':'Rejected'} the suggested metric changes for ${PROJECTS.find(p=>p.id===pid).name}.`); if(v==='approved') step('act'); } renderSummary(); });
+
+S.np={open:false,saved:false,metrics:NEWPROJ.metrics.map(m=>({...m}))};
+
+/* ask */
+const QA = [
+  {q:'What\'s at risk for the Acme renewal?', re:/acme|renewal|customer|revenue|sso/i, a:[
+    'The $420K Acme renewal closes on {d+25}. Tom promised Acme that SSO would be live by {d+14} [acme], but the engineering work behind it moved to Sprint 25, which ends {d+22}. In the sprint review, the team moved it because they thought nothing depended on it.',
+    'Two more things depend on the same work. Support training on {d+4} walks through the SSO flow on staging, which isn\'t there yet [training]. And Priya, the only engineer on the ticket, is out {d+8}–{d+12} [priya].']},
+  {q:'What changed since Friday?', re:/chang|since|friday|new|week|update/i, a:[
+    'PLAT-412 slipped two sprints, and Tom promised Acme an SSO date that no longer holds [acme]. The steering committee moved Portal go-live to {d+38}, but nothing written was updated [dates].',
+    'The CFO announced a vendor hold in a leadership meeting, and a $186K contract is still set to be signed on {d+2} [hold]. Support training is now scheduled ahead of the feature it teaches [training].']},
+  {q:'Who is overloaded in the next two weeks?', re:/who|overload|capacity|people|priya|staff|busy|leave|vacation|out of office/i, a:[
+    'Priya Shah. She is the only owner of critical work in three projects between {d+8} and {d+12}, the same days she is out of office. Raj asked about it in the Data Migration weekly and nobody followed up [priya].']},
+  {q:'Which decisions haven\'t reached the plans?', re:/decision|hold|spend|budget|vendor|stratus|cfo|money|contract/i, a:[
+    'Two. The CFO\'s hold on vendor commitments over $50K was said in a leadership meeting and posted in #leadership. The Data Migration team still plans to sign the $186K Stratus contract on {d+2} [hold].',
+    'The steering committee moved Portal go-live to {d+38}. That lives only in the meeting transcript. The plan and the customer launch email still say {d+21} [dates].']},
+  {q:'Summarize Portal 2.0 for the steering committee', re:/portal|steering|summar|status|report/i, a:[
+    'Portal 2.0 reports green but is at risk. Go-live is either {d+21} or {d+38}; the plan and the steering decision disagree [dates].',
+    'SSO, a launch requirement, now ends {d+22}. That affects a promise to Acme [acme] and support training on {d+4} [training]. Asks for the committee: confirm the go-live date, and decide what we tell Acme.']},
+  {q:'Are any teams duplicating work?', re:/duplic|partner|overlap|twice|same work/i, a:[
+    'Likely one case. Partner Onboarding Modernization (Jira, 4 engineers) and Partner Launch (Monday, 3 people) share 11 of 14 requirements [dup]. Estimated overlap is about 5 engineer-weeks.']}
+];
+function renderAsk(){
+  $('suggest').innerHTML=QA.map((x,n)=>`<button type="button" data-q="${n}">${esc(x.q)}</button>`).join('');
+  $('ask-mode').textContent = CAP.sample && !CAP.askOff
+    ? 'Ask anything, in your own words. Answers are written live from the sample data, using your own Claude account.'
+    : 'This demo answers the questions below. Ask in your own words and it will match the closest one.';
+}
+$('suggest').addEventListener('click',e=>{const b=e.target.closest('[data-q]'); if(b) ask(QA[+b.dataset.q].q);});
+$('ask-form').addEventListener('submit',e=>{e.preventDefault(); const v=$('ask-input').value.trim(); if(v) ask(v);});
+const citeHTML = s => esc(s).replace(/\[(acme|hold|dates|priya|training|dup)\]/g,(_,id)=>`<button type="button" class="cite" data-open="${id}">${esc(byId(id).kind)} ↗</button>`);
+let askCtl=null;
+async function ask(q){
+  if(S.view!=='ask') go('ask');
+  $('ask-input').value='';
+  step('ask'); S.asked.push(q); log(`Asked: "${q}"`);
+  const box=$('answer');
+  box.innerHTML=`<p class="q">${esc(q)}</p><div class="a" id="a-body"></div><p class="muted" id="a-foot" style="font-size:13px;margin-top:12px"></p>`;
+  const body=$('a-body');
+  const canned=QA.find(x=>x.q===q);
+  if(CAP.sample && !CAP.askOff && !canned){
+    askCtl?.abort(); askCtl=new AbortController();
+    body.innerHTML='<p class="thinking">Reading the sample week</p>';
+    try{
+      const {text}=await CAP.sample(buildPrompt(q),{modelTier:'quick',signal:askCtl.signal,onText:({text})=>{ body.innerHTML=text.split(/\n{2,}/).map(p=>`<p>${citeHTML(p.trim())}</p>`).join(''); }});
+      body.innerHTML=text.split(/\n{2,}/).map(p=>`<p>${citeHTML(p.trim())}</p>`).join('');
+      $('a-foot').textContent='Written from the sample data only. Select a finding button to check the evidence.';
+      return;
+    }catch(e){
+      if(e&&e.code==='cancelled') return;
+      if(e&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(e.code)){ CAP.askOff=true; renderAsk(); }
+      else if(e&&e.text){ body.innerHTML=`<p>${citeHTML(e.text)}</p>`; $('a-foot').textContent='The answer was cut off. Try asking again.'; return; }
+      else if(e&&e.code==='rate_limited'){ body.innerHTML='<p>Too many questions at once. Wait a minute and try again.</p>'; return; }
+    }
+  }
+  const hit=canned||QA.find(x=>x.re.test(q));
+  if(!hit){ body.innerHTML=`<p>This copy of the demo can't answer that one. Try one of the questions above, or ask about Acme, Priya, the vendor hold, Portal 2.0 or partner onboarding.</p>`; return; }
+  if(!canned) $('a-foot').textContent=`Closest match: "${hit.q}"`;
+  body.innerHTML=hit.a.map(p=>`<p>${citeHTML(fmt(p))}</p>`).join('');
+}
+function buildPrompt(q){
+  const now = S.morning?fmtWD(1)+', 8:05 AM':fmtWD(0)+', 8:10 AM';
+  const lines=[];
+  lines.push(`You are Ondatrace, a portfolio assistant. Answer Morgan Reyes (VP of Delivery at Kestrel Health, a fictional company) using ONLY the sample data below. It is ${now}.`);
+  lines.push('Rules: Be direct and specific, under 140 words, in 1-3 short paragraphs separated by blank lines. Plain text only: no markdown, headings, bold or bullets. After any sentence that relies on a finding, cite it with its id in square brackets, e.g. [acme]. Use only these ids: acme, hold, dates, priya, training, dup. Never invent people, numbers, dates or events. If the data does not answer the question, say so plainly and name what Ondatrace would need to read to answer it. Distinguish what sources state from what Ondatrace infers.');
+  lines.push(`Connected tools: ${ALL.filter(on).map(t=>TOOLS[t].name).join(', ')}. Tools turned off (no data): ${ALL.filter(t=>!on(t)).map(t=>TOOLS[t].name).join(', ')||'none'}.`);
+  lines.push('PROJECTS: '+PROJECTS.map(p=>`${p.name} (owner ${p.owner}, lives in ${TOOLS[p.tool].name}, own status "${p.plan}")`).join('; '));
+  openList().forEach(i=>{
+    lines.push(`\nFINDING [${i.id}] ${i.sev==='ok'?'RESOLVED':SEV[i.sev][1]} · ${i.kind}\nTitle: ${fmt(i.title)}\nSummary: ${fmt(S.morning&&OVERNIGHT[i.id]?i.why+' '+i.lede:i.lede)}\nAt stake: ${i.stake}. People: ${i.people}.`);
+    i.ev.filter(e=>on(e.t)).forEach(e=>lines.push(`- ${TOOLS[e.t].name}, ${e.where}, ${e.who}, ${fmtD(e.d)}: ${strip(fmt(e.text))}`));
+    if(on('zoom')) i.talk.forEach(m=>{ lines.push(`- Meeting "${m.title}", ${fmtD(m.d)}:`); m.lines.forEach(([ts,w,t])=>lines.push(`   ${w}: ${strip(fmt(t))}`)); });
+    lines.push('Reasoning: '+i.reason.map(([t,k])=>fmt(t)+(k==='inf'?' (inference)':'')).join(' '));
+    lines.push('Unknown: '+fmt(i.unknown));
+    if(S.note[i.id]==='approved') lines.push('Morgan approved a note to '+i.note.to+'.');
+  });
+  const dis=Object.entries(S.dismissed); if(dis.length) lines.push('\nMorgan marked these not an issue: '+dis.map(([k,v])=>k+' ('+v+')').join(', '));
+  lines.push('\nSUCCESS METRICS BY PROJECT: '+PROJECTS.map(p=>{const x=SUCCESS[p.id]; return `${p.name}: charter "${fmt(x.charter)}"; ${FIT[x.fit][1]} (${x.fitNote}); metrics: ${x.metrics.map(m=>`${m[0]} baseline ${m[1]}, target ${m[2]}, now ${m[3]}, ${MST[m[4]][1]}`).join('; ')}${x.sugg?`; Ondatrace suggests: ${x.sugg.rows.map(r=>r[0]+' '+r[1]+' ('+r[2]+')').join('; ')}`:''}`;}).join('\n'));
+  lines.push('\nCHECKED AND FINE: '+FINE.filter(([t])=>on(t)).map(x=>x[1]).join('; '));
+  lines.push(`\nMORGAN'S QUESTION: ${q}`);
+  return lines.join('\n');
+}
+
+/* feedback */
+const FB=['fb-project','fb-evidence','fb-inbox','fb-auto','fb-next','fb-other','fb-name'];
+const radio = n => document.querySelector(`[name=${n}]:checked`)?.value||'';
+function renderWrap(){
+  step('feedback');
+  const approved=Object.values(S.note).filter(x=>x==='approved').length+Object.values(S.prop).filter(x=>x==='approved').length;
+  const tools=new Set([...S.opened].flatMap(id=>toolsOf(byId(id))));
+  $('stats').innerHTML=[[S.opened.size+' of 6','findings opened'],[tools.size,'tools behind them'],[approved,'notes and changes approved'],[S.asked.length,'questions asked']].map(([a,b])=>`<div class="counter"><strong>${a}</strong><span>${b}</span></div>`).join('');
+  $('react-table').innerHTML=INSIGHTS.map(i=>`<tr><td>${esc(fmt(i.title))}${S.why[i.id]?`<div class="muted" style="font-size:12.5px">"${esc(S.why[i.id])}"</div>`:''}</td><td><div class="react" role="group" aria-label="Would you act on this">${['Yes','Maybe','No'].map(x=>`<button class="btn small" type="button" data-wr="${i.id}" data-v="${x}" aria-pressed="${S.react[i.id]===x}">${x}</button>`).join('')}</div></td></tr>`).join('');
+  const cur=[...document.querySelectorAll('#missed input')]; const prev=cur.length?cur.filter(x=>x.checked).map(x=>x.value):(S.missed||[]);
+  $('missed').innerHTML=INSIGHTS.map(i=>`<label class="choice"><input type="checkbox" value="${i.id}" ${prev.includes(i.id)?'checked':''}>${esc(i.kind)}</label>`).join('');
+  $('fb-submit').textContent = (CAP.db && CAP.uid && CAP.canWrite!==false) || FORM ? 'Send feedback' : 'Copy my feedback';
+  $('log').innerHTML=S.log.map(([t,x])=>`<li><span class="mono">${t}</span>${esc(x)}</li>`).join('')||'<li>Nothing yet.</li>';
+}
+$('react-table').addEventListener('click',e=>{const b=e.target.closest('[data-wr]'); if(!b) return; S.react[b.dataset.wr]=b.dataset.v; save(); renderWrap();});
+function payload(){
+  return {
+    name:$('fb-name').value.trim(),
+    reactions:Object.fromEntries(INSIGHTS.map(i=>[i.id,{act:S.react[i.id]||'',why:S.why[i.id]||''}])),
+    missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value),
+    scope:radio('scope'), track:radio('track'), projectView:$('fb-project').value.trim(), other:$('fb-other').value.trim(),
+    evidence:$('fb-evidence').value.trim(), inbox:$('fb-inbox').value.trim(), auto:$('fb-auto').value.trim(),
+    next:$('fb-next').value.trim(),
+    session:{opened:[...S.opened], asked:S.asked.slice(-20), morning:S.morning, toolsOff:ALL.filter(t=>S.scanTools&&!on(t)),
+      notes:Object.keys(S.note).filter(k=>S.note[k]==='approved'), changes:Object.keys(S.prop).filter(k=>S.prop[k]==='approved'),
+      dismissed:S.dismissed},
+    submittedAt:new Date().toISOString(), demo:'v2'
+  };
+}
+function asText(p){
+  const out=['NOPMO DEMO FEEDBACK', p.name?`From: ${p.name}`:'', '', 'Would act on:',
+    ...INSIGHTS.map(i=>`- ${i.kind}: ${p.reactions[i.id].act||'no answer'}${p.reactions[i.id].why?` ("${p.reactions[i.id].why}")`:''}`),
+    '', `Would have missed: ${p.missed.map(id=>byId(id).kind).join(', ')||'no answer'}`,
+    `Main use: ${p.scope||'no answer'}`, `Track projects: ${p.track||'no answer'}`, `What Ondatrace adds: ${p.projectView||'-'}`,
+    `Evidence needed: ${p.evidence||'-'}`, `Would become another inbox if: ${p.inbox||'-'}`,
+    `OK to do without asking: ${p.auto||'-'}`, `Try it first on: ${p.next||'-'}`, `Anything else: ${p.other||'-'}`,
+    '', `Session: opened ${p.session.opened.length}/6 findings, asked ${p.session.asked.length} questions, next morning: ${p.session.morning?'yes':'no'}.`];
+  return out.filter((l,n,a)=>!(l===''&&a[n-1]==='')).join('\n');
+}
+function formFields(p){
+  const r=id=>{ const x=p.reactions[id]; return x.act?(x.act+(x.why?' - '+x.why:'')):''; };
+  return [p.name, r('acme'), r('hold'), r('dates'), r('priya'), r('training'), r('dup'),
+    p.missed.map(id=>byId(id).kind).join(', '), p.scope, p.track, p.projectView, p.evidence, p.inbox, p.auto, p.next, p.other,
+    `Opened ${p.session.opened.length}/6 findings; asked: ${p.session.asked.join(' | ')||'none'}; next morning: ${p.session.morning?'yes':'no'}; tools off: ${p.session.toolsOff.join(', ')||'none'}; notes approved: ${p.session.notes.join(', ')||'none'}; changes approved: ${p.session.changes.join(', ')||'none'}`];
+}
+async function sendToForm(p){
+  const body=new URLSearchParams();
+  formFields(p).forEach((v,n)=>{ const k=FORM.map[n+1]; if(k) body.append(k,String(v||'')); });
+  await fetch(FORM.action,{method:'POST',mode:'no-cors',body});
+}
+function save(){ try{ localStorage.setItem('ondatrace-demo-fb',JSON.stringify({react:S.react,why:S.why,f:Object.fromEntries(FB.map(k=>[k,$(k).value])),scope:radio('scope'),track:radio('track'),missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value)})); }catch(e){} }
+function fill(d){
+  if(!d) return;
+  if(d.react) Object.assign(S.react,d.react); if(d.why) Object.assign(S.why,d.why);
+  if(d.reactions) Object.entries(d.reactions).forEach(([k,v])=>{ if(v.act) S.react[k]=v.act; if(v.why) S.why[k]=v.why; });
+  const f=d.f||{'fb-project':d.projectView,'fb-evidence':d.evidence,'fb-inbox':d.inbox,'fb-auto':d.auto,'fb-next':d.next,'fb-other':d.other,'fb-name':d.name};
+  FB.forEach(k=>{ if(f[k]) $(k).value=f[k]; });
+  ['scope','track'].forEach(n=>{ if(d[n]){ const r=document.querySelector(`[name=${n}][value="${d[n]}"]`); if(r) r.checked=true; } });
+  if(d.missed) S.missed=d.missed;
+}
+function load(){ try{ fill(JSON.parse(localStorage.getItem('ondatrace-demo-fb')||'null')); }catch(e){} }
+$('fb').addEventListener('input',save); $('fb').addEventListener('change',save);
+$('fb').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const p=payload(); const btn=$('fb-submit');
+  if(CAP.db && CAP.uid && CAP.canWrite!==false){
+    btn.disabled=true; $('copy-state').textContent='Sending…';
+    try{
+      await CAP.db.doc('feedback/'+CAP.uid).set(p);
+      $('copy-state').textContent='Sent. Thank you! You can change your answers and send again.';
+      log('Sent feedback.'); btn.disabled=false; return;
+    }catch(err){ CAP.canWrite=false; btn.disabled=false; btn.textContent='Copy my feedback'; }
+  }
+  if(FORM && !CAP.db){
+    btn.disabled=true; $('copy-state').textContent='Sending…';
+    try{
+      await sendToForm(p);
+      $('copy-state').textContent='Sent. Thank you! You can change your answers and send again.';
+      log('Sent feedback.'); btn.disabled=false; return;
+    }catch(err){ btn.disabled=false; $('copy-state').textContent='Sending didn\'t work, so here is your feedback to copy instead.'; }
+  }
+  const text=asText(p); const out=$('copy-out'); out.value=text; out.hidden=false;
+  try{ await navigator.clipboard.writeText(text); $('copy-state').textContent='Copied. Paste it into an email or message to the Ondatrace team.'; }
+  catch(err){ out.focus(); out.select(); $('copy-state').textContent='Copy didn\'t work here. The text is selected below; press Ctrl+C or ⌘C.'; }
+  log('Copied feedback.');
+});
+$('restart').addEventListener('click',()=>{ try{localStorage.removeItem('ondatrace-demo-fb');}catch(e){} location.reload(); });
+
+function renderResponses(docs){
+  $('responses-sec').hidden=false;
+  const rs=docs.map(d=>d.data()).filter(Boolean).sort((a,b)=>String(b.submittedAt).localeCompare(String(a.submittedAt)));
+  if(!rs.length){ $('responses-sum').innerHTML='<p class="muted">No responses yet. Share this page with testers as Contributors (or invite outside testers by email as Editors) so they can send feedback.</p>'; $('responses').innerHTML=''; return; }
+  const cnt=(k,v)=>rs.filter(r=>r[k]===v).length;
+  const tally=INSIGHTS.map(i=>{ const c={Yes:0,Maybe:0,No:0}; rs.forEach(r=>{ const a=r.reactions?.[i.id]?.act; if(c[a]!==undefined) c[a]++; }); const m=rs.filter(r=>(r.missed||[]).includes(i.id)).length; return `<tr><td>${esc(i.kind)}</td><td class="n">${c.Yes}</td><td class="n">${c.Maybe}</td><td class="n">${c.No}</td><td class="n">${m}</td></tr>`; }).join('');
+  $('responses-sum').innerHTML=`<p style="font-size:14px;margin-bottom:10px"><b>${rs.length}</b> ${rs.length===1?'response':'responses'} · portfolio: <b>${cnt('scope','Across my whole portfolio')}</b>, project: <b>${cnt('scope','On individual projects')}</b>, both: <b>${cnt('scope','Both equally')}</b> · track in Ondatrace: <b>${cnt('track','In Ondatrace')}</b>, in current tools: <b>${cnt('track','In my current tools, with Ondatrace reading across them')}</b>, not sure: <b>${cnt('track','Not sure yet')}</b></p>
+    <div class="tablewrap"><table class="tally" style="min-width:480px"><thead><tr><th>Finding</th><th class="n">Act</th><th class="n">Maybe</th><th class="n">No</th><th class="n">Would miss</th></tr></thead><tbody>${tally}</tbody></table></div>`;
+  $('responses').innerHTML=rs.map(r=>`<div class="resp"><div class="resp-head"><b>${esc(r.name||'Anonymous tester')}</b><span class="mono muted">${esc(r.submittedAt?new Date(r.submittedAt).toLocaleString():'')}</span></div>
+    ${[['Main use',r.scope],['Track projects',r.track],['What Ondatrace adds',r.projectView],['Evidence needed',r.evidence],['Another inbox if',r.inbox],['OK without asking',r.auto],['Try first on',r.next],['Anything else',r.other]].filter(([,v])=>v).map(([k,v])=>`<div><span class="muted">${k}:</span> ${esc(v)}</div>`).join('')}
+    ${Object.entries(r.reactions||{}).filter(([,v])=>v&&v.why).map(([k,v])=>`<div><span class="muted">${esc(byId(k)?.kind||k)} (${esc(v.act||'-')}):</span> "${esc(v.why)}"</div>`).join('')}</div>`).join('');
+}
+
+/* init */
+load();
+renderTools();
+go('start');
+$('topbar').hidden=true;
+
+(async()=>{
+  if(!window.claude || typeof window.claude.use!=='function') return;
+  const safe=p=>Promise.resolve(p).catch(()=>null);
+  const [sample,db,user]=await Promise.all([safe(claude.use('sample')),safe(claude.use('db')),safe(claude.use('user'))]);
+  CAP.sample=sample; CAP.db=db;
+  if(user){ CAP.uid=await safe(user.id()); CAP.owner=!!(await safe(user.isOwner())); CAP.canWrite=await safe(user.can('data.write')); }
+  if(S.view==='ask') renderAsk();
+  if(db && CAP.uid){ try{ const snap=await db.doc('feedback/'+CAP.uid).get(); if(snap.exists){ fill(snap.data()); if(S.view==='wrap') renderWrap(); } }catch(e){} }
+  if(S.view==='wrap') renderWrap();
+  if(db && CAP.owner){ db.collection('feedback').onSnapshot(s=>renderResponses(s.docs),()=>{}); }
+})();
+})();
+</script>
+</body>
+</html>
