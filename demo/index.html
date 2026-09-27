@@ -311,6 +311,19 @@ details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-siz
 .sfind button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px;font-size:13px;display:grid;gap:4px}
 .sfind button:hover{border-color:var(--brand)}
 @media (max-width:980px){.sgrid{grid-template-columns:1fr}}
+@media (max-width:640px){
+  #sum-table{min-width:0}
+  #sum-table thead{display:none}
+  #sum-table,#sum-table tbody,#sum-table tr,#sum-table td{display:block;width:100%}
+  #sum-table tr.proj{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;padding:14px 40px 14px 14px;border-bottom:1px solid var(--line)}
+  #sum-table tr.proj td{padding:0;border:0;max-width:none!important;background:transparent!important}
+  #sum-table tr.proj td.name{grid-column:1/-1}
+  #sum-table tr.proj td:last-child{position:absolute;top:14px;right:14px;width:auto}
+  #sum-table tr.proj td[data-label]::before{content:attr(data-label);display:block;font:500 10.5px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+  #sum-table tr.proj[aria-expanded="true"]{background:var(--surface-2)}
+  #sum-table .sdetail td{padding:14px}
+  #sum-table .meter{width:100%}
+}
 
 /* ask */
 .answer{margin-top:18px}
@@ -1227,6 +1240,7 @@ function renderSummary(){
     return `<tr class="proj" tabindex="0" data-lens="${p.id}" aria-expanded="${exp}">${cells}<td aria-hidden="true" class="muted">${exp?'▴':'▾'}</td></tr>`+(exp?`<tr class="sdetail"><td colspan="${head.length+1}">${tab==='success'?successDetail(p):projDetail(p,f)}</td></tr>`:'');
   }).join('');
   $('sum-table').innerHTML=`<thead><tr>${head.map(h=>`<th scope="col">${h}</th>`).join('')}<th scope="col"><span class="sr">Expand</span></th></tr></thead><tbody>${rows}</tbody>`;
+  $('sum-table').querySelectorAll('tr.proj').forEach(tr=>[...tr.children].forEach((td,n)=>{ if(n>0&&head[n]) td.dataset.label=head[n]; }));
 }
 function projDetail(p,f){
   const b=p.budget; const find=id=>f.find(i=>i.id===id);
