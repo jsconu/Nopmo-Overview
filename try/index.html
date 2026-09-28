@@ -544,7 +544,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <div><b>More sources, earlier warnings</b><p>Each finding here needs at least two tools, and the most valuable ones draw on five or six. Every tool you leave out hides connections Ondatrace can't see.</p></div>
         </div>
         <div class="tools" id="tools"></div>
-        <p class="avail-legend"><span class="avail now">Connects today</span> the prototype reads these now. <span class="avail next">Coming next</span> and <span class="avail later">Planned</span> are shown here with sample data. Meeting transcripts will come from Microsoft Teams first.</p>
+        <p class="avail-legend">The tools shown here are for illustration only. Ondatrace will keep adding connectors on an ongoing basis once the official product launches.</p>
         <div class="connect-bar">
           <span class="muted" id="tool-summary" role="status" aria-live="polite"></span>
           <button class="btn primary" type="button" id="run">Read the sample week</button>
@@ -764,9 +764,6 @@ const TOOLS = {
   monday:{name:'Monday',m:'M',c:'#c24f72',n:13,unit:'board changes'}
 };
 const ALL = Object.keys(TOOLS);
-const AVAIL = {slack:['now','Connects today'],gmail:['now','Connects today'],calendar:['now','Connects today'],
-  docs:['next','Coming next'],jira:['next','Coming next'],smartsheet:['next','Coming next'],
-  zoom:['later','Planned'],salesforce:['later','Planned'],monday:['later','Planned']};
 const dot = t => `<span class="dot" style="background:${TOOLS[t].c}" aria-hidden="true">${TOOLS[t].m}</span>`;
 const chip = t => `<span class="src">${dot(t)}${TOOLS[t].name}</span>`;
 const SEV = {crit:['crit','Needs a decision'],warn:['warn','Needs attention'],watch:['watch','Worth a look'],ok:['ok','Resolved']};
@@ -1131,7 +1128,7 @@ $('back').addEventListener('click',()=>go(S.prev||'today'));
 
 /* connect */
 function renderTools(){
-  $('tools').innerHTML = ALL.map(t=>`<button type="button" class="tool" data-tool="${t}" aria-pressed="${S.tools.has(t)}">${dot(t)}<span><b>${TOOLS[t].name}</b><small>${TOOLS[t].n} ${TOOLS[t].unit}</small><span class="avail ${AVAIL[t][0]}">${AVAIL[t][1]}</span></span><span class="sw" aria-hidden="true"></span></button>`).join('');
+  $('tools').innerHTML = ALL.map(t=>`<button type="button" class="tool" data-tool="${t}" aria-pressed="${S.tools.has(t)}">${dot(t)}<span><b>${TOOLS[t].name}</b><small>${TOOLS[t].n} ${TOOLS[t].unit}</small></span><span class="sw" aria-hidden="true"></span></button>`).join('');
   const offT=ALL.filter(t=>!S.tools.has(t));
   $('tool-summary').innerHTML = offT.length ? `<span class="coach-warn">${offT.includes('zoom')?'Without meeting recordings, Ondatrace can\'t hear decisions and promises made out loud. ':''}${offT.length} ${offT.length===1?'tool is':'tools are'} off, so findings that need ${offT.length===1?'it':'them'} won't appear.</span>` : 'All 9 tools connected.';
   $('run').disabled = S.tools.size===0;
