@@ -275,6 +275,21 @@ details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-siz
 .upcoming .when b{display:block;color:var(--ink);font-weight:500}
 .upcoming li.sep{background:var(--surface-2);grid-template-columns:1fr;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 14px}
 
+/* permissions */
+.viewas{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.viewas select{border:1px solid var(--line-strong);border-radius:8px;background:var(--surface);color:var(--ink);padding:7px 8px;font-size:13px;max-width:210px}
+.access{margin-top:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:14px;max-width:760px}
+.access.warn{border-color:var(--warn);background:var(--warn-soft)}
+.access ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px;font-size:13.5px}
+.access li{color:var(--ink-2)}
+.perm-box{padding:12px 14px;border-radius:10px;background:var(--warn-soft);font-size:14px}
+.perm-box .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.ev-body.locked,.talk.locked{border-style:dashed;background:var(--surface-2)}
+.lockdot{background:var(--muted)!important;color:var(--surface)}
+.srclink{margin-top:8px;border:0;background:none;padding:0;color:var(--brand-text);font-size:13px;font-weight:600;cursor:pointer}
+.srclink:hover{text-decoration:underline}
+@media (max-width:760px){.viewas span{display:none}.viewas select{max-width:130px}}
+
 /* coaching */
 .coach{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
 .coach > div{background:var(--brand-soft);border-radius:10px;padding:14px 16px}
@@ -411,6 +426,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
       <ol id="guide">
         <li data-step="connect">Connect the sample tools</li>
         <li data-step="open">Open the top finding</li>
+        <li data-step="view">View it as a project lead</li>
         <li data-step="act">Approve a note or change</li>
         <li data-step="filter">Turn a tool off on Today</li>
         <li data-step="morning">Jump to tomorrow morning</li>
@@ -431,6 +447,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <input id="ask-input" type="text" autocomplete="off" placeholder="Ask about Kestrel's projects, people or dates…">
           <button class="btn primary small" type="submit">Ask</button>
         </form>
+        <label class="viewas" for="viewer"><span>View as</span><select id="viewer"><option value="morgan">Morgan Reyes · VP of Delivery</option><option value="leo">Leo Park · Portal 2.0 lead</option><option value="ana">Ana Ruiz · Data Migration lead</option></select></label>
         <span class="clock" id="clock"></span>
       </div>
     </div>
@@ -511,6 +528,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <p class="summary" id="today-summary"></p>
         <div class="filterbar">
           <div class="row" id="filters" aria-label="Tools Ondatrace can read"></div>
+          <div id="perm-note"></div>
           <p class="filter-note">To see what you'd miss without a tool, turn it off here and watch which findings disappear.</p>
         </div>
         <div class="queue" id="queue"></div>
@@ -530,6 +548,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <h1 id="h-detail" tabindex="-1"></h1>
           <p class="lede" id="d-lede"></p>
           <div class="facts" id="d-facts"></div>
+          <div id="d-access"></div>
         </div>
 
         <div class="section">
@@ -727,8 +746,8 @@ const INSIGHTS = [
     {t:'smartsheet',d:-12,where:'Portal 2.0 launch plan · row 18',who:'Leo Park',text:'SSO login live · due {d+14} · Status: <mark>Green</mark> · Predecessors: <mark>none</mark>'},
     {t:'jira',d:-9,where:'PLAT-412 · SSO token service',who:'Priya Shah',text:'Sprint changed: Sprint 23 → <mark>Sprint 25</mark> (ends {d+22}). Comment: "Pushing to 25, identity provider edge cases."'},
     {t:'slack',d:-6,where:'#platform-eng',who:'Priya Shah',text:'"Realistically the SSO token service is <mark>3 more weeks, maybe 4</mark>. The edge cases are worse than we scoped."'},
-    {t:'gmail',d:-3,where:'Sent · to Acme CIO',who:'Tom Reilly',text:'"Confirming <mark>SSO will be live for your team by {d+14}</mark>, well ahead of your renewal."'},
-    {t:'salesforce',d:-3,where:'Acme Corp · Renewal',who:'Tom Reilly',text:'Amount <mark>$420,000 ARR</mark> · close date {d+25} · next step: "SSO live {d+14}"'}
+    {t:'gmail',scope:'tom-mail',d:-3,where:'Sent · to Acme CIO',who:'Tom Reilly',text:'"Confirming <mark>SSO will be live for your team by {d+14}</mark>, well ahead of your renewal."'},
+    {t:'salesforce',scope:'salesforce',d:-3,where:'Acme Corp · Renewal',who:'Tom Reilly',text:'Amount <mark>$420,000 ARR</mark> · close date {d+25} · next step: "SSO live {d+14}"'}
   ],
   alone:{smartsheet:['Looks fine','The SSO milestone is green. The row was last touched 12 days ago.'],jira:['Looks routine','One of 38 tickets re-planned in sprint review.'],slack:['Buried','One of 612 messages this week, in a channel Morgan doesn\'t follow.'],gmail:['Not visible','In Tom\'s sent mail. Morgan wasn\'t copied.'],salesforce:['Looks fine','Renewal on track at 80% probability.']},
   talk:[
@@ -737,7 +756,7 @@ const INSIGHTS = [
       ['00:31:22','Kevin Doyle','<mark>Does anyone downstream care?</mark>'],
       ['00:31:25','Priya Shah','Portal, maybe? It\'s not linked to anything in their plan.'],
       ['00:31:29','Kevin Doyle','Then <mark>just move it</mark>. Next one.']]},
-    {title:'Acme quarterly business review',d:-3,len:'52 min',lines:[
+    {title:'Acme quarterly business review',scope:'acme-qbr',d:-3,len:'52 min',lines:[
       ['00:18:40','Acme CIO','SSO is the <mark>one thing blocking our renewal decision</mark>. We have 1,200 people waiting on it.'],
       ['00:18:52','Tom Reilly','Understood. Our team has it for the {d+14}. <mark>I\'ll confirm in writing today.</mark>'],
       ['00:19:05','Acme CIO','Good. We\'ll plan our rollout around that.']]}
@@ -759,13 +778,13 @@ const INSIGHTS = [
   lede:'Eight days ago the CFO paused new vendor commitments over $50K until the Q4 review on {d+10}. The Data Migration team still plans to sign the $186K Stratus contract by {d+2}, and in their weekly meeting they agreed nobody else needed to sign off. The hold was announced in a leadership meeting and a Slack channel the team isn\'t in.',
   pids:['mig'], people:'Dana Whitfield, Ana Ruiz, Raj Mehta', needs:['slack','docs'], extra:['gmail','zoom'], span:'4 tools · 2 teams · 7 days', stake:'$186K commitment',
   ev:[
-    {t:'slack',d:-8,where:'#leadership',who:'Dana Whitfield, CFO',text:'"Until the Q4 review on {d+10}, <mark>no new vendor commitments over $50K</mark>. Route anything pending to me."'},
+    {t:'slack',scope:'leadership',d:-8,where:'#leadership',who:'Dana Whitfield, CFO',text:'"Until the Q4 review on {d+10}, <mark>no new vendor commitments over $50K</mark>. Route anything pending to me."'},
     {t:'docs',d:-2,where:'Data Migration plan · Next steps',who:'Ana Ruiz',text:'"<mark>Sign Stratus SOW ($186,000) by {d+2}</mark> to hold pricing."'},
-    {t:'gmail',d:-1,where:'Stratus Sales → Ana Ruiz',who:'Stratus Sales',text:'"The agreement is out for signature. <mark>Pricing is held through {d+3}</mark>."'}
+    {t:'gmail',scope:'ana-mail',d:-1,where:'Stratus Sales → Ana Ruiz',who:'Stratus Sales',text:'"The agreement is out for signature. <mark>Pricing is held through {d+3}</mark>."'}
   ],
   alone:{slack:['Not visible to the team','Posted in #leadership. Ana isn\'t a member.'],docs:['Looks fine','Plan is current and on schedule.'],gmail:['Looks routine','A normal vendor follow-up.']},
   talk:[
-    {title:'Leadership staff meeting',d:-8,len:'60 min',lines:[
+    {title:'Leadership staff meeting',scope:'leadership',d:-8,len:'60 min',lines:[
       ['00:12:02','Dana Whitfield','Until the Q4 review, <mark>anything over fifty K waits</mark>. I\'ll post it in the channel.'],
       ['00:12:15','CEO','Does that include the migration vendor?'],
       ['00:12:18','Dana Whitfield','<mark>Anything that isn\'t signed yet.</mark>']]},
@@ -795,7 +814,7 @@ const INSIGHTS = [
   ],
   alone:{smartsheet:['Looks fine','Go-live {d+21}. No edits since the steering meeting.'],docs:['Looks fine','The brief matches the plan.']},
   talk:[
-    {title:'Portal 2.0 steering committee',d:-4,len:'58 min',lines:[
+    {title:'Portal 2.0 steering committee',scope:'steering',d:-4,len:'58 min',lines:[
       ['00:41:30','Leo Park','Given the SSO work, I don\'t want to launch on the {d+21}.'],
       ['00:41:44','Maya Chen','What\'s the realistic date?'],
       ['00:42:15','Leo Park','<mark>{d+38}.</mark> I\'ll update the plan this week.'],
@@ -927,7 +946,7 @@ const SCANLOG = [
 ];
 
 const S = {tools:new Set(ALL), scanTools:null, scanned:false, view:'start', prev:'today', cur:null, morning:false, holdResolved:false,
-  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null};
+  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited'};
 
 /* runtime capabilities (only inside the Claude viewer) */
 const CAP = {sample:null, db:null, uid:null, owner:false, canWrite:null, askOff:false};
@@ -958,7 +977,7 @@ const OVERNIGHT = {
   acme:()=>({fresh:'Stakes went up overnight',
     title:'Acme scheduled 1,200 users for {d+15}. SSO work ends {d+22}.',
     why:'Acme replied to Tom overnight and planned their rollout around the promised date. The gap is now a customer-visible failure.',
-    addEv:[{t:'gmail',d:1,where:'Acme CIO → Tom Reilly',who:'Acme CIO',text:'"Great. We\'ve scheduled our <mark>1,200-user rollout for {d+15}</mark>."',fresh:1},{t:'jira',d:1,where:'PLAT-412 · subtask "Token refresh"',who:'QA',text:'Status: Done → <mark>Reopened</mark>',fresh:1}]}),
+    addEv:[{t:'gmail',scope:'tom-mail',d:1,where:'Acme CIO → Tom Reilly',who:'Acme CIO',text:'"Great. We\'ve scheduled our <mark>1,200-user rollout for {d+15}</mark>."',fresh:1},{t:'jira',d:1,where:'PLAT-412 · subtask "Token refresh"',who:'QA',text:'Status: Done → <mark>Reopened</mark>',fresh:1}]}),
   priya:()=>({fresh:'Improved overnight', sev:'watch',
     title:'Priya is still the only owner for two projects during her leave.',
     why:'Ana named a backup for the cutover rehearsal overnight. PLAT-412 and the security review still have no cover.',
@@ -966,17 +985,56 @@ const OVERNIGHT = {
   hold:()=> S.holdResolved
     ? {fresh:'Resolved overnight', sev:'ok', kind:'Resolved', title:'Stratus signature is on hold until the CFO review.',
        why:'Dana replied to your note. Ana asked Stratus to extend pricing. Ondatrace will check the review outcome on {d+10}.',
-       addEv:[{t:'slack',d:1,where:'DM · Dana Whitfield',who:'Dana Whitfield, CFO',text:'"Good catch. <mark>Hold Stratus</mark>. Ana, ask them to extend pricing to {d+12}."',fresh:1}]}
+       addEv:[{t:'slack',scope:'dm-dana',d:1,where:'DM · Dana Whitfield',who:'Dana Whitfield, CFO',text:'"Good catch. <mark>Hold Stratus</mark>. Ana, ask them to extend pricing to {d+12}."',fresh:1}]}
     : {fresh:'Still open, one day less',
        why:'No reply yet. Stratus followed up overnight, and pricing expires in 2 days.',
-       addEv:[{t:'gmail',d:1,where:'Stratus Sales → Ana Ruiz',who:'Stratus Sales',text:'"Just checking the agreement reached you? <mark>Pricing expires {d+3}</mark>."',fresh:1}]}
+       addEv:[{t:'gmail',scope:'ana-mail',d:1,where:'Stratus Sales → Ana Ruiz',who:'Stratus Sales',text:'"Just checking the agreement reached you? <mark>Pricing expires {d+3}</mark>."',fresh:1}]}
 };
+/* permissions: who is viewing, which sources are private, and what others see */
+const VIEWERS = {
+  morgan:{name:'Morgan Reyes',first:'Morgan',role:'VP of Delivery',projects:null,blocked:[]},
+  leo:{name:'Leo Park',first:'Leo',role:'Portal 2.0 lead',projects:['portal','support'],blocked:['tom-mail','salesforce','acme-qbr','leadership','ana-mail','dm-dana']},
+  ana:{name:'Ana Ruiz',first:'Ana',role:'Data Migration lead',projects:['mig'],blocked:['tom-mail','salesforce','acme-qbr','leadership','dm-dana','steering']}
+};
+const SCOPES = {
+  'tom-mail':{anon:"a colleague's email",label:"Tom Reilly's email",who:'Tom Reilly and delivery leadership',ask:'Ask Tom Reilly for details.'},
+  'salesforce':{anon:'sales records',label:'Salesforce deal records',who:'Sales and delivery leadership',ask:'Ask the account owner for details.'},
+  'acme-qbr':{anon:'a customer meeting recording',label:'the Acme business review recording',who:'People who attended',ask:'Ask Tom Reilly for details.'},
+  'leadership':{anon:'a private channel and meeting',label:'#leadership and the leadership meeting',who:'The leadership team',ask:'Ask Dana Whitfield for details.'},
+  'ana-mail':{anon:"another team's inbox",label:'the Data Migration inbox',who:'The Data Migration team and delivery leadership',ask:'Ask Ana Ruiz for details.'},
+  'dm-dana':{anon:'a private message',label:'a private message',who:'People in that conversation',ask:'Ask Dana Whitfield for details.'},
+  'steering':{anon:'a meeting recording',label:'the steering committee recording',who:'Steering committee members',ask:'Ask Leo Park for details.'}
+};
+const REDACT = {
+  acme:{leo:{kind:'Commitment you can only partly see',title:'A customer commitment may depend on SSO work that has slipped.',
+    why:'Ondatrace found a promise to a customer, in sources you can\'t open, that depends on PLAT-412. Ask Tom Reilly what date he gave the customer.',
+    lede:'PLAT-412 moved to Sprint 25, which ends {d+22}, and your plan still shows the SSO milestone as green. Ondatrace also found a customer commitment that depends on this work. It came from sources you don\'t have access to, so it isn\'t shown here. Ask Tom Reilly about it.'}},
+  hold:{ana:{kind:'Decision you can\'t see',title:'A decision you can\'t see may affect the Stratus contract.',
+    why:'Ondatrace found a spending decision, in a source you can\'t open, that applies to your $186K contract. Check with Dana Whitfield before signing.',
+    lede:'Your plan says to sign the $186K Stratus contract by {d+2}. Ondatrace found a company decision that applies to it, in a source you don\'t have access to, so the details aren\'t shown. Check with Dana Whitfield before you sign.'}}
+};
+Object.assign(REDACT.acme.leo,{stake:'A customer commitment',
+  reason:[['PLAT-412 moved to Sprint 25, which ends {d+22}.','ev'],['Your plan has SSO due {d+14}, still marked green, with no link to PLAT-412.','ev'],['A customer commitment depends on this work. It comes from sources you can\'t open, so only the fact that it exists is shown.','pol']],
+  unknown:'Which customer, what date was promised, and how much is at stake. Those are in sources you don\'t have access to.',
+  note:{to:'Tom Reilly, Priya Shah',subject:'SSO date and a customer commitment',body:'Tom, Priya,\n\nOndatrace flagged that a customer commitment depends on PLAT-412, which now ends {d+22}. The Portal plan has SSO due {d+14}.\n\nTom, what date did you give the customer? Priya, what date can engineering stand behind?\n\nLeo'}});
+Object.assign(REDACT.hold.ana,{people:'Ana Ruiz, Dana Whitfield',stake:'$186K commitment',
+  reason:[['Your plan says to sign the $186K Stratus contract by {d+2}.','ev'],['A company decision, in a source you can\'t open, applies to contracts like this one.','pol'],['Stratus is holding its price only through {d+3}.','ev']],
+  unknown:'What the decision says. It is in a source you don\'t have access to, and Dana Whitfield can tell you.',
+  note:{to:'Dana Whitfield',subject:'Stratus contract ($186K) before we sign',body:'Dana,\n\nWe plan to sign the Stratus contract ($186K) on {d+2}. Ondatrace flagged a company decision that may apply to it. Is there anything I should know before signing?\n\nAna'},
+  prop:{tool:'docs',target:'Data Migration plan · Next steps',rows:[['Next step','Sign Stratus SOW by {d+2}','Confirm with Dana Whitfield before signing']]}});
+const blocked = sc => !!sc && VIEWERS[S.viewer].blocked.includes(sc);
+const scLabel = sc => blocked(sc) ? SCOPES[sc].anon : SCOPES[sc].label;
+const relevantTo = i => !VIEWERS[S.viewer].projects || i.pids.some(p=>VIEWERS[S.viewer].projects.includes(p));
+const needsRedact = i => !!(REDACT[i.id] && REDACT[i.id][S.viewer]);
+const viewerSees = i => relevantTo(i) && !(needsRedact(i) && S.permMode==='hide');
+
 const current = i => {
-  if(!S.morning || !OVERNIGHT[i.id]) return i;
-  const o = OVERNIGHT[i.id]();
-  return {...i,...o, ev:[...i.ev,...(o.addEv||[])]};
+  let out=i;
+  if(S.morning && OVERNIGHT[i.id]){ const o=OVERNIGHT[i.id](); out={...i,...o, ev:[...i.ev,...(o.addEv||[])]}; }
+  if(needsRedact(i)) out={...out,...REDACT[i.id][S.viewer],fresh:null,redacted:true};
+  return out;
 };
-const openList = () => INSIGHTS.map(current).filter(i=>visible(i) && !S.dismissed[i.id]).sort((a,b)=>ORDER[a.sev]-ORDER[b.sev]);
+const openList = () => INSIGHTS.map(current).filter(i=>visible(i) && viewerSees(i) && !S.dismissed[i.id]).sort((a,b)=>ORDER[a.sev]-ORDER[b.sev]);
 
 /* navigation */
 const VIEWS=['start','connect','today','detail','summary','risks','ask','wrap'];
@@ -1050,7 +1108,14 @@ function renderToday(){
   $('clock').textContent = S.morning?`${fmtWD(1)} 8:05 AM`:`${fmtWD(0)} 8:10 AM`;
   $('filters').innerHTML = ALL.filter(t=>S.scanTools.has(t)).map(t=>`<button type="button" class="fchip" data-f="${t}" aria-pressed="${S.tools.has(t)}">${dot(t)}${TOOLS[t].name}</button>`).join('');
   const vis = openList();
-  const hid = INSIGHTS.filter(i=>!visible(i));
+  const hid = INSIGHTS.filter(i=>!visible(i) && relevantTo(i));
+  const V=VIEWERS[S.viewer];
+  document.querySelector('#v-today h1').textContent=`Good morning, ${V.first}.`;
+  const hiddenByPerm=INSIGHTS.filter(i=>visible(i)&&relevantTo(i)&&needsRedact(i)).length;
+  $('perm-note').innerHTML = S.viewer==='morgan' ? '' : `<div class="perm-box"><p><b>You're viewing as ${esc(V.name)}, ${esc(V.role)}.</b> Ondatrace only shows ${esc(V.first)} the projects they work on, and only the sources they can open.</p>
+    <div class="row" style="margin-top:8px"><span class="muted" style="font-size:13px">Your organization's setting, when someone can't open a source:</span>
+    <span class="seg" role="group" aria-label="Permission setting" style="margin:0"><button type="button" data-perm="limited" aria-pressed="${S.permMode==='limited'}">Show a limited finding</button><button type="button" data-perm="hide" aria-pressed="${S.permMode==='hide'}">Hide the finding</button></span></div>
+    ${hiddenByPerm&&S.permMode==='hide'?`<p class="muted" style="font-size:13px;margin-top:8px">${hiddenByPerm} ${hiddenByPerm===1?'finding is':'findings are'} hidden because ${hiddenByPerm===1?'it relies':'they rely'} on sources ${esc(V.first)} can't open.</p>`:''}</div>`;
   const open = vis.filter(i=>i.sev!=='ok').length;
   const nOn = ALL.filter(on).length;
   $('nav-count').textContent=open;
@@ -1111,18 +1176,20 @@ function renderDetail(){
   $('back').textContent = '← Back to '+({today:'Today',summary:'Portfolio summary',risks:'Portfolio risks',ask:'Ask',wrap:'feedback'}[S.prev]||'Today');
   $('d-top').innerHTML=`<span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}`;
   $('h-detail').textContent=fmt(i.title);
-  $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]?i.why+' '+i.lede:i.lede);
+  $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]&&!i.redacted?i.why+' '+i.lede:i.lede);
   $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span><span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
   renderNote(i); renderProp(i); renderWrong(i);
+  renderAccess(i);
   const seen=new Set();
   const ev=i.ev.filter(e=>on(e.t)).sort((a,b)=>a.d-b.d);
   $('d-timeline').innerHTML=ev.map(e=>{
+    if(blocked(e.scope)) return lockedEv(e);
     const first=!seen.has(e.t); seen.add(e.t); const al=i.alone[e.t];
-    return `<li class="ev">${dot(e.t)}<div class="ev-body${e.fresh?' fresh':''}"><div class="ev-meta"><span><b>${TOOLS[e.t].name}</b> · ${esc(fmt(e.where))}</span><span class="mono">${ago(e.d)} · ${fmtD(e.d)}</span></div><div class="ev-text">${fmt(e.text)}</div><div class="muted" style="font-size:12.5px;margin-top:4px">${esc(e.who)}</div>${first&&al?`<div class="alone-line"><span>On its own in ${TOOLS[e.t].name}:</span><span class="pill ${/fine|healthy|routine|normal/i.test(al[0])?'ok':'neutral'}">${esc(al[0])}</span><span>${esc(fmt(al[1]))}</span></div>`:''}${e.fresh?'<div class="alone-line"><span class="new-badge">New overnight</span></div>':''}</div></li>`;
+    return `<li class="ev">${dot(e.t)}<div class="ev-body${e.fresh?' fresh':''}"><div class="ev-meta"><span><b>${TOOLS[e.t].name}</b> · ${esc(fmt(e.where))}</span><span class="mono">${ago(e.d)} · ${fmtD(e.d)}</span></div><div class="ev-text">${fmt(e.text)}</div><div class="muted" style="font-size:12.5px;margin-top:4px">${esc(e.who)}</div><button type="button" class="srclink" data-src="${e.t}">Open in ${TOOLS[e.t].name} ↗</button>${first&&al?`<div class="alone-line"><span>On its own in ${TOOLS[e.t].name}:</span><span class="pill ${/fine|healthy|routine|normal/i.test(al[0])?'ok':'neutral'}">${esc(al[0])}</span><span>${esc(fmt(al[1]))}</span></div>`:''}${e.fresh?'<div class="alone-line"><span class="new-badge">New overnight</span></div>':''}</div></li>`;
   }).join('');
   const zoomOn=on('zoom');
   $('d-talk-intro').textContent = zoomOn?'From recorded meeting transcripts. None of this was written down anywhere else.':'Zoom is turned off, so Ondatrace can\'t read meeting transcripts. Turn it back on from Today to see what people said.';
-  $('d-talk').innerHTML = zoomOn ? i.talk.map(m=>`<div class="talk"><div class="talk-head"><span>${chip('zoom')} · <b>${esc(m.title)}</b></span><span class="mono">${ago(m.d)} · ${fmtD(m.d)} · ${esc(m.len)}</span></div><div class="talk-lines">${m.lines.map(([ts,who,tx])=>`<div class="tline"><span class="ts">${ts}</span><span><b>${esc(who)}:</b>${fmt(tx)}</span></div>`).join('')}</div></div>`).join('') : '';
+  $('d-talk').innerHTML = zoomOn ? i.talk.map(m=>blocked(m.scope)?lockedTalk(m):`<div class="talk"><div class="talk-head"><span>${chip('zoom')} · <b>${esc(m.title)}</b></span><span class="mono">${ago(m.d)} · ${fmtD(m.d)} · ${esc(m.len)}</span></div><div class="talk-lines">${m.lines.map(([ts,who,tx])=>`<div class="tline"><span class="ts">${ts}</span><span><b>${esc(who)}:</b>${fmt(tx)}</span></div>`).join('')}</div></div>`).join('') : '';
   const tagName={inf:['inf','Inference'],ev:['ev','From evidence'],pol:['pol','Policy']};
   $('d-reason').innerHTML=i.reason.map(([t,k])=>`<li><span>${esc(fmt(t))}<span class="tag ${tagName[k][0]}">${tagName[k][1]}</span></span></li>`).join('');
   $('d-unknown').innerHTML=`<b>What Ondatrace can't see</b>${esc(fmt(i.unknown))}`;
@@ -1131,6 +1198,43 @@ function renderDetail(){
   $('d-linked').innerHTML=lk.length?`Related finding: ${lk.map(l=>`<button type="button" class="cite" data-open="${l}">${esc(fmt(current(byId(l)).title))}</button>`).join(' ')}`:'';
   renderTester(i);
 }
+const LOCK='<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="vertical-align:-2px"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+function lockedEv(e){
+  return `<li class="ev"><span class="dot lockdot" aria-hidden="true">${LOCK}</span><div class="ev-body locked"><div class="ev-meta"><span><b>Restricted source</b> · ${TOOLS[e.t].name}</span><span class="mono">${ago(e.d)} · ${fmtD(e.d)}</span></div><div class="ev-text">You don't have access to ${esc(scLabel(e.scope))}. Ondatrace used it to find this, but won't show it to you. ${esc(SCOPES[e.scope].ask)}</div></div></li>`;
+}
+function lockedTalk(m){
+  return `<div class="talk locked"><div class="talk-head"><span>${LOCK} <b>Restricted meeting</b></span><span class="mono">${ago(m.d)} · ${fmtD(m.d)}</span></div><div class="talk-lines"><p class="muted" style="font-size:14px">You don't have access to ${esc(scLabel(m.scope))}, so what was said isn't shown. ${esc(SCOPES[m.scope].ask)}</p></div></div>`;
+}
+function renderAccess(i){
+  const scopes=[...new Set([...i.ev,...i.talk].map(x=>x.scope).filter(Boolean))];
+  const V=VIEWERS[S.viewer];
+  const mine=scopes.filter(blocked);
+  const who=Object.entries(VIEWERS).filter(([k,v])=>k!=='morgan'&&k!==S.viewer&&REDACT[i.id]&&REDACT[i.id][k]);
+  let h;
+  if(!scopes.length) h=`<p><b>Who can see this:</b> every source behind it is open to the people on these projects, so they all see it in full.</p>`;
+  else if(mine.length) h=`<p><b>You're viewing as ${esc(V.name)}.</b> ${mine.length} of the sources behind this finding ${mine.length===1?'is':'are'} private to other people, so ${mine.length===1?'it is':'they are'} shown as restricted below. ${esc(V.first)} sees what the finding means, not what those sources say.</p>`;
+  else h=`<p><b>Who can see this:</b> it uses ${scopes.length} private ${scopes.length===1?'source':'sources'}. People without access to ${scopes.length===1?'it':'them'} ${S.permMode==='limited'?'see a limited version with those sources hidden':'don\'t see this finding at all'}.</p>`;
+  h+=scopes.length?`<ul>${scopes.map(sc=>`<li>${LOCK} ${esc(scLabel(sc))} <span class="muted">· ${blocked(sc)?'not shared with you':esc(SCOPES[sc].who)}</span></li>`).join('')}</ul>`:'';
+  if(S.viewer==='morgan'&&who.length) h+=`<div class="row" style="margin-top:8px">${who.map(([k,v])=>`<button type="button" class="btn small" data-viewas="${k}">See what ${esc(v.first)} sees</button>`).join('')}</div>`;
+  if(S.viewer!=='morgan') h+=`<div class="row" style="margin-top:8px"><button type="button" class="btn small" data-viewas="morgan">Back to Morgan's view</button></div>`;
+  $('d-access').innerHTML=`<div class="access${mine.length?' warn':''}">${h}</div>`;
+}
+function setViewer(v){
+  if(!VIEWERS[v]||v===S.viewer) return;
+  S.viewer=v; $('viewer').value=v; if(v!=='morgan') step('view');
+  log(`Viewed Ondatrace as ${VIEWERS[v].name}.`);
+  if(S.view==='detail'){
+    if(openList().some(x=>x.id===S.cur)) renderDetail();
+    else { status(`${VIEWERS[v].name} doesn't see this finding, so you're back on Today.`); go('today'); }
+  } else if(S.scanned) go(S.view);
+}
+$('viewer').addEventListener('change',e=>setViewer(e.target.value));
+document.addEventListener('click',e=>{
+  const v=e.target.closest('[data-viewas]'); if(v){ setViewer(v.dataset.viewas); return; }
+  const pm=e.target.closest('[data-perm]'); if(pm){ S.permMode=pm.dataset.perm; log(`Set the permission rule to "${pm.textContent}".`); renderToday(); return; }
+  const sl=e.target.closest('[data-src]'); if(sl){ const n=TOOLS[sl.dataset.src].name; status(`In the product, this opens the exact item in ${n}, using your own ${n} login. You only see what ${n} already lets you see.`); logOnce('src'+sl.dataset.src,`Tried opening a source in ${n}.`); }
+});
+
 function renderNote(i){
   const st=S.note[i.id]||'none'; const n=i.note;
   let h=`<h3>Talk to the people involved</h3><p>A note to ${esc(n.to)}, drafted from the evidence.</p>`;
@@ -1163,7 +1267,7 @@ function renderTester(i){
 }
 $('v-detail').addEventListener('input',e=>{ if(e.target.id==='why-in'){ S.why[S.cur]=e.target.value; save(); } });
 $('v-detail').addEventListener('click',e=>{
-  const i=byId(S.cur); const t=e.target.closest('[data-note],[data-prop],[data-react],[data-dismiss]'); if(!t) return;
+  const i=current(byId(S.cur)); const t=e.target.closest('[data-note],[data-prop],[data-react],[data-dismiss]'); if(!t) return;
   if(t.dataset.note){ const a=t.dataset.note;
     if(a==='draft'){S.note[i.id]='draft'; renderNote(i); $('n-body').focus(); return;}
     if(a==='approve'){ const edited=$('n-body').value.trim()!==fmt(i.note.body).trim(); S.note[i.id]='approved'; step('act'); log(`Approved a note to ${i.note.to}${edited?' (edited)':''}. Nothing was sent.`); status('Note approved. Nothing was sent in this demo.'); }
@@ -1423,6 +1527,7 @@ async function ask(q){
   const box=$('answer');
   box.innerHTML=`<p class="q">${esc(q)}</p><div class="a" id="a-body"></div><p class="muted" id="a-foot" style="font-size:13px;margin-top:12px"></p>`;
   const body=$('a-body');
+  if(S.viewer!=='morgan'){ body.innerHTML='<p>In this demo, Ask answers as Morgan. In the product, answers only use sources the person asking can open. Switch "View as" back to Morgan to try it.</p>'; return; }
   const canned=QA.find(x=>x.q===q);
   if(CAP.sample && !CAP.askOff && !canned){
     askCtl?.abort(); askCtl=new AbortController();
