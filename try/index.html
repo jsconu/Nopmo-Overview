@@ -305,6 +305,20 @@ details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-siz
 .np-item input{display:block;width:100%;margin-top:3px;border:1px solid var(--line-strong);border-radius:6px;padding:5px 8px;background:var(--surface);color:var(--ink);font-size:13.5px}
 @media (max-width:760px){.np-item{grid-template-columns:1fr 1fr}}
 
+/* plan preview and client tag */
+.plan-preview{margin-top:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:10px 12px;font-size:13px}
+.pp-head{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.pp-head b{font-weight:600}
+.pp-target{color:var(--muted);font-size:12px;margin:4px 0 6px}
+.pp-table{width:100%;border-collapse:collapse}
+.pp-table td{padding:4px 0;border-top:1px solid var(--line);vertical-align:top}
+.pp-table td:first-child{color:var(--muted);width:38%;padding-right:8px}
+.pp-table s{color:var(--muted)}
+.pp-note{margin-top:6px;font-size:12px;color:var(--muted)}
+.pill.client{background:var(--brand-soft);color:var(--brand-text)}
+.fchip.client-toggle{padding:4px 12px}
+.fchip.client-toggle[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink);text-decoration:none;opacity:1}
+
 /* alert channels card */
 .channels{margin-top:18px;padding:18px}
 .ch-head{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
@@ -550,6 +564,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <div class="filterbar">
           <div class="row" id="filters" aria-label="Tools Ondatrace can read"></div>
           <div id="perm-note"></div>
+          <div class="row"><button type="button" class="fchip client-toggle" id="client-only" aria-pressed="false">Only findings that affect a client</button></div>
           <p class="filter-note">To see what you'd miss without a tool, turn it off here and watch which findings disappear.</p>
         </div>
         <div class="queue" id="queue"></div>
@@ -766,7 +781,7 @@ const PROJECTS = [
 const money = v => v>=1e6?'$'+(v/1e6).toFixed(2).replace(/0$/,'')+'M':'$'+Math.round(v/1000)+'K';
 
 const INSIGHTS = [
-{ id:'acme', sev:'crit', kind:'Customer commitment at risk', money:420000,
+{ id:'acme', sev:'crit', kind:'Customer commitment at risk', money:420000, client:'Acme\'s renewal and rollout',
   title:'Acme was promised SSO by {d+14}. The work behind it slipped to {d+22}.',
   why:'Sales promised a date that engineering had already moved. The Portal plan still shows green because nothing links the two.',
   lede:'Tom Reilly told Acme\'s CIO that single sign-on would be live by {d+14}, ahead of their $420K renewal on {d+25}. The engineering ticket that delivers SSO was pushed two sprints nine days ago. In the sprint review, the team asked whether anyone downstream cared and decided nobody did. The Portal 2.0 plan still shows the SSO milestone as green.',
@@ -832,7 +847,7 @@ const INSIGHTS = [
   note:{to:'Dana Whitfield, Ana Ruiz',subject:'Stratus SOW ($186K) vs. the vendor hold',body:'Dana, Ana,\n\nThe Data Migration plan has the Stratus SOW ($186K) signing on {d+2}. That falls inside the hold on new vendor commitments until the {d+10} review, and I don\'t think the team knew about the hold.\n\nStratus is holding pricing only through {d+3}. Options:\n1. Dana grants an exception now\n2. Ana asks Stratus to hold pricing to {d+12}\n3. We accept the price risk and wait\n\nWhich would you like?\n\nMorgan'},
   prop:{tool:'docs',target:'Data Migration plan · Next steps',rows:[['Next step','Sign Stratus SOW by {d+2}','Hold signature pending CFO decision'],['Decision log','—','Vendor hold until {d+10} (CFO, leadership meeting {d-8})']]}
 },
-{ id:'dates', sev:'warn', kind:'Sources disagree',
+{ id:'dates', sev:'warn', kind:'Sources disagree', client:'A launch email to every customer',
   title:'Portal 2.0 has two go-live dates: {d+21} and {d+38}.',
   why:'Leadership agreed on a new date in a meeting. The plan and the customer launch email still use the old one.',
   lede:'In last week\'s steering meeting, Leo said go-live moves to {d+38} and that he would update the plan and tell marketing. Neither happened. The plan and launch brief still say {d+21}, and marketing\'s email to all customers is scheduled for that day. Ondatrace won\'t pick a date for you.',
@@ -1136,7 +1151,8 @@ function renderToday(){
   $('today-eyebrow').textContent = S.morning?`${fmtWD(1)} · 8:05 AM`:`${fmtWD(0)} · 8:10 AM`;
   $('clock').textContent = S.morning?`${fmtWD(1)} 8:05 AM`:`${fmtWD(0)} 8:10 AM`;
   $('filters').innerHTML = ALL.filter(t=>S.scanTools.has(t)).map(t=>`<button type="button" class="fchip" data-f="${t}" aria-pressed="${S.tools.has(t)}">${dot(t)}${TOOLS[t].name}</button>`).join('');
-  const vis = openList();
+  const vis = openList().filter(i=>!S.clientOnly||i.client);
+  $('client-only').setAttribute('aria-pressed',!!S.clientOnly);
   const hid = INSIGHTS.filter(i=>!visible(i) && relevantTo(i));
   const V=VIEWERS[S.viewer];
   document.querySelector('#v-today h1').textContent=`Good morning, ${V.first}.`;
@@ -1164,6 +1180,7 @@ function renderToday(){
   $('fine-sum').textContent = `${Math.max(fine.length, Math.round(41*nOn/9))} items checked and fine`;
   $('fine').innerHTML = fine.map(([t,x])=>`<li>${chip(t)}<span>${esc(x)}</span></li>`).join('') + `<li class="muted" style="font-size:13px">Showing ${fine.length}. Ondatrace checks these so that a quiet Today means something.</li>`;
 }
+document.addEventListener('click',e=>{ const b=e.target.closest('#client-only'); if(!b) return; S.clientOnly=!S.clientOnly; b.setAttribute('aria-pressed',S.clientOnly); logOnce('client'+S.clientOnly,S.clientOnly?'Filtered Today to client-facing findings.':'Showed all findings again.'); renderToday(); });
 function renderChannels(){
   const list=openList().filter(i=>i.sev!=='ok');
   const top=list[0]; const V=VIEWERS[S.viewer];
@@ -1174,7 +1191,7 @@ function renderChannels(){
     <div class="ch">
       <div class="ch-top"><b>Email and Slack</b><span class="pill ok">In the pilot</span></div>
       <p>A short alert when something important changes, plus an optional morning summary.</p>
-      <div class="ch-preview">${dot('slack')}<div><div class="ch-meta"><b>Ondatrace</b> · 8:02 AM · to ${esc(V.first)}</div><div>New: ${esc(t)}</div><div class="ch-btns"><span>Review</span><span>Snooze</span></div></div></div>
+      <div class="ch-preview">${dot('slack')}<div><div class="ch-meta"><b>Ondatrace</b> · 8:02 AM · to ${esc(V.first)}</div><div>New: ${esc(t)}</div><div class="ch-btns"><span>Review</span><span>Approve</span><span>Snooze</span></div><div class="ch-note">Approving from Slack or Teams is planned. Today you approve in Ondatrace.</div></div></div>
     </div>
     <div class="ch">
       <div class="ch-top"><b>Microsoft Teams</b><span class="pill watch">Next</span></div>
@@ -1191,7 +1208,7 @@ function renderChannels(){
 function cardHTML(i){
   const [cls,label]=SEV[i.sev];
   return `<article class="card clickable" data-sev="${cls}" data-card="${i.id}">
-    <div class="card-top"><span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}${S.note[i.id]==='approved'?'<span class="pill neutral">Note approved</span>':''}${S.prop[i.id]==='approved'?'<span class="pill neutral">Change approved</span>':''}</div>
+    <div class="card-top"><span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.client?'<span class="pill client">Client impact</span>':''}${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}${S.note[i.id]==='approved'?'<span class="pill neutral">Note approved</span>':''}${S.prop[i.id]==='approved'?'<span class="pill neutral">Change approved</span>':''}</div>
     <h3>${esc(fmt(i.title))}</h3>
     <p class="why">${esc(fmt(i.why))}</p>
     <div class="card-foot"><div class="srcs">${toolsOf(i).map(chip).join('')}</div><div class="foot-right"><span class="span-note">${esc(i.span)}</span><button type="button" class="btn small open-btn" data-open="${i.id}">Review finding →</button></div></div>
@@ -1230,7 +1247,7 @@ function renderDetail(){
   $('d-top').innerHTML=`<span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}`;
   $('h-detail').textContent=fmt(i.title);
   $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]&&!i.redacted?i.why+' '+i.lede:i.lede);
-  $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span><span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
+  $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span>${i.client?`<span>Client impact <b>${esc(i.redacted?'A customer':i.client)}</b></span>`:''}<span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
   renderNote(i); renderProp(i); renderWrong(i);
   renderAccess(i);
   const seen=new Set();
@@ -1299,13 +1316,19 @@ function renderNote(i){
   if(st==='approved') h+=`<p class="done-note">Approved. This is a demo, so nothing was sent. In the product it would go to ${esc(n.to)} from your account.</p><div class="row" style="margin-top:8px"><button class="btn ghost small" type="button" data-note="discard">Undo</button></div>`;
   $('p-note').innerHTML=h;
 }
+function planPreview(p,where){
+  return `<div class="plan-preview"><div class="pp-head">${dot(p.tool)}<b>How it will look in ${esc(where)}</b><span class="pill neutral">Planned</span></div>
+    <div class="pp-target">${esc(fmt(p.target))}</div>
+    <table class="pp-table"><tbody>${p.rows.map(([f,a,b])=>`<tr><td>${esc(f)}</td><td>${a&&a!=='—'?`<s>${esc(fmt(a))}</s> `:''}<b>${esc(fmt(b))}</b></td></tr>`).join('')}</tbody></table>
+    <div class="pp-note">Changed by Ondatrace · approved by ${esc(VIEWERS[S.viewer].name)} · ${fmtD(S.morning?1:0)}. The old value stays visible so everyone can see what moved.</div></div>`;
+}
 function renderProp(i){
   const st=S.prop[i.id]||'pending'; const p=i.prop;
   const where = p.tool==='ondatrace'?'Ondatrace':TOOLS[p.tool].name;
   let h=`<h3>Update ${esc(where)}</h3><p>${esc(fmt(p.target))}.${p.needs?' '+esc(p.needs)+'.':''}</p>
     <table class="diff"><thead><tr><th scope="col">Field</th><th scope="col">Now</th><th scope="col">Proposed</th></tr></thead><tbody>${p.rows.map(([f,a,b])=>`<tr><td>${esc(f)}</td><td><del>${esc(fmt(a))}</del></td><td><ins>${esc(fmt(b))}</ins></td></tr>`).join('')}</tbody></table>`;
   if(st==='pending') h+=`<div class="row" style="margin-top:12px"><button class="btn primary" type="button" data-prop="approved">Approve change</button><button class="btn ghost" type="button" data-prop="rejected">Reject</button></div>`;
-  else h+=`<p class="done-note" ${st==='rejected'?'style="background:var(--surface-2);color:var(--ink-2)"':''}>${st==='approved'?`Approved. In the product, Ondatrace writes this to ${esc(where)} and records that you approved it. Nothing changed in this demo.`:'Rejected. Ondatrace won\'t propose this again unless the evidence changes.'}</p><div class="row" style="margin-top:8px"><button class="btn ghost small" type="button" data-prop="pending">Undo</button></div>`;
+  else h+=`<p class="done-note" ${st==='rejected'?'style="background:var(--surface-2);color:var(--ink-2)"':''}>${st==='approved'?(p.tool==='nopmo'?`Approved. Ondatrace now treats these as one initiative. Nothing changes in your other tools.`:`Approved. Ondatrace records the change and your approval. Writing it back into ${esc(where)} is planned; for now you'd make the change there yourself. Nothing changed in this demo.`):'Rejected. Ondatrace won\'t propose this again unless the evidence changes.'}</p>${st==='approved'&&p.tool!=='nopmo'?planPreview(p,where):''}<div class="row" style="margin-top:8px"><button class="btn ghost small" type="button" data-prop="pending">Undo</button></div>`;
   $('p-prop').innerHTML=h;
 }
 function renderWrong(){
@@ -1546,6 +1569,9 @@ S.np={open:false,saved:false,metrics:NEWPROJ.metrics.map(m=>({...m}))};
 
 /* ask */
 const QA = [
+  {q:'Why did the SSO work slip?', re:/why.*(sso|slip|push|delay|late|move)|cause|reason/i, a:[
+    'PLAT-412, the SSO token service, hit identity-provider edge cases that were bigger than the team scoped. In the sprint 23 review Priya said it wouldn\'t make that sprint, and the team moved it to Sprint 25, which ends {d+22} [acme].',
+    'They moved it because they believed nothing downstream depended on it. The Portal 2.0 plan had no link to PLAT-412, so nobody saw that the date promised to Acme and the support training on {d+4} both rely on it [training].']},
   {q:'What\'s at risk for the Acme renewal?', re:/acme|renewal|customer|revenue|sso/i, a:[
     'The $420K Acme renewal closes on {d+25}. Tom promised Acme that SSO would be live by {d+14} [acme], but the engineering work behind it moved to Sprint 25, which ends {d+22}. In the sprint review, the team moved it because they thought nothing depended on it.',
     'Two more things depend on the same work. Support training on {d+4} walks through the SSO flow on staging, which isn\'t there yet [training]. And Priya, the only engineer on the ticket, is out {d+8}–{d+12} [priya].']},
