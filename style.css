@@ -692,12 +692,12 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
 }
 .silo-title {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  margin: 0 0 14px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin: 0 0 18px;
 }
 .silo-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .silo-list li {
