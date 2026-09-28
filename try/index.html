@@ -311,6 +311,12 @@ details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-siz
 .np-item input{display:block;width:100%;margin-top:3px;border:1px solid var(--line-strong);border-radius:6px;padding:5px 8px;background:var(--surface);color:var(--ink);font-size:13.5px}
 @media (max-width:760px){.np-item{grid-template-columns:1fr 1fr}}
 
+/* demo-only source popup */
+.modal-back{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(8,17,15,.55)}
+.modal{background:var(--surface);color:var(--ink);border-radius:14px;padding:22px 22px 20px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);display:grid;gap:10px;justify-items:start}
+.modal h2{font:600 19px/1.3 var(--display)}
+.modal p{font-size:14.5px;color:var(--ink-2)}
+
 /* plan preview and client tag */
 .plan-preview{margin-top:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:10px 12px;font-size:13px}
 .pp-head{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
@@ -720,6 +726,15 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <div class="row" style="margin-top:18px"><button class="btn" type="button" id="restart">Start over</button></div>
       </section>
     </main>
+  </div>
+</div>
+
+<div class="modal-back" id="src-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="src-modal-h">
+    <span class="pill neutral">Demo only</span>
+    <h2 id="src-modal-h">This link doesn't open a real source</h2>
+    <p id="src-modal-text"></p>
+    <div class="row" style="margin-top:16px"><button type="button" class="btn primary" id="src-modal-ok">Got it</button></div>
   </div>
 </div>
 
@@ -1312,8 +1327,19 @@ $('viewer').addEventListener('change',e=>setViewer(e.target.value));
 document.addEventListener('click',e=>{
   const v=e.target.closest('[data-viewas]'); if(v){ setViewer(v.dataset.viewas); return; }
   const pm=e.target.closest('[data-perm]'); if(pm){ S.permMode=pm.dataset.perm; log(`Set the permission rule to "${pm.textContent}".`); renderToday(); return; }
-  const sl=e.target.closest('[data-src]'); if(sl){ const n=TOOLS[sl.dataset.src].name; status(`In the product, this opens the exact item in ${n}, using your own ${n} login. You only see what ${n} already lets you see.`); logOnce('src'+sl.dataset.src,`Tried opening a source in ${n}.`); }
+  const sl=e.target.closest('[data-src]'); if(sl){ const n=TOOLS[sl.dataset.src].name; openSrcModal(n, sl); logOnce('src'+sl.dataset.src,`Tried opening a source in ${n}.`); }
 });
+
+let srcReturn=null;
+function openSrcModal(n, from){
+  srcReturn=from;
+  $('src-modal-text').textContent=`The demo isn't connected to ${n} or any other tool. Every source here is made up to show how Ondatrace works. In the product, this link would open the exact item in ${n}, using your own ${n} login, so you'd only see what ${n} already lets you see.`;
+  $('src-modal').hidden=false; $('src-modal-ok').focus();
+}
+function closeSrcModal(){ $('src-modal').hidden=true; srcReturn?.focus(); srcReturn=null; }
+$('src-modal-ok').addEventListener('click',closeSrcModal);
+$('src-modal').addEventListener('click',e=>{ if(e.target.id==='src-modal') closeSrcModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('src-modal').hidden) closeSrcModal(); if(e.key==='Tab'&&!$('src-modal').hidden){ e.preventDefault(); $('src-modal-ok').focus(); } });
 
 function renderNote(i){
   const st=S.note[i.id]||'none'; const n=i.note;
