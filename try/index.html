@@ -305,6 +305,27 @@ details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-siz
 .np-item input{display:block;width:100%;margin-top:3px;border:1px solid var(--line-strong);border-radius:6px;padding:5px 8px;background:var(--surface);color:var(--ink);font-size:13.5px}
 @media (max-width:760px){.np-item{grid-template-columns:1fr 1fr}}
 
+/* alert channels card */
+.channels{margin-top:18px;padding:18px}
+.ch-head{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.ch-head h3{font:600 17px/1.3 var(--display)}
+.ch-head p{font-size:13px;color:var(--muted);max-width:60ch}
+.ch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ch{display:grid;gap:8px;align-content:start;border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface)}
+.ch-top{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:space-between}
+.ch-top b{font-weight:600;font-size:14px}
+.ch p{font-size:13px;color:var(--ink-2)}
+.ch-preview{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;font-size:13px;background:var(--surface-2);border-radius:8px;padding:10px}
+.ch-preview.chat{grid-template-columns:1fr}
+.ch-meta{font-size:11.5px;color:var(--muted);margin-bottom:2px}
+.ch-meta b{color:var(--ink);font-weight:600}
+.ch-btns{display:flex;gap:6px;margin-top:6px}
+.ch-btns span{border:1px solid var(--line-strong);border-radius:6px;padding:1px 8px;font-size:12px;background:var(--surface)}
+.ch-note{font-size:11.5px;color:var(--muted);margin-top:4px}
+.ch-q{justify-self:end;max-width:90%;background:var(--brand-soft);color:var(--brand-text);border-radius:10px 10px 2px 10px;padding:6px 10px}
+.ch-a{max-width:95%;background:var(--surface);border:1px solid var(--line);border-radius:10px 10px 10px 2px;padding:6px 10px}
+@media (max-width:860px){.ch-grid{grid-template-columns:1fr}}
+
 /* summary */
 .meter{position:relative;height:6px;width:120px;max-width:100%;background:var(--surface-2);border-radius:99px;margin:6px 0 4px}
 .meter span{display:block;height:100%;border-radius:99px;background:var(--brand)}
@@ -537,6 +558,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <p id="morning-text"></p>
           <button class="btn" type="button" id="morning-btn">Jump to tomorrow morning</button>
         </div>
+        <div class="panel channels" id="channels"></div>
         <details class="fine"><summary id="fine-sum">41 items checked and fine</summary><ul id="fine"></ul></details>
       </section>
 
@@ -640,6 +662,13 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
               <label class="choice"><input type="radio" name="scope" value="Across my whole portfolio">Across my whole portfolio</label>
               <label class="choice"><input type="radio" name="scope" value="On individual projects">On individual projects</label>
               <label class="choice"><input type="radio" name="scope" value="Both equally">Both equally</label>
+            </div></fieldset>
+            <fieldset class="q-block"><legend>Where would you want to get alerts like the ones on Today? Pick any.</legend><div class="choices">
+              <label class="choice"><input type="checkbox" name="alerts" value="Email">Email</label>
+              <label class="choice"><input type="checkbox" name="alerts" value="Slack">Slack</label>
+              <label class="choice"><input type="checkbox" name="alerts" value="Microsoft Teams">Microsoft Teams</label>
+              <label class="choice"><input type="checkbox" name="alerts" value="An AI assistant like Claude or Copilot">An AI assistant like Claude or Copilot</label>
+              <label class="choice"><input type="checkbox" name="alerts" value="Only inside Ondatrace">Only inside Ondatrace</label>
             </div></fieldset>
             <fieldset class="q-block"><legend>Where would you want to track your projects day to day?</legend><div class="choices">
               <label class="choice"><input type="radio" name="track" value="In Ondatrace">In Ondatrace</label>
@@ -1118,7 +1147,7 @@ function renderToday(){
     ${hiddenByPerm&&S.permMode==='hide'?`<p class="muted" style="font-size:13px;margin-top:8px">${hiddenByPerm} ${hiddenByPerm===1?'finding is':'findings are'} hidden because ${hiddenByPerm===1?'it relies':'they rely'} on sources ${esc(V.first)} can't open.</p>`:''}</div>`;
   const open = vis.filter(i=>i.sev!=='ok').length;
   const nOn = ALL.filter(on).length;
-  $('nav-count').textContent=open;
+  $('nav-count').textContent=open; renderChannels();
   $('today-summary').innerHTML = S.morning
     ? `Overnight, Ondatrace read 214 new updates. <b>${open} ${open===1?'finding needs':'findings need'} you</b>, and ${vis.filter(i=>i.fresh).length} changed since yesterday.`
     : `Since Friday, Ondatrace read ${ALL.filter(on).reduce((a,t)=>a+TOOLS[t].n,0).toLocaleString()} updates across ${nOn} tools. <b>${open} ${open===1?'finding needs':'findings need'} you.</b> None of them shows up in any single tool.`;
@@ -1134,6 +1163,30 @@ function renderToday(){
   const fine = FINE.filter(([t])=>on(t));
   $('fine-sum').textContent = `${Math.max(fine.length, Math.round(41*nOn/9))} items checked and fine`;
   $('fine').innerHTML = fine.map(([t,x])=>`<li>${chip(t)}<span>${esc(x)}</span></li>`).join('') + `<li class="muted" style="font-size:13px">Showing ${fine.length}. Ondatrace checks these so that a quiet Today means something.</li>`;
+}
+function renderChannels(){
+  const list=openList().filter(i=>i.sev!=='ok');
+  const top=list[0]; const V=VIEWERS[S.viewer];
+  const t=top?fmt(top.title):'Nothing needs your attention today.';
+  const nSrc=top?toolsOf(top).length:0;
+  $('channels').innerHTML=`<div class="ch-head"><h3>Get this without opening Ondatrace</h3><p>Alerts go out only when something important changes, and only show what the reader is allowed to see.</p></div>
+  <div class="ch-grid">
+    <div class="ch">
+      <div class="ch-top"><b>Email and Slack</b><span class="pill ok">In the pilot</span></div>
+      <p>A short alert when something important changes, plus an optional morning summary.</p>
+      <div class="ch-preview">${dot('slack')}<div><div class="ch-meta"><b>Ondatrace</b> · 8:02 AM · to ${esc(V.first)}</div><div>New: ${esc(t)}</div><div class="ch-btns"><span>Review</span><span>Snooze</span></div></div></div>
+    </div>
+    <div class="ch">
+      <div class="ch-top"><b>Microsoft Teams</b><span class="pill watch">Next</span></div>
+      <p>The same alerts, posted to a Teams channel or sent to you directly.</p>
+      <div class="ch-preview"><span class="dot" style="background:#5059c9" aria-hidden="true">T</span><div><div class="ch-meta"><b>Ondatrace</b> · in a project channel</div><div>${list.length} ${list.length===1?'finding needs':'findings need'} attention this week.</div><div class="ch-note">Channel posts include only what everyone in the channel can see.</div></div></div>
+    </div>
+    <div class="ch">
+      <div class="ch-top"><b>AI assistants like Claude or Copilot</b><span class="pill neutral">Exploring</span></div>
+      <p>Ask Ondatrace from the AI assistant you already use, or schedule a morning summary there.</p>
+      <div class="ch-preview chat"><div class="ch-q">What changed in my portfolio overnight?</div><div class="ch-a"><span class="ch-meta">From Ondatrace${nSrc?` · ${nSrc} sources`:''}</span><div>${esc(t)}</div></div></div>
+    </div>
+  </div>`;
 }
 function cardHTML(i){
   const [cls,label]=SEV[i.sev];
@@ -1591,7 +1644,7 @@ function payload(){
     name:$('fb-name').value.trim(),
     reactions:Object.fromEntries(INSIGHTS.map(i=>[i.id,{act:S.react[i.id]||'',why:S.why[i.id]||''}])),
     missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value),
-    scope:radio('scope'), track:radio('track'), projectView:$('fb-project').value.trim(), other:$('fb-other').value.trim(),
+    scope:radio('scope'), track:radio('track'), alerts:[...document.querySelectorAll('[name=alerts]:checked')].map(x=>x.value), projectView:$('fb-project').value.trim(), other:$('fb-other').value.trim(),
     evidence:$('fb-evidence').value.trim(), inbox:$('fb-inbox').value.trim(), auto:$('fb-auto').value.trim(),
     next:$('fb-next').value.trim(),
     session:{opened:[...S.opened], asked:S.asked.slice(-20), morning:S.morning, toolsOff:ALL.filter(t=>S.scanTools&&!on(t)),
@@ -1604,7 +1657,7 @@ function asText(p){
   const out=['NOPMO DEMO FEEDBACK', p.name?`From: ${p.name}`:'', '', 'Would act on:',
     ...INSIGHTS.map(i=>`- ${i.kind}: ${p.reactions[i.id].act||'no answer'}${p.reactions[i.id].why?` ("${p.reactions[i.id].why}")`:''}`),
     '', `Would have missed: ${p.missed.map(id=>byId(id).kind).join(', ')||'no answer'}`,
-    `Main use: ${p.scope||'no answer'}`, `Track projects: ${p.track||'no answer'}`, `What Ondatrace adds: ${p.projectView||'-'}`,
+    `Main use: ${p.scope||'no answer'}`, `Track projects: ${p.track||'no answer'}`, `Alerts: ${p.alerts.join(', ')||'no answer'}`, `What Ondatrace adds: ${p.projectView||'-'}`,
     `Evidence needed: ${p.evidence||'-'}`, `Would become another inbox if: ${p.inbox||'-'}`,
     `OK to do without asking: ${p.auto||'-'}`, `Try it first on: ${p.next||'-'}`, `Anything else: ${p.other||'-'}`,
     '', `Session: opened ${p.session.opened.length}/6 findings, asked ${p.session.asked.length} questions, next morning: ${p.session.morning?'yes':'no'}.`];
@@ -1614,14 +1667,14 @@ function formFields(p){
   const r=id=>{ const x=p.reactions[id]; return x.act?(x.act+(x.why?' - '+x.why:'')):''; };
   return [p.name, r('acme'), r('hold'), r('dates'), r('priya'), r('training'), r('dup'),
     p.missed.map(id=>byId(id).kind).join(', '), p.scope, p.track, p.projectView, p.evidence, p.inbox, p.auto, p.next, p.other,
-    `Opened ${p.session.opened.length}/6 findings; asked: ${p.session.asked.join(' | ')||'none'}; next morning: ${p.session.morning?'yes':'no'}; tools off: ${p.session.toolsOff.join(', ')||'none'}; notes approved: ${p.session.notes.join(', ')||'none'}; changes approved: ${p.session.changes.join(', ')||'none'}`];
+    `Alert channels: ${p.alerts.join(', ')||'none picked'}; opened ${p.session.opened.length}/6 findings; asked: ${p.session.asked.join(' | ')||'none'}; next morning: ${p.session.morning?'yes':'no'}; tools off: ${p.session.toolsOff.join(', ')||'none'}; notes approved: ${p.session.notes.join(', ')||'none'}; changes approved: ${p.session.changes.join(', ')||'none'}`];
 }
 async function sendToForm(p){
   const body=new URLSearchParams();
   formFields(p).forEach((v,n)=>{ const k=FORM.map[n+1]; if(k) body.append(k,String(v||'')); });
   await fetch(FORM.action,{method:'POST',mode:'no-cors',body});
 }
-function save(){ try{ localStorage.setItem('ondatrace-demo-fb',JSON.stringify({react:S.react,why:S.why,f:Object.fromEntries(FB.map(k=>[k,$(k).value])),scope:radio('scope'),track:radio('track'),missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value)})); }catch(e){} }
+function save(){ try{ localStorage.setItem('ondatrace-demo-fb',JSON.stringify({react:S.react,why:S.why,f:Object.fromEntries(FB.map(k=>[k,$(k).value])),scope:radio('scope'),track:radio('track'),alerts:[...document.querySelectorAll('[name=alerts]:checked')].map(x=>x.value),missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value)})); }catch(e){} }
 function fill(d){
   if(!d) return;
   if(d.react) Object.assign(S.react,d.react); if(d.why) Object.assign(S.why,d.why);
@@ -1630,6 +1683,7 @@ function fill(d){
   FB.forEach(k=>{ if(f[k]) $(k).value=f[k]; });
   ['scope','track'].forEach(n=>{ if(d[n]){ const r=document.querySelector(`[name=${n}][value="${d[n]}"]`); if(r) r.checked=true; } });
   if(d.missed) S.missed=d.missed;
+  if(d.alerts) document.querySelectorAll('[name=alerts]').forEach(x=>x.checked=d.alerts.includes(x.value));
 }
 function load(){ try{ fill(JSON.parse(localStorage.getItem('ondatrace-demo-fb')||'null')); }catch(e){} }
 $('fb').addEventListener('input',save); $('fb').addEventListener('change',save);
@@ -1668,7 +1722,7 @@ function renderResponses(docs){
   $('responses-sum').innerHTML=`<p style="font-size:14px;margin-bottom:10px"><b>${rs.length}</b> ${rs.length===1?'response':'responses'} · portfolio: <b>${cnt('scope','Across my whole portfolio')}</b>, project: <b>${cnt('scope','On individual projects')}</b>, both: <b>${cnt('scope','Both equally')}</b> · track in Ondatrace: <b>${cnt('track','In Ondatrace')}</b>, in current tools: <b>${cnt('track','In my current tools, with Ondatrace reading across them')}</b>, not sure: <b>${cnt('track','Not sure yet')}</b></p>
     <div class="tablewrap"><table class="tally" style="min-width:480px"><thead><tr><th>Finding</th><th class="n">Act</th><th class="n">Maybe</th><th class="n">No</th><th class="n">Would miss</th></tr></thead><tbody>${tally}</tbody></table></div>`;
   $('responses').innerHTML=rs.map(r=>`<div class="resp"><div class="resp-head"><b>${esc(r.name||'Anonymous tester')}</b><span class="mono muted">${esc(r.submittedAt?new Date(r.submittedAt).toLocaleString():'')}</span></div>
-    ${[['Main use',r.scope],['Track projects',r.track],['What Ondatrace adds',r.projectView],['Evidence needed',r.evidence],['Another inbox if',r.inbox],['OK without asking',r.auto],['Try first on',r.next],['Anything else',r.other]].filter(([,v])=>v).map(([k,v])=>`<div><span class="muted">${k}:</span> ${esc(v)}</div>`).join('')}
+    ${[['Main use',r.scope],['Track projects',r.track],['Alerts',(r.alerts||[]).join(', ')],['What Ondatrace adds',r.projectView],['Evidence needed',r.evidence],['Another inbox if',r.inbox],['OK without asking',r.auto],['Try first on',r.next],['Anything else',r.other]].filter(([,v])=>v).map(([k,v])=>`<div><span class="muted">${k}:</span> ${esc(v)}</div>`).join('')}
     ${Object.entries(r.reactions||{}).filter(([,v])=>v&&v.why).map(([k,v])=>`<div><span class="muted">${esc(byId(k)?.kind||k)} (${esc(v.act||'-')}):</span> "${esc(v.why)}"</div>`).join('')}</div>`).join('');
 }
 
