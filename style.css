@@ -807,7 +807,7 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
 .hn-label { fill: var(--ink); font-family: var(--font-body); font-weight: 600; font-size: 15px; text-anchor: middle; }
 .hn-world .hn-label, .hn-craft .hn-label { fill: var(--accent-ink); }
 .hn-node circle { stroke: var(--bg); stroke-width: 4; }
-.helm-card figcaption { color: var(--ink-soft); font-size: 0.95rem; text-align: center; max-width: 380px; }
+.helm-card figcaption { color: var(--ink-soft); font-size: 0.95rem; text-align: center; max-width: 440px; }
 @keyframes hn-flow { to { stroke-dashoffset: -24; } }
 @media (prefers-reduced-motion: reduce) { .hn-spoke { animation: none; } }
 @media (max-width: 900px) { .helm-net { max-width: 460px; } }
