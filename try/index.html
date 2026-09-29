@@ -290,6 +290,56 @@ details.fold:hover>summary h2{text-decoration:underline;text-underline-offset:4p
 .rtable td.name b{display:block;font-weight:600}
 .rtable td.name span{font-size:12.5px;color:var(--muted)}
 .rtable .gap{font:500 12px var(--mono);color:var(--crit)}
+/* project view: layered schedule, Gantt and risks */
+.sched-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.sched-controls .seg{margin:0}
+.sched-controls .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.rtable.sched{min-width:760px;font-size:13.5px}
+.rtable.sched td{padding:8px 12px;vertical-align:top}
+.rtable.sched tr.lv0 td{background:var(--surface-2);font-weight:600}
+.rtable.sched tr.lv1 td.task{padding-left:28px}
+.rtable.sched tr.lv2 td.task{padding-left:48px;font-weight:400}
+.sched td.task{min-width:240px}
+.sched .tname{display:flex;gap:6px;align-items:flex-start}
+.sched .caret{border:0;background:transparent;color:var(--ink-2);width:20px;height:20px;padding:0;border-radius:4px;flex:none;line-height:20px;font-size:12px}
+.sched .caret:hover{background:var(--line)}
+.sched .caret-sp{display:inline-block;width:20px;flex:none}
+.lsrc{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:5px;font-weight:400}
+.lsrc .src{font-size:12px}
+.lsrc .dot{width:16px;height:16px;font-size:9.5px;border-radius:4px}
+.lsrc .anon{font-size:12px;color:var(--muted);display:inline-flex;gap:4px;align-items:center}
+.sched .alt{display:block;margin-top:4px;font-size:12px;color:var(--warn)}
+.sched .dates{white-space:nowrap;font:500 12.5px var(--mono);color:var(--ink-2)}
+.sched .pill{font-size:11px;padding:4px 7px}
+.sched button.pill{border:0;cursor:pointer}
+.sched th.tl-h,.sched td.tl{width:44%;min-width:320px;padding-left:0;padding-right:0;position:relative}
+.sched .tl-in{position:relative;height:22px;margin:0 12px}
+.sched td.tl .tl-in{margin-top:2px}
+.sched .tick{position:absolute;top:0;bottom:0;border-left:1px dashed var(--line);font:500 10.5px var(--mono);color:var(--muted);padding-left:4px;white-space:nowrap;text-transform:none;letter-spacing:0}
+.sched .today{position:absolute;top:-8px;bottom:-8px;border-left:2px solid var(--crit);opacity:.55}
+.sched .bar{position:absolute;top:5px;height:12px;border-radius:4px;background:var(--brand);min-width:4px}
+.sched .bar.done{background:var(--ok);opacity:.55}
+.sched .bar.risk{background:var(--warn)}
+.sched .bar.late{background:var(--crit)}
+.sched .bar.group{top:8px;height:6px;border-radius:1px;background:var(--ink-2)}
+.sched .bar.group::before,.sched .bar.group::after{content:"";position:absolute;top:0;width:3px;height:11px;background:var(--ink-2)}
+.sched .bar.group::before{left:0}.sched .bar.group::after{right:0}
+.sched .bar.ms{width:12px!important;min-width:0;height:12px;border-radius:2px;transform:translateX(-6px) rotate(45deg)}
+.sched .ghost{position:absolute;top:5px;height:12px;width:12px;transform:translateX(-6px) rotate(45deg);border:2px dashed var(--warn);border-radius:2px}
+.sched-wrap .rtable.sched.table-only{min-width:640px}
+.risk-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.risk-cols h3{font-size:14px;margin-bottom:8px}
+.plist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.plist li{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:grid;gap:4px;background:var(--surface)}
+.plist .meta{color:var(--muted);font-size:12.5px}
+.proj-open{margin-top:12px}
+.qsec{font:500 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 -2px}
+.qproj{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;font-size:14px;margin-top:6px}
+.next14 h2{font-size:17px;margin-bottom:4px}
+.next14 ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.next14 li{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:start;font-size:13.5px;border-top:1px solid var(--line);padding-top:8px}
+.next14 .when{font:500 12.5px var(--mono);color:var(--ink-2)}
+@media (max-width:760px){.risk-cols{grid-template-columns:1fr}.next14 li{grid-template-columns:1fr}}
 .lens td{background:var(--bg);padding:12px 14px 16px}
 .lens-list{display:grid;gap:8px}
 .lens-list button{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px;font-size:14px}
@@ -779,6 +829,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <div class="detail-toggle"><span class="lbl">How much to show on each suggestion</span>
           <span class="seg" role="group" aria-label="Detail level"><button type="button" data-detail="high">High level</button><button type="button" data-detail="more">More detail</button><button type="button" data-detail="all">All details</button></span></div>
         <div class="queue" id="queue"></div>
+        <div class="panel next14" id="next14" hidden></div>
         <p class="dismissed" id="dismissed" hidden></p>
         <div class="morning" id="morning">
           <p id="morning-text"></p>
@@ -847,6 +898,32 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <p class="section-intro" style="margin-top:12px" id="sum-intro"></p>
         <div class="panel" id="sum-new" style="margin-bottom:14px" hidden></div>
         <div class="tablewrap"><table class="rtable" id="sum-table"></table></div>
+      </section>
+
+      <!-- PROJECT -->
+      <section class="view" id="v-project" aria-labelledby="h-project" hidden>
+        <button class="btn ghost small back" type="button" id="proj-back">← Back</button>
+        <span class="eyebrow" id="proj-eyebrow">Project</span>
+        <h1 id="h-project" style="margin-top:6px"></h1>
+        <p class="summary" id="proj-summary"></p>
+        <div class="tiles" id="proj-tiles"></div>
+        <div class="section">
+          <h2>Schedule</h2>
+          <p class="section-intro">One plan built from every tool the team uses. Each line shows where it came from. Phases and deliverables roll up the dates and status of the work below them.</p>
+          <div class="sched-controls">
+            <span class="seg" role="group" aria-label="Schedule detail"><button type="button" data-level="high">High level</button><button type="button" data-level="more">More details</button><button type="button" data-level="all">Most detailed</button></span>
+            <span class="seg" role="group" aria-label="Schedule view"><button type="button" data-smode="gantt">Gantt</button><button type="button" data-smode="table">Table</button></span>
+          </div>
+          <div class="tablewrap sched-wrap"><table class="rtable sched" id="sched"></table></div>
+          <p class="cell-sub" id="sched-note" style="margin-top:8px"></p>
+        </div>
+        <div class="section">
+          <h2>Risks</h2>
+          <div class="risk-cols">
+            <div><h3>What Ondatrace found</h3><div class="sfind" id="proj-findings"></div></div>
+            <div><h3>The team's own risk log</h3><ul class="plist" id="proj-risks"></ul></div>
+          </div>
+        </div>
       </section>
 
       <!-- RISKS -->
@@ -1015,6 +1092,136 @@ const PROJECTS = [
    team:'Jess Lin + 2', src:['monday','docs']}
 ];
 const money = v => v>=1e6?'$'+(v/1e6).toFixed(2).replace(/0$/,'')+'M':'$'+Math.round(v/1000)+'K';
+
+/* project schedules: phase > deliverable > task. Each line lists every source it came from:
+   'tool:label' or ['tool','label','scope'] (a scope a viewer can't open shows only its anonymous label).
+   Tasks: [name, owner, start, end, status, sources, finding id?, {alt date from another source}?]
+   Status: done | on | risk. Phases and deliverables roll their dates and status up from below. */
+const sT = (n,o,s,e,st,src,f,alt) => ({n,o,s,e,st,src,f,alt});
+const sG = (n,src,kids) => ({n,src,kids});
+const SCHED = {
+  api:[
+    sG('Design',['jira:Epic PLAT-300'],[
+      sG('Auth architecture',['docs:Auth design doc'],[
+        sT('Threat model','Priya Shah',-62,-48,'done',['jira:PLAT-301','docs:Threat model']),
+        sT('Token service design','Kevin Doyle',-40,-20,'done',['jira:PLAT-355','docs:Auth design doc','zoom:Architecture review'])]),
+      sG('SSO approach',['jira:PLAT-360'],[
+        sT('Choose the SSO pattern','Priya Shah',-45,-33,'done',['jira:PLAT-360','zoom:Architecture review'])])]),
+    sG('Build',['jira:Epic PLAT-400'],[
+      sG('SSO token service',['jira:PLAT-412'],[
+        sT('Token issuance API','Priya Shah',-18,8,'on',['jira:PLAT-413','slack:#api-team']),
+        sT('SSO token service (PLAT-412)','Priya Shah',-10,22,'risk',['jira:PLAT-412 · moved to Sprint 25','slack:#api-team'],'acme'),
+        sT('Load-test sign-in','Kevin Doyle',15,26,'on',['jira:PLAT-420'])]),
+      sG('API layer v3',['jira:Epic PLAT-380'],[
+        sT('Rate limiting','Kevin Doyle',-25,5,'on',['jira:PLAT-388']),
+        sT('Partner endpoints','Kevin Doyle',0,30,'on',['jira:PLAT-430','monday:Partner Launch · API access']),
+        sT('Deprecation shims for v2','Kevin Doyle',10,40,'on',['jira:PLAT-441'])])]),
+    sG('Release',['jira:Fix version 3.0'],[
+      sG('Security and performance',['jira:PLAT-450'],[
+        sT('Security review','Priya Shah',28,36,'on',['jira:PLAT-450','calendar:Security review booked']),
+        sT('p95 sign-in latency under 150 ms','Kevin Doyle',20,45,'on',['jira:PLAT-460'])]),
+      sG('General availability',['jira:Fix version 3.0'],[
+        sT('Customer migration guide','Kevin Doyle',35,55,'on',['docs:v3 migration guide']),
+        sT('API v3 general availability','Kevin Doyle',58,60,'on',['jira:Fix version 3.0','zoom:Sprint review'])])])],
+  portal:[
+    sG('Design and beta',['smartsheet:Rows 2–14'],[
+      sG('Customer experience redesign',['smartsheet:Row 3'],[
+        sT('Design system refresh','Maya Chen',-70,-45,'done',['smartsheet:Row 4','docs:Portal design spec']),
+        sT('Usability testing','Maya Chen',-40,-28,'done',['smartsheet:Row 6','zoom:Usability sessions'])]),
+      sG('Beta',['smartsheet:Row 11'],[
+        sT('Beta with 38 customers','Leo Park',-20,-6,'done',['smartsheet:Row 12','gmail:Beta invitations']),
+        sT('Beta feedback triage','Maya Chen',-6,5,'on',['smartsheet:Row 13','docs:Beta feedback log'])])]),
+    sG('Build',['smartsheet:Rows 15–26'],[
+      sG('Single sign-on',['smartsheet:Row 17'],[
+        sT('SSO login (needs PLAT-412)','Leo Park',0,14,'risk',['smartsheet:Row 18 · marked green','jira:PLAT-412 (Platform API v3)'],'acme'),
+        sT('Account linking','Nina Alvarez',2,16,'on',['smartsheet:Row 19'])]),
+      sG('Self-service pages',['smartsheet:Row 20'],[
+        sT('Billing pages','Nina Alvarez',-15,10,'on',['smartsheet:Row 21']),
+        sT('Support ticket view','Nina Alvarez',-5,12,'on',['smartsheet:Row 22','jira:SUP-88'])])]),
+    sG('Launch',['smartsheet:Rows 27–34'],[
+      sG('Go-live',['smartsheet:Row 29'],[
+        sT('Launch email to every customer','Leo Park',16,21,'risk',['smartsheet:Row 30','docs:Launch email draft'],'dates'),
+        sT('Go-live','Leo Park',21,21,'risk',['smartsheet:Row 31'],'dates',{d:38,src:['zoom','Steering committee','steering']})]),
+      sG('Hypercare',['smartsheet:Row 32'],[
+        sT('Two weeks of hypercare','Leo Park',21,35,'on',['smartsheet:Row 33']),
+        sT('Hand off to Support','Marcus Bell',25,28,'on',['calendar:Handoff meeting','docs:Support runbook'])])])],
+  mig:[
+    sG('Vendor and contract',['smartsheet:Rows 2–8'],[
+      sG('Stratus contract',['smartsheet:Row 5'],[
+        sT('Vendor evaluation','Ana Ruiz',-50,-30,'done',['docs:Vendor scorecard','smartsheet:Row 4']),
+        sT('Sign Stratus contract ($186K)','Ana Ruiz',0,2,'risk',['smartsheet:Row 7 · sign by {d+2}','docs:Data Migration plan'],'hold'),
+        sT('Stratus price hold ends','Ana Ruiz',3,3,'risk',['smartsheet:Row 8',['gmail','Stratus pricing email','ana-mail']],'hold')])]),
+    sG('Build and validate',['smartsheet:Rows 9–18'],[
+      sG('Data pipelines',['smartsheet:Row 10'],[
+        sT('Schema mapping','Raj Mehta',-35,-10,'done',['smartsheet:Row 11','docs:Mapping sheet']),
+        sT('Pipeline build','Raj Mehta',-12,20,'on',['smartsheet:Row 12','slack:#data-migration'])]),
+      sG('Validation',['smartsheet:Row 14'],[
+        sT('Validation test runs (14 of 14 passed)','Raj Mehta',-20,5,'on',['smartsheet:Row 15']),
+        sT('Validate every record (62% so far)','Raj Mehta',-5,30,'on',['smartsheet:Row 16'])])]),
+    sG('Cutover',['smartsheet:Rows 19–26'],[
+      sG('Rehearsal',['smartsheet:Row 20'],[
+        sT('Rollback plan','Ana Ruiz',5,12,'on',['docs:Rollback plan']),
+        sT('Cutover rehearsal (owner: Priya)','Priya Shah',8,10,'risk',['smartsheet:Row 22','calendar:Rehearsal · Priya Shah'],'priya')]),
+      sG('Final cutover',['smartsheet:Row 24'],[
+        sT('Change freeze','Ana Ruiz',70,74,'on',['smartsheet:Row 25']),
+        sT('Final cutover','Ana Ruiz',75,75,'on',['smartsheet:Row 26'])])])],
+  support:[
+    sG('Prepare',['calendar:Readiness plan'],[
+      sG('Training content',['docs:Training plan'],[
+        sT('Training deck','Carla Nguyen',-20,-5,'done',['docs:Portal 2.0 training deck']),
+        sT('Knowledge base articles','Carla Nguyen',-10,15,'on',['docs:Knowledge base drafts'])]),
+      sG('Training environment',['jira:SUP-100'],[
+        sT('Training sandbox','Marcus Bell',-3,3,'on',['jira:SUP-102'])])]),
+    sG('Train',['calendar:Training sessions'],[
+      sG('Agent training',['calendar:Training series'],[
+        sT('Portal 2.0 training, 40 agents','Marcus Bell',4,4,'risk',['calendar:Training · {d+4}','docs:Training deck'],'training'),
+        sT('Practice tickets','Carla Nguyen',5,12,'on',['jira:SUP-110'])])]),
+    sG('Go-live',['calendar:Launch week'],[
+      sG('Launch support',['docs:Support runbook'],[
+        sT('Staffing plan for launch week','Marcus Bell',15,20,'on',['calendar:Launch week rota','docs:Staffing plan']),
+        sT('Support go-live','Marcus Bell',25,25,'on',['calendar:Go-live'])])])],
+  pon:[
+    sG('Discovery',['jira:Epic PON-1'],[
+      sG('Partner research',['docs:Research plan'],[
+        sT('Partner interviews','Sam Okafor',-45,-30,'done',['docs:Interview notes','zoom:Partner calls']),
+        sT('Invite flow prototype','Sam Okafor',-25,-12,'done',['jira:PON-12'])])]),
+    sG('Build',['jira:Epic PON-2'],[
+      sG('Self-service sign-up',['jira:PON-30'],[
+        sT('Sign-up form','Sam Okafor',-10,15,'on',['jira:PON-31']),
+        sT('Invite emails','Sam Okafor',5,25,'risk',['jira:PON-38','monday:Partner Launch · invite emails'],'dup')]),
+      sG('Tax forms',['jira:PON-40'],[
+        sT('Tax form collection','Sam Okafor',10,28,'risk',['jira:PON-44','monday:Partner Launch · tax forms'],'dup'),
+        sT('Compliance review','Sam Okafor',20,30,'on',['docs:Compliance checklist'])])]),
+    sG('Pilot and launch',['jira:Epic PON-3'],[
+      sG('Pilot',['jira:PON-60'],[
+        sT('Partner pilot, 12 partners','Sam Okafor',30,40,'risk',['jira:PON-61','monday:Partner Launch board'],'dup')]),
+      sG('Launch',['jira:PON-70'],[
+        sT('Launch to all partners','Sam Okafor',50,50,'on',['jira:PON-71'])])])],
+  pl:[
+    sG('Setup',['monday:Group · Setup'],[
+      sG('Partner list',['monday:Item 3'],[
+        sT('Confirm the 12 partners','Jess Lin',-30,-15,'done',['monday:Item 4']),
+        sT('Contacts and owners','Jess Lin',-15,-5,'done',['monday:Item 5','gmail:Partner contacts'])]),
+      sG('Security',['monday:Item 12'],[
+        sT('API security review (owner: Priya)','Priya Shah',9,11,'risk',['monday:Item 14','calendar:Review block · Priya Shah'],'priya')])]),
+    sG('Onboarding',['monday:Group · Onboarding'],[
+      sG('Invites',['monday:Item 18'],[
+        sT('Send invite emails by hand','Jess Lin',-5,20,'on',['monday:Item 19','gmail:Sent invitations'])]),
+      sG('Tax forms',['monday:Item 21'],[
+        sT('Tax form collection live','Jess Lin',15,20,'risk',['monday:Item 22','docs:Tax form process'],'dup')])]),
+    sG('Complete',['monday:Group · Complete'],[
+      sG('All partners live',['monday:Item 30'],[
+        sT('All 12 partners onboarded','Jess Lin',35,40,'on',['monday:Item 31'])])])]
+};
+/* each project's own risk log, as its team keeps it (Ondatrace's findings are listed separately) */
+const PRISKS = {
+  api:[['SSO token service slipped a sprint','warn','Kevin Doyle',22,['jira:PLAT-412']],['Sign-in latency above target (180 ms, target 150 ms)','watch','Priya Shah',45,['jira:PLAT-460']]],
+  portal:[['Launch depends on SSO from Platform API','watch','Leo Park',14,['smartsheet:Risk log #3']],['Beta feedback backlog growing','watch','Maya Chen',5,['docs:Beta feedback log']]],
+  mig:[['Validation coverage at 62%','watch','Raj Mehta',30,['smartsheet:Risk log #2']],['Vendor price hold ends {d+3}','warn','Ana Ruiz',3,[['gmail','Stratus pricing email','ana-mail']]]],
+  support:[['Trainers not confirmed for {d+4}','warn','Marcus Bell',4,['calendar:Training · {d+4}']],['Knowledge base articles behind schedule','watch','Carla Nguyen',15,['docs:Knowledge base drafts']]],
+  pon:[['Scope overlaps with Partner Launch','watch','Sam Okafor',30,['jira:PON-2 comments']]],
+  pl:[['Invites by hand will not scale past 12 partners','watch','Jess Lin',40,['monday:Item 19 notes']]]
+};
 
 const INSIGHTS = [
 { id:'acme', sev:'crit', kind:'Customer commitment at risk', money:420000, client:'Acme\'s renewal and rollout',
@@ -1345,15 +1552,20 @@ const current = i => {
 const openList = () => INSIGHTS.map(current).filter(i=>visible(i) && viewerSees(i) && !S.dismissed[i.id]).sort((a,b)=>ORDER[a.sev]-ORDER[b.sev]);
 
 /* navigation */
-const VIEWS=['start','connect','today','detail','summary','risks','research','coach','ask','wrap'];
+const VIEWS=['start','connect','today','detail','summary','project','risks','research','coach','ask','wrap'];
+// The project view has no menu item of its own; it belongs under Portfolio summary.
+const navOf = v => v==='project' ? 'summary' : v;
 function go(v){
-  if(['today','summary','risks','research','coach','ask','wrap','detail'].includes(v) && !S.scanned) return;
+  if(['today','summary','project','risks','research','coach','ask','wrap','detail'].includes(v) && !S.scanned) return;
+  if(v==='project' && !PROJECTS.some(p=>p.id===S.proj)) v='summary';
   if(v==='detail' && S.view!=='detail') S.prev=S.view;
+  if(v==='project' && !['project','detail'].includes(S.view)) S.projFrom=S.view;
   S.view=v;
   VIEWS.forEach(n=>$('v-'+n).hidden = n!==v);
-  document.querySelectorAll('.nav [data-go]').forEach(b=>{ const cur = b.dataset.go===v || (v==='detail'&&b.dataset.go===S.prev); cur ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'); });
+  document.querySelectorAll('.nav [data-go]').forEach(b=>{ const cur = b.dataset.go===navOf(v) || (v==='detail'&&b.dataset.go===navOf(S.prev)); cur ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'); });
   $('topbar').hidden=!S.scanned;
   if(v==='today') renderToday();
+  if(v==='project') renderProject();
   if(v==='summary'){ step('risks'); renderSummary(); }
   if(v==='risks') renderRisks();
   if(v==='coach') renderCoach();
@@ -1436,7 +1648,7 @@ function renderToday(){
   const missing = [...new Set(hid.flatMap(i=>i.needs.filter(t=>!on(t))))];
   $('queue').dataset.detail = S.detail;
   document.querySelectorAll('[data-detail]').forEach(b=>{ if(b.tagName==='BUTTON') b.setAttribute('aria-pressed', b.dataset.detail===S.detail); });
-  $('queue').innerHTML = vis.map(cardHTML).join('') +
+  $('queue').innerHTML = (V.projects ? vis.map(cardHTML).join('') : leaderQueueHTML(vis)) +
     (hid.length?`<div class="card missing"><p><b>${hid.length} ${hid.length===1?'finding is':'findings are'} hidden</b> because ${hid.length===1?'it needs':'they need'} a tool that's off: ${missing.map(t=>TOOLS[t].name).join(', ')}. Without it, the connection doesn't exist.</p></div>`:'') +
     (!vis.length && !hid.length ? `<div class="card missing"><p>Nothing needs you right now.</p></div>`:'');
   const last=S.lastDismissed&&S.dismissed[S.lastDismissed]?S.lastDismissed:null;
@@ -1445,6 +1657,7 @@ function renderToday(){
   const dis = Object.keys(S.dismissed);
   $('dismissed').hidden=!dis.length;
   $('dismissed').innerHTML = dis.length?`Marked not an issue: ${dis.map(id=>`${esc(fmt(byId(id).title))} <button class="btn ghost small" type="button" data-undo="${id}">Undo</button>`).join(' · ')}`:'';
+  renderNext14();
   $('morning-btn').disabled=S.morning;
   $('morning-text').innerHTML = S.morning?'<b>It\'s tomorrow morning.</b> Findings with a green label changed overnight. Ondatrace keeps state between days, so it knows what\'s new, what improved and what got worse.':'<b>See how findings change over time.</b> Ondatrace keeps watching. Jump ahead a day and new updates arrive overnight.';
   const fine = FINE.filter(([t])=>on(t));
@@ -1715,7 +1928,7 @@ function projDetail(p,f){
   const msState=st=>st==='done'?['ok','Done']:find(st)?[SEV[find(st).sev][0],'At risk']:['neutral','On track'];
   const varc=b.forecast-b.total;
   const mismatch=f.length?`<p class="mismatch">Reported "${esc(p.plan)}" in ${TOOLS[p.tool].name}. Ondatrace found ${f.length} ${f.length===1?'problem':'problems'} the plan doesn't show.</p>`:'';
-  return `${mismatch}<div class="sgrid">
+  return `${mismatch}<p><button type="button" class="btn small primary proj-open" data-proj="${p.id}" style="margin:0 0 14px">Open the full schedule and risks →</button></p><div class="sgrid">
     <div><h3>Milestones</h3><ul>${p.ms.map(([d,name,st])=>{const [c,l]=msState(st);return `<li><span><span class="mono muted">${fmtD(d)}</span> ${esc(fmt(name))}</span><span class="pill ${c}">${l}</span></li>`;}).join('')}</ul>
       <h3 style="margin-top:16px">Team</h3><p style="font-size:13.5px">${esc(p.team)}</p></div>
     <div><h3>Budget</h3><dl class="kv"><dt>Approved</dt><dd>${money(b.total)}</dd><dt>Spent</dt><dd>${money(b.spent)}</dd><dt>Committed, not yet spent</dt><dd>${money(b.committed)}</dd><dt>Forecast at completion</dt><dd>${money(b.forecast)}</dd><dt>Variance</dt><dd class="${varc>0?'gap':''}">${varc===0?'$0':(varc>0?'+':'−')+money(Math.abs(varc))}</dd></dl>
@@ -1729,6 +1942,143 @@ function toggleLens(id){ S.lens=S.lens===id?null:id; if(S.lens) logOnce('lens'+i
 $('sum-table').addEventListener('click',e=>{ if(e.target.closest('[data-open]')) return; const r=e.target.closest('[data-lens]'); if(r) toggleLens(r.dataset.lens); });
 $('sum-table').addEventListener('keydown',e=>{ const r=e.target.closest('[data-lens]'); if(r&&e.target===r&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); toggleLens(r.dataset.lens); } });
 ['overview','metrics','success'].forEach(k=>$('st-'+k).addEventListener('click',()=>{ S.sumTab=k; if(k==='metrics') logOnce('metrics','Looked at portfolio delivery.'); if(k==='success') logOnce('success','Looked at portfolio outcomes.'); renderSummary(); }));
+
+/* project view: the whole schedule (phase > deliverable > task) and the project's risks */
+Object.assign(S,{proj:null, projFrom:'summary', schedLevel:'high', schedMode:'gantt', schedOpen:new Set(), schedClosed:new Set()});
+let schedOpenIds = new Set();   // open findings the current viewer can see; set on each render
+const SCHED_RANK = {late:3,risk:2,on:1,done:0};
+const SCHED_LABEL = {done:['ok','Done'],on:['neutral','On track'],risk:['warn','At risk'],late:['crit','Late']};
+const LEVEL_DEPTH = {high:0,more:1,all:2};
+const srcParts = x => Array.isArray(x) ? x : [x.slice(0,x.indexOf(':')), x.slice(x.indexOf(':')+1)];
+const schedLeaves = nodes => nodes.flatMap(n => n.kids ? schedLeaves(n.kids) : [n]);
+// A task is at risk only while the finding behind it is open and visible to this viewer; otherwise it
+// shows what its own tool says. Unfinished work past its end date is late.
+function taskState(t){
+  if(t.st==='done') return 'done';
+  if(t.e<0) return 'late';
+  if(t.st==='risk' && !(t.f && schedOpenIds.has(t.f))) return 'on';
+  return t.st;
+}
+function rollup(n){
+  if(!n.kids) return {s:n.s, e:n.e, st:taskState(n)};
+  const r=n.kids.map(rollup);
+  return {s:Math.min(...r.map(x=>x.s)), e:Math.max(...r.map(x=>x.e)), st:r.reduce((w,x)=>SCHED_RANK[x.st]>SCHED_RANK[w]?x.st:w,'done')};
+}
+function lineSrcHTML(list){
+  let off=0; const out=[];
+  list.forEach(x=>{
+    const [t,label,sc]=srcParts(x); if(!TOOLS[t]) return;
+    if(!on(t)){ off++; return; }
+    if(sc && blocked(sc)) out.push(`<span class="anon">${LOCK}${esc(SCOPES[sc].anon)}</span>`);
+    else out.push(`<span class="src">${dot(t)}${esc(TOOLS[t].name)} · ${esc(fmt(label))}</span>`);
+  });
+  if(!out.length) out.push(`<span class="anon">${off?'Its tool is turned off':'No source recorded'}</span>`);
+  return out.join('');
+}
+function schedRows(pid){
+  const rows=[], max=LEVEL_DEPTH[S.schedLevel];
+  const walk=(nodes,depth,key,show)=>nodes.forEach((n,i)=>{
+    const k=key+i, group=!!n.kids;
+    const open=group && !S.schedClosed.has(k) && (depth<max || S.schedOpen.has(k));
+    if(show) rows.push({n,k,depth,group,open,r:rollup(n)});
+    if(group) walk(n.kids,depth+1,k+'.',show&&open);
+  });
+  walk(SCHED[pid]||[],0,pid+':',true);
+  return rows;
+}
+function renderSchedule(){
+  const pid=S.proj, all=SCHED[pid]||[], rows=schedRows(pid), gantt=S.schedMode==='gantt';
+  document.querySelectorAll('button[data-level]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.level===S.schedLevel));
+  document.querySelectorAll('button[data-smode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.smode===S.schedMode));
+  const leaves=schedLeaves(all);
+  const dates=[0,...leaves.flatMap(t=>[t.s,t.e,...(t.alt?[t.alt.d]:[])])];
+  const lo=Math.min(...dates)-4, hi=Math.max(...dates)+4, pct=x=>((x-lo)/(hi-lo)*100).toFixed(2);
+  const todayMark=`<span class="today" style="left:${pct(0)}%" aria-hidden="true"></span>`;
+  const ticks=[]; for(let n=lo;n<=hi;n++) if(day(n).getDate()===1) ticks.push(`<span class="tick" style="left:${pct(n)}%">${day(n).toLocaleDateString(undefined,{month:'short'})}</span>`);
+  const head=`<thead><tr><th scope="col">Work</th><th scope="col">Owner</th><th scope="col">Dates</th><th scope="col">Status</th>${gantt?`<th scope="col" class="tl-h"><span class="sr">Timeline</span><div class="tl-in" aria-hidden="true">${ticks.join('')}${todayMark}</div></th>`:''}</tr></thead>`;
+  const body=rows.map(({n,k,depth,group,open,r})=>{
+    const range=r.s===r.e?fmtD(r.s):`${fmtD(r.s)} – ${fmtD(r.e)}`;
+    const [c,l]=SCHED_LABEL[r.st];
+    const fi=!group && n.f && r.st!=='done' && schedOpenIds.has(n.f) ? n.f : null;
+    const status=fi?`<button type="button" class="pill ${c}" data-open="${fi}" title="Open the finding behind this">${l} ↗</button>`:`<span class="pill ${c}">${l}</span>`;
+    const alt=n.alt && on(n.alt.src[0]) && !(n.alt.src[2] && blocked(n.alt.src[2]))
+      ? `<span class="alt">${esc(n.alt.src[1])} (${TOOLS[n.alt.src[0]].name}) says ${fmtD(n.alt.d)}</span>` : '';
+    let below='';
+    if(group && !open){ const tools=new Set(schedLeaves(n.kids).flatMap(t=>t.src.map(x=>srcParts(x)[0])).filter(on)); below=` <span class="anon">+ ${tools.size} ${tools.size===1?'tool':'tools'} in the ${schedLeaves(n.kids).length} tasks below</span>`; }
+    const caret=group?`<button type="button" class="caret" data-sk="${k}" aria-expanded="${open}" aria-label="${open?'Collapse':'Expand'} ${esc(n.n)}">${open?'▾':'▸'}</button>`:'<span class="caret-sp"></span>';
+    const kind=group?'group':(r.s===r.e?'ms':r.st);
+    const bar=`<span class="bar ${kind} ${r.st}" style="left:${pct(r.s)}%;${r.s===r.e?'':`width:${(pct(r.e)-pct(r.s)).toFixed(2)}%`}" role="img" aria-label="${esc(n.n)}: ${range}, ${l.toLowerCase()}"></span>`;
+    const ghost=alt?`<span class="ghost" style="left:${pct(n.alt.d)}%" title="${esc(n.alt.src[1])} says ${fmtD(n.alt.d)}"></span>`:'';
+    return `<tr class="lv${depth}"><td class="task"><div class="tname">${caret}<div><span>${esc(fmt(n.n))}</span>${alt}<div class="lsrc">${lineSrcHTML(n.src)}${below}</div></div></div></td>
+      <td>${group?'':esc(n.o)}</td><td class="dates">${range}</td><td>${status}</td>${gantt?`<td class="tl"><div class="tl-in">${todayMark}${bar}${ghost}</div></td>`:''}</tr>`;
+  }).join('');
+  $('sched').className='rtable sched'+(gantt?'':' table-only');
+  $('sched').innerHTML=head+`<tbody>${body}</tbody>`;
+  $('sched-note').textContent=`Showing ${rows.length} of ${all.length+all.reduce((a,g)=>a+g.kids.length,0)+leaves.length} lines. Use the arrows to open or close a single phase or deliverable.${gantt?' The red line is today.':''}`;
+}
+function renderProject(){
+  const p=PROJECTS.find(x=>x.id===S.proj); if(!p) return;
+  const list=openList().filter(i=>i.sev!=='ok');
+  schedOpenIds=new Set(list.map(i=>i.id));
+  const f=list.filter(i=>i.pids.includes(p.id)), b=p.budget;
+  const back={today:'Today',summary:'Portfolio summary',risks:'Portfolio risks'}[S.projFrom];
+  $('proj-back').textContent=back?`← Back to ${back}`:'← Back';
+  $('proj-eyebrow').textContent=`Project · led by ${p.owner}`;
+  $('h-project').textContent=p.name;
+  $('proj-summary').innerHTML=`${esc(p.purpose)}. ${esc(TOOLS[p.tool].name)} reports it as <b>${esc(p.plan)}</b>. `+
+    (f.length?`Ondatrace found ${f.length} ${f.length===1?'problem':'problems'} the plan doesn't show.`:'Ondatrace found nothing here that needs attention.');
+  const tools=new Set(schedLeaves(SCHED[p.id]||[]).flatMap(t=>t.src.map(x=>srcParts(x)[0])).filter(on));
+  $('proj-tiles').innerHTML=[[`${p.pct}%`,`done, with ${p.elapsed}% of the time used`],[fmtD(p.due),`due, in ${p.due} days`],[money(b.spent),`spent of ${money(b.total)}`],[tools.size,`tools feeding this schedule`]]
+    .map(([a,x])=>`<div class="counter"><strong>${a}</strong><span>${esc(x)}</span></div>`).join('');
+  renderSchedule();
+  $('proj-findings').innerHTML=f.length?f.map(i=>`<button type="button" data-open="${i.id}"><span class="pill ${SEV[i.sev][0]}" style="justify-self:start">${esc(i.kind)}</span><span>${esc(fmt(i.title))}</span></button>`).join('')
+    :'<p class="muted" style="font-size:13.5px">Nothing Ondatrace found needs attention on this project.</p>';
+  $('proj-risks').innerHTML=(PRISKS[p.id]||[]).map(([t,sev,o,d,src])=>`<li><span><span class="pill ${sev}">${SEV[sev][1]}</span> ${esc(fmt(t))}</span><span class="meta">Owner ${esc(o)} · by ${fmtD(d)}</span><span class="lsrc srcs">${lineSrcHTML(src)}</span></li>`).join('')
+    || '<li class="muted">No risks logged.</li>';
+}
+function openProject(id){
+  const p=PROJECTS.find(x=>x.id===id); if(!p) return;
+  S.proj=id; S.schedOpen.clear(); S.schedClosed.clear();
+  logOnce('proj'+id,`Opened the ${p.name} project.`);
+  go('project');
+}
+document.addEventListener('click',e=>{
+  const pj=e.target.closest('[data-proj]'); if(pj){ openProject(pj.dataset.proj); return; }
+  const lv=e.target.closest('button[data-level]'); if(lv){ S.schedLevel=lv.dataset.level; S.schedOpen.clear(); S.schedClosed.clear(); logOnce('level-'+S.schedLevel,`Set the schedule to "${lv.textContent}".`); renderSchedule(); return; }
+  const sm=e.target.closest('button[data-smode]'); if(sm){ S.schedMode=sm.dataset.smode; logOnce('smode-'+S.schedMode,`Switched the schedule to the ${sm.textContent} view.`); renderSchedule(); return; }
+  const c=e.target.closest('button[data-sk]'); if(c){
+    const k=c.dataset.sk;
+    if(c.getAttribute('aria-expanded')==='true'){ S.schedOpen.delete(k); S.schedClosed.add(k); } else { S.schedClosed.delete(k); S.schedOpen.add(k); }
+    renderSchedule(); document.querySelector(`#sched [data-sk="${k}"]`)?.focus();
+  }
+});
+$('proj-back').addEventListener('click',()=>go(S.projFrom||'summary'));
+/* Today by role: a leader sees portfolio issues first; a project lead also sees their next 14 days */
+function leaderQueueHTML(vis){
+  const cross=vis.filter(i=>i.pids.length>1), single=vis.filter(i=>i.pids.length===1);
+  let h='';
+  if(cross.length) h+=`<h2 class="qsec">Across projects · ${cross.length}</h2>`+cross.map(cardHTML).join('');
+  if(single.length){
+    h+='<h2 class="qsec">Inside one project</h2>';
+    PROJECTS.forEach(p=>{ const mine=single.filter(i=>i.pids[0]===p.id); if(!mine.length) return;
+      h+=`<div class="qproj"><span><b>${esc(p.name)}</b> · ${mine.length} ${mine.length===1?'finding':'findings'} · led by ${esc(p.owner)}</span><button type="button" class="btn small" data-proj="${p.id}">Open project →</button></div>`+mine.map(cardHTML).join(''); });
+  }
+  return h;
+}
+function renderNext14(){
+  const V=VIEWERS[S.viewer], el=$('next14');
+  if(!V.projects){ el.hidden=true; el.innerHTML=''; return; }
+  schedOpenIds=new Set(openList().filter(i=>i.sev!=='ok').map(i=>i.id));
+  const items=V.projects.flatMap(pid=>schedLeaves(SCHED[pid]||[]).map(t=>({t,pid,st:taskState(t)})))
+    .filter(x=>x.st!=='done' && x.t.e<=14)
+    .sort((a,b)=>(b.st==='late')-(a.st==='late') || a.t.e-b.t.e);
+  el.hidden=!items.length;
+  el.innerHTML=items.length?`<h2>Your next 14 days</h2><p class="cell-sub">Work due soon on ${esc(V.projects.map(id=>PROJECTS.find(p=>p.id===id).name).join(' and '))}, from every tool your team uses.</p><ul>${items.map(({t,pid,st})=>{
+    const [c,l]=SCHED_LABEL[st]; const p=PROJECTS.find(x=>x.id===pid);
+    const pill=t.f&&schedOpenIds.has(t.f)?`<button type="button" class="pill ${c}" style="border:0;cursor:pointer" data-open="${t.f}">${l} ↗</button>`:`<span class="pill ${c}">${l}</span>`;
+    return `<li><span class="when">${fmtD(t.e)}<span class="cell-sub">${t.e<0?`${-t.e} days late`:t.e===0?'today':`in ${t.e} days`}</span></span><span><b>${esc(fmt(t.n))}</b><span class="cell-sub"><button type="button" class="cite" data-proj="${pid}">${esc(p.name)}</button> · ${esc(t.o)}</span><span class="lsrc srcs" style="margin-top:4px">${lineSrcHTML(t.src)}</span></span>${pill}</li>`;
+  }).join('')}</ul>`:'';
+}
 
 /* success metrics */
 const FIT = {match:['ok','Matches charter'],partial:['watch','Partly matches'],drift:['warn','Drifted from charter']};
@@ -1947,10 +2297,10 @@ function ratingHTML(c){
   return `<span class="rating r${c.score}"><span class="pips" aria-hidden="true">${pips}</span><b>${c.score} of 5 · ${RATING[c.score]}</b><span class="trend">${trend}</span></span>`;
 }
 function momentHTML(m){
-  const cat=COACH_CATS.find(c=>c.id===m.cat);
+  const cat=coachFor().cats.find(c=>c.id===m.cat), me=VIEWERS[S.viewer].name;
   const when=m.d!=null?`<span class="mono">${ago(m.d)} · ${fmtD(m.d)}</span>`:'<span class="mono">This week</span>';
   let body='';
-  if(m.lines) body=`<div class="talk-lines">${m.lines.map(([ts,who,tx])=>`<div class="tline${who===ME?' me':''}"><span class="ts">${ts}</span><span><b>${who===ME?'You':esc(who)}:</b>${fmt(tx)}</span></div>`).join('')}</div>`;
+  if(m.lines) body=`<div class="talk-lines">${m.lines.map(([ts,who,tx])=>`<div class="tline${who===me?' me':''}"><span class="ts">${ts}</span><span><b>${who===me?'You':esc(who)}:</b>${fmt(tx)}</span></div>`).join('')}</div>`;
   if(m.quote) body=`<div class="cm-quote"><small>What you wrote</small>${fmt(m.quote)}</div>${m.stat?`<div class="cm-stat">${esc(m.stat)}</div>`:''}`;
   if(m.obs) body=`<p class="cm-fine">From the meeting video. Ondatrace describes what the camera shows, like where you were looking or whether you were typing. It doesn't guess how you or anyone else felt.</p><ul class="obs">${m.obs.map(([ts,tx,k])=>`<li><span class="ts">${ts}</span><span class="mk ${k}" aria-label="${k==='good'?'Worked':'Try next time'}">${k==='good'?'✓':'→'}</span><span>${esc(fmt(tx))}</span></li>`).join('')}</ul>`;
   if(m.table) body=`<div class="tablewrap"><table class="rtable talk-table"><thead><tr><th>Meeting</th><th>Your role</th><th>Your share of talk time</th><th>Questions you asked</th><th>Times you cut someone off</th></tr></thead><tbody>${m.table.map(r=>`<tr class="${r[5]}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="num">${r[2]}%</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td></tr>`).join('')}</tbody></table></div>`;
@@ -1972,14 +2322,14 @@ function coachSetHTML(){
   return `<details class="tune" id="coach-tune" ${S.coachTuneOpen?'open':''}><summary><b>Make coaching yours</b><span>Ondatrace set this up from your role and tools. Change anything.</span></summary><div class="tune-body">
     <div><h4>How Ondatrace builds your coaching</h4><ul class="tune-built"><li>Reads the meetings you speak in and the emails and chat messages you write, and quotes your own words.</li><li>Rates you against what's expected of a <b>${esc(C.level)}</b>${C.guide?`, using <b>${esc(C.guide)}</b>`:''}.</li><li>Only you see it. It isn't used to rate you.</li></ul></div>
     <div><h4>Your role</h4><select id="coach-level" aria-label="Role level">${LEVELS.map(l=>`<option${l===C.level?' selected':''}>${esc(l)}</option>`).join('')}</select></div>
-    <div><h4>What you want to work on (pick up to 2)</h4><div class="srcs-toggle">${COACH_CATS.map(c=>`<button type="button" class="tgl" data-cfocus="${c.id}" aria-pressed="${C.focus.includes(c.id)}">${esc(c.name)}</button>`).join('')}</div></div>
+    <div><h4>What you want to work on (pick up to 2)</h4><div class="srcs-toggle">${coachFor().cats.map(c=>`<button type="button" class="tgl" data-cfocus="${c.id}" aria-pressed="${C.focus.includes(c.id)}">${esc(c.name)}</button>`).join('')}</div></div>
     <div><h4>Your company's expectations</h4>
       ${C.guide?`<div class="tchips"><span class="tchip added">${esc(C.guide)} <small>ratings now use your company's wording</small><button type="button" data-noguide aria-label="Stop using ${esc(C.guide)}">×</button></span></div>`:`
       <div class="tsugg" style="margin-bottom:8px"><button type="button" data-guide="Kestrel leadership expectations 2026"><b>+ Use</b><span>Kestrel leadership expectations 2026 <small>· found in Google Docs, shared with managers</small></span></button></div>
       <div class="upload"><label class="btn small" for="guide-file">Upload performance review guidelines</label><input id="guide-file" type="file" accept=".pdf,.doc,.docx,.txt,.md"><span class="cm-fine">A competency framework or review template. PDF, Word or text.</span></div>`}
     </div>
     <div><h4>What to coach on</h4><div class="srcs-toggle">${src.map(([k,l])=>`<button type="button" class="tgl" data-csrc="${k}" aria-pressed="${C.sources[k]}">${esc(l)}</button>`).join('')}</div></div>
-    <div><h4>Suggested</h4><div class="srcs-toggle"><button type="button" class="tgl" data-prep aria-pressed="${C.prep}">Coach me before big meetings</button></div><p class="cm-fine" style="margin-top:6px">A short tip the morning of meetings like Portal 2.0 steering, based on how your last one went.</p></div>
+    <div><h4>Suggested</h4><div class="srcs-toggle"><button type="button" class="tgl" data-prep aria-pressed="${C.prep}">Coach me before big meetings</button></div><p class="cm-fine" style="margin-top:6px">A short tip the morning of meetings like ${esc(coachFor().prep)}, based on how your last one went.</p></div>
     <p class="tune-note" id="coach-note" role="status"></p>
   </div></details>`;
 }
@@ -2000,27 +2350,26 @@ document.addEventListener('change',e=>{
 });
 function renderCoach(){
   step('coach');
-  const V=VIEWERS[S.viewer];
-  if(S.viewer!=='morgan'){
-    $('coach-body').innerHTML=`<div class="coach-private">${LOCKICON}<span><b>Coaching is private.</b> ${esc(V.name)} would see coaching on ${esc(V.first)}'s own meetings and messages here. Nobody else can open it, including Morgan, and Morgan's coaching isn't visible to ${esc(V.first)}.</span></div>
-      <div class="row" style="margin-top:14px"><button class="btn" type="button" data-viewas="morgan">Switch back to Morgan</button></div>`;
-    return;
-  }
-  const C=S.coachSet; const toolOn={zoom:C.sources.meetings,gmail:C.sources.emails,slack:C.sources.chat};
-  const list=COACH.filter(m=>(!S.coachCat||m.cat===S.coachCat) && toolOn[m.t]!==false && !(m.obs&&!C.sources.video))
+  const V=VIEWERS[S.viewer], K=coachFor();
+  const C=coachSetFor(); const toolOn={zoom:C.sources.meetings,gmail:C.sources.emails,slack:C.sources.chat};
+  if(S.coachCat && !K.cats.some(c=>c.id===S.coachCat)) S.coachCat=null;
+  const list=K.moments.filter(m=>(!S.coachCat||m.cat===S.coachCat) && toolOn[m.t]!==false && !(m.obs&&!C.sources.video))
     .sort((a,b)=>(C.focus.includes(b.cat)?1:0)-(C.focus.includes(a.cat)?1:0));
-  const cat=COACH_CATS.find(c=>c.id===S.coachCat);
+  const cat=K.cats.find(c=>c.id===S.coachCat);
+  const privacy=S.viewer==='morgan'
+    ? 'Your coaching isn\'t shared with your manager or your team, and it\'s never used to rate you.'
+    : `Morgan, your manager, can't open it, and Morgan's coaching isn't visible to you. It's never used to rate you.`;
   const from=S.coachFrom&&visible(byId(S.coachFrom))?`<div class="row" style="margin-top:10px"><button type="button" class="btn ghost small" data-open="${S.coachFrom}">← Back to the finding</button></div>`:'';
   $('coach-body').innerHTML=from+`
-    <p class="summary">Based on 4 meetings you spoke in, 11 emails and 23 Slack messages you wrote this week. Every note quotes what you actually said or wrote.</p>
-    <div class="coach-private">${LOCKICON}<span><b>Only you see this.</b> Your coaching isn't shared with your manager or your team, and it's never used to rate you.</span></div>
+    <p class="summary">${esc(V.first)}'s coaching, as ${esc(V.role)}. ${esc(K.stats)} Every note quotes what you actually said or wrote.</p>
+    <div class="coach-private">${LOCKICON}<span><b>Only you see this.</b> ${esc(privacy)}</span></div>
     ${coachSetHTML()}
     <div class="coach-focus">
-      <div class="panel"><span class="eyebrow">This week's focus</span><h2>Close every decision with an owner, a date, and who else needs to know.</h2><p class="section-intro" style="margin:0">Three of this week's findings started in a meeting where a decision ended without one: the two launch dates, the vendor hold, and the Acme SSO promise.</p></div>
-      <div class="panel"><span class="eyebrow">Before your next meeting</span><h2>Portal 2.0 steering · ${fmtD(3)}</h2><ol><li>Start by confirming the go-live date and whether Nina has heard.</li><li>Ask Leo what would have to be true for ${fmtD(38)} to hold.</li><li>When a lead raises a risk, stop typing.</li></ol></div>
+      <div class="panel"><span class="eyebrow">This week's focus</span><h2>${esc(fmt(K.focus[0]))}</h2><p class="section-intro" style="margin:0">${esc(fmt(K.focus[1]))}</p></div>
+      <div class="panel"><span class="eyebrow">Before your next meeting</span><h2>${esc(fmt(K.next[0]))}</h2><ol>${K.next[1].map(x=>`<li>${esc(fmt(x))}</li>`).join('')}</ol></div>
     </div>
     <div class="section"><h2>Your ratings</h2><p class="section-intro">Rated against what's expected of a ${esc(C.level)}${C.guide?` in ${esc(C.guide)}`:''}, from this week's evidence. Pick one to see the moments behind it.</p>
-      <div class="coach-grid">${[...COACH_CATS].sort((a,b)=>(C.focus.includes(b.id)?1:0)-(C.focus.includes(a.id)?1:0)).map(c=>`<button type="button" class="ctile" data-coachcat="${c.id}" aria-pressed="${S.coachCat===c.id}">${C.focus.includes(c.id)?'<span class="focus-badge">Your focus</span>':''}<span class="cname">${esc(c.name)}</span>${ratingHTML(c)}<span class="cline">${esc(c.line)}</span></button>`).join('')}</div>
+      <div class="coach-grid">${[...K.cats].sort((a,b)=>(C.focus.includes(b.id)?1:0)-(C.focus.includes(a.id)?1:0)).map(c=>`<button type="button" class="ctile" data-coachcat="${c.id}" aria-pressed="${S.coachCat===c.id}">${C.focus.includes(c.id)?'<span class="focus-badge">Your focus</span>':''}<span class="cname">${esc(c.name)}</span>${ratingHTML(c)}<span class="cline">${esc(c.line)}</span></button>`).join('')}</div>
     </div>
     <div class="coach-filter" role="status">${cat?`Showing ${list.length} moment${list.length===1?'':'s'} for <b style="color:var(--ink)">${esc(cat.name)}</b> <button type="button" class="btn small" data-coachcat="">Show all</button>`:`${list.length} moments from this week, with what worked and what to try`}</div>
     <div class="cmoments">${list.map(momentHTML).join('')}</div>
@@ -2030,7 +2379,7 @@ function renderCoach(){
 document.addEventListener('click',e=>{
   const c=e.target.closest('[data-coachcat]'); if(!c) return;
   const id=c.dataset.coachcat||null; S.coachCat = S.coachCat===id?null:id;
-  if(S.coachCat) logOnce('coach-'+S.coachCat,`Looked at coaching on ${COACH_CATS.find(x=>x.id===S.coachCat).name}.`);
+  if(S.coachCat) logOnce('coach-'+S.coachCat,`Looked at coaching on ${coachFor().cats.find(x=>x.id===S.coachCat).name}.`);
   renderCoach();
 });
 document.addEventListener('change',e=>{
@@ -2078,16 +2427,114 @@ const TIPS = {
   training:{m:'align-lead',text:'Downstream teams like Support hear about slips last. When a date moves, ask "who else is building on this?"'},
   dup:{m:'write-jess',text:'Your note to Jess this week worked: one ask, one date, one reason. Use the same shape when you write to Sam and Jess.'}
 };
-const coachTipHTML = i => { const t=TIPS[i.id]; if(!t||S.viewer!=='morgan') return '';
-  return `<button type="button" class="coach-tip" data-coachtip="${t.m}" data-from="${i.id}"><span class="ct-label">Coaching tip</span><span>${esc(t.text)}</span><span class="ct-go">See the tip →</span></button>`; };
+/* Each viewer gets their own coaching, from their own meetings and messages. A lead's coaching never
+   repeats what their redacted findings withhold. */
+const LEAD_CATS = (lines, scores) => ['decide','write','align','risk','listen'].map((id,n)=>({...COACH_CATS.find(c=>c.id===id), score:scores[n][0], prev:scores[n][1], line:lines[n]}));
+const COACHING = {
+  morgan:{cats:COACH_CATS, moments:COACH, tips:TIPS, level:'VP or head of delivery', prep:'Portal 2.0 steering',
+    stats:'Based on 4 meetings you spoke in, 11 emails and 23 Slack messages you wrote this week.',
+    focus:['Close every decision with an owner, a date, and who else needs to know.','Three of this week\'s findings started in a meeting where a decision ended without one: the two launch dates, the vendor hold, and the Acme SSO promise.'],
+    next:['Portal 2.0 steering · {d+3}',['Start by confirming the go-live date and whether Nina has heard.','Ask Leo what would have to be true for {d+38} to hold.','When a lead raises a risk, stop typing.']]},
+  leo:{level:'Senior project manager', prep:'Portal 2.0 steering',
+    cats:LEAD_CATS(['"I\'ll let them know" and "I\'ll update the plan" came without a date.','Status notes are short and friendly. They say green when the work isn\'t.','Teams building on your dates hear about changes late.','You soften risks when you report up. "A bit tight" hid a slip past your milestone.','You answer hard questions honestly. Your stand-ups run long.'],[[3,3],[3,2],[3,3],[2,3],[4,4]]),
+    stats:'Based on 7 meetings you spoke in, 9 emails and 31 Slack messages you wrote this week.',
+    focus:['Say the risk in days, before someone asks.','Two of this week\'s findings grew while your plan still said green: the SSO dependency and the two launch dates.'],
+    next:['Portal 2.0 steering · {d+3}',['Open with the SSO dependency: PLAT-412 now ends {d+22}, after your {d+14} milestone.','Confirm one go-live date and that marketing has heard it.','Keep your update to five minutes, then ask for the decisions you need.']],
+    moments:[
+      {id:'leo-risk',cat:'risk',kind:'try',t:'zoom',where:'Morgan / Leo 1:1',d:-6,lines:[
+        ['00:07:40','Morgan Reyes','How\'s Portal looking?'],
+        ['00:07:44','Leo Park','<mark>Good. SSO is a bit tight, but we\'ll make it.</mark>'],
+        ['00:07:49','Morgan Reyes','Good. Let me know if that changes.']],
+       note:'That morning PLAT-412 had moved to Sprint 25, which ends {d+22}, eight days after your SSO milestone on {d+14}. "A bit tight" made it sound manageable, so nobody escalated it.',
+       try:'"SSO needs PLAT-412, which now ends {d+22}. That misses our {d+14} milestone by eight days. I need a decision on what we tell people by Friday."',link:'acme'},
+      {id:'leo-decide',cat:'decide',kind:'try',t:'zoom',where:'Portal 2.0 steering committee',d:-4,lines:[
+        ['00:42:15','Leo Park','<mark>{d+38}. I\'ll update the plan this week.</mark>'],
+        ['00:42:20','Maya Chen','And marketing?'],
+        ['00:42:22','Leo Park','<mark>I\'ll let them know.</mark>'],
+        ['00:42:26','Morgan Reyes','Great, sounds like we\'re aligned. Let\'s keep moving.']],
+       note:'Neither promise had a date. Four days later your Smartsheet plan still shows go-live on {d+21}, and the launch email to every customer is still set for {d+21}.',
+       try:'"I\'ll update Smartsheet today and tell Nina by Thursday. Maya, please hold the launch email until you hear from me."',link:'dates'},
+      {id:'leo-write',cat:'write',kind:'try',t:'slack',where:'#portal-team',d:-2,
+       quote:'Weekly status: <mark>all green</mark> 🎉 Beta feedback triage on track, billing pages ahead of plan, SSO login in progress.',
+       stat:'19 words · no mention that SSO depends on another team\'s ticket',
+       note:'SSO login is green on Row 18, but it needs PLAT-412, which has slipped. "All green" tells the team, and anyone reading the plan, that nothing needs their help.',
+       try:'"Mostly green. One amber: SSO login needs PLAT-412 from Platform, now due {d+22}, after our {d+14} milestone. I\'m working it with Kevin and will have a new date Friday."',link:'acme'},
+      {id:'leo-honest',cat:'risk',kind:'good',t:'zoom',where:'Portal 2.0 steering committee',d:-4,lines:[
+        ['00:38:02','Morgan Reyes','Leo, what would have to be true for the {d+21} date to hold?'],
+        ['00:38:15','Leo Park','<mark>Honestly? SSO would have to land two sprints early. That\'s the part I\'m worried about.</mark>']],
+       note:'A direct answer with the reason behind it. It was the first time the SSO risk reached the steering committee.',
+       try:'Say it before you\'re asked. Open the next steering with the one thing you\'re most worried about.',link:'dates'},
+      {id:'leo-align',cat:'align',kind:'try',t:'gmail',where:'Sent · Reply to Marcus Bell (Support Readiness)',d:-2,
+       quote:'Hi Marcus, <mark>training on {d+4} should be fine</mark>. We\'ll send the final screens this week. Leo',
+       stat:'17 words · Support is training 40 agents on screens that may still change',
+       note:'Your go-live may move and the SSO screens aren\'t final, but Support will train 40 agents on {d+4}. Teams building on your dates can only adjust if they hear early.',
+       try:'"Marcus, heads up: go-live may move from {d+21} and the SSO screens aren\'t final. Can we run the SSO part of training after {d+14}?"',link:'training'},
+      {id:'leo-talk',cat:'listen',kind:'try',t:'zoom',where:'Talk time across your meetings this week',table:[
+        ['Portal daily stand-up (5 days)','You ran it',46,4,0,'try'],
+        ['Portal 2.0 steering committee','Presenter',31,1,0,''],
+        ['Morgan / Leo 1:1','1:1',42,1,0,''],
+        ['Support handoff planning','Guest',12,2,0,'']],
+       note:'Your stand-ups ran 24 minutes on average in a 15-minute slot, and you spoke for almost half of that. Two engineers didn\'t speak at all on Thursday.',
+       try:'Go round the room first and save your own updates for the end. Stop at 15 minutes.'}],
+    tips:{
+      acme:{m:'leo-risk',text:'You called SSO "a bit tight" to Morgan. Say what it means in days: PLAT-412 ends {d+22}, and your milestone is {d+14}.'},
+      dates:{m:'leo-decide',text:'"I\'ll let them know" had no date. Close with what you\'ll do, by when, and who else needs to hear.'},
+      training:{m:'leo-align',text:'You told Marcus training "should be fine." When your dates are shaky, tell the teams building on them first.'}}},
+  ana:{level:'Senior project manager', prep:'Data Migration check-in',
+    cats:LEAD_CATS(['You decide quickly. Check who else has to approve before you commit money.','Numbered updates with one clear ask. Your team replies fast.','You hear little from leadership channels, so you have to ask before big commitments.','You filled the last open owner without asking what else that person has that week.','Your check-ins give the team room to talk.'],[[3,3],[4,4],[2,3],[3,4],[4,3]]),
+    stats:'Based on 5 meetings you spoke in, 14 emails and 19 Slack messages you wrote this week.',
+    focus:['Before you commit money or people, check who else has a say.','Two of this week\'s findings started with an assumption: that the Stratus contract needed no sign-off, and that Priya was free on {d+10}.'],
+    next:['Stratus contract · sign by {d+2}',['Ask Dana Whitfield whether the contract needs approval before you sign.','Confirm Priya for the rehearsal on {d+10}, or name a backup.','Tell Stratus you\'re confirming internal approvals.']],
+    moments:[
+      {id:'ana-decide',cat:'decide',kind:'try',t:'zoom',where:'Data Migration check-in',d:-5,lines:[
+        ['00:14:02','Raj Mehta','Do we need anyone to sign off on the Stratus contract?'],
+        ['00:14:06','Ana Ruiz','<mark>No, it\'s within our budget. I\'ll sign it on {d+2}.</mark>'],
+        ['00:14:10','Raj Mehta','Great, I\'ll tell Stratus.']],
+       note:'Being within budget and being approved aren\'t the same. A $186K commitment is big enough that someone above you may have a say you haven\'t heard about.',
+       try:'"It\'s within budget, but it\'s $186K. I\'ll check with Dana whether it needs approval before we sign."',link:'hold'},
+      {id:'ana-align',cat:'align',kind:'try',t:'gmail',where:'Sent · Reply to Stratus',d:-1,
+       quote:'Thanks, we\'re on track to sign by {d+2}, <mark>no further approvals needed on our side</mark>.',
+       stat:'a promise to a vendor about approvals you haven\'t checked',
+       note:'You told the vendor no approvals were needed before checking. If one is, you\'ll have to walk that back with Stratus while its price hold runs out.',
+       try:'"We\'re aiming for {d+2}. I\'m confirming internal approvals and will come back to you by {d+1}."',link:'hold'},
+      {id:'ana-risk',cat:'risk',kind:'try',t:'slack',where:'#data-migration',d:-3,
+       quote:'Priya\'s taking the cutover rehearsal on {d+10} 👍 <mark>that was the last open owner</mark>, so we\'re fully staffed.',
+       stat:'20 words · no check on what else Priya has that week',
+       note:'Priya also owns the API security review on {d+11} and the SSO token service on Platform API v3. One person on three critical paths in the same week is a risk, not a staffing win.',
+       try:'"Priya, you\'re also on the security review on {d+11}. Can you confirm {d+10}, or who\'s your backup?"',link:'priya'},
+      {id:'ana-write',cat:'write',kind:'good',t:'gmail',where:'Sent · Update to Raj Mehta',d:-2,
+       quote:'Raj, validation is at 62%, and 14 of 14 test runs passed. <mark>One ask: finish the remaining mapping by Friday</mark> so we can rehearse on {d+10}.',
+       stat:'33 words · the number, what it means, one ask with a date',
+       note:'Raj finished the mapping a day early.',
+       try:'Use the same shape when you write to Dana or Morgan: the number, what it means, one ask with a date.'},
+      {id:'ana-talk',cat:'listen',kind:'good',t:'zoom',where:'Talk time across your meetings this week',table:[
+        ['Data Migration check-in','You ran it',28,7,0,''],
+        ['Stratus vendor call','Lead',35,5,0,''],
+        ['Morgan / Ana 1:1','1:1',38,3,0,'']],
+       note:'You kept your share of talk time under 40% in every meeting and asked more questions than anyone else on the team.',
+       try:'Keep doing this. On vendor calls, save one question for "What would change your price or your date?"'}],
+    tips:{
+      hold:{m:'ana-decide',text:'You told Raj no sign-off was needed. Before a large commitment, ask who else has to approve.'},
+      priya:{m:'ana-risk',text:'You counted Priya as the last open owner. Before relying on someone, ask what else they have that week.'}}}
+};
+const coachFor = () => COACHING[S.viewer] || COACHING.morgan;
+const COACH_SETS = {};
+// Each person keeps their own coaching settings; Morgan's are the ones the page started with.
+function coachSetFor(){
+  if(!COACH_SETS.morgan) COACH_SETS.morgan=S.coachSet;
+  if(!COACH_SETS[S.viewer]) COACH_SETS[S.viewer]={level:coachFor().level,focus:[],sources:{meetings:true,emails:true,chat:true,video:true},guide:null,prep:false};
+  return S.coachSet=COACH_SETS[S.viewer];
+}
+const coachTipHTML = i => { const t=coachFor().tips[i.id]; if(!t) return '';
+  return `<button type="button" class="coach-tip" data-coachtip="${t.m}" data-from="${i.id}"><span class="ct-label">Coaching tip</span><span>${esc(fmt(t.text))}</span><span class="ct-go">See the tip →</span></button>`; };
 // Guidance sits inside the suggestion it belongs to, folded into a row of small buttons so the
 // suggestion itself stays easy to read: coaching, the outside factors behind it, and the people side.
 const outsideFor = i => RESEARCH.filter(r=>r.link===i.id&&r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p)));
 function guideBarHTML(i, scope, withPeople){
   const parts=[];
-  const t=TIPS[i.id];
-  if(t && S.viewer==='morgan') parts.push(['coach','','Coaching tip','Coaching tip',
-    `<p>${esc(t.text)}</p><button type="button" class="gb-link" data-coachtip="${t.m}" data-from="${i.id}">See the full tip on Coaching →</button>`]);
+  const t=coachFor().tips[i.id];
+  if(t) parts.push(['coach','','Coaching tip','Coaching tip',
+    `<p>${esc(fmt(t.text))}</p><button type="button" class="gb-link" data-coachtip="${t.m}" data-from="${i.id}">See the full tip on Coaching →</button>`]);
   const out=outsideFor(i);
   if(out.length) parts.push(['ind','ind',`Outside factors (${out.length})`,out.length>1?'Outside factors':'Outside factor',
     `<ul>${out.map(r=>`<li>${esc(fmt(r.today))}<br><button type="button" class="gb-link" data-research="${r.id}">Read the story in Industry watch →</button></li>`).join('')}</ul>`]);
