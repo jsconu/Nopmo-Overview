@@ -520,6 +520,9 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .coach-tip .ct-go{color:var(--brand-text);font-weight:600;white-space:nowrap}
 .cmoment.hi,.ritem.hi{box-shadow:0 0 0 2px var(--brand),var(--shadow)}
 .guide-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.undo-note{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:12px 0 4px;padding:12px 16px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line-strong);font-size:14.5px}
+.undo-note b{font-weight:600}
+.undo-note .btn{margin-left:auto}
 .detail-toggle{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin:4px 0 10px}
 .detail-toggle .lbl{font-size:13px;color:var(--muted)}
 .detail-toggle .seg{margin:0}
@@ -766,6 +769,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <span class="eyebrow" id="today-eyebrow">Monday morning</span>
         <h1 id="h-today" style="margin-top:6px">Good morning, Morgan.</h1>
         <p class="summary" id="today-summary"></p>
+        <div class="undo-note" id="undo-note" role="status" aria-live="polite" hidden></div>
         <div class="filterbar">
           <div class="row" id="filters" aria-label="Tools Ondatrace can read"></div>
           <div id="perm-note"></div>
@@ -1435,6 +1439,9 @@ function renderToday(){
   $('queue').innerHTML = vis.map(cardHTML).join('') +
     (hid.length?`<div class="card missing"><p><b>${hid.length} ${hid.length===1?'finding is':'findings are'} hidden</b> because ${hid.length===1?'it needs':'they need'} a tool that's off: ${missing.map(t=>TOOLS[t].name).join(', ')}. Without it, the connection doesn't exist.</p></div>`:'') +
     (!vis.length && !hid.length ? `<div class="card missing"><p>Nothing needs you right now.</p></div>`:'');
+  const last=S.lastDismissed&&S.dismissed[S.lastDismissed]?S.lastDismissed:null;
+  $('undo-note').hidden=!last;
+  $('undo-note').innerHTML=last?`<span><b>"${esc(fmt(byId(last).title))}"</b> removed because you marked it ${({'Not important':'not important','Already handled':'already handled','Wrong connection':'a wrong connection'})[S.dismissed[last]]||'not an issue'}. Ondatrace will use this to tune what it shows you.</span><button class="btn small" type="button" data-undo="${last}">Undo</button>`:'';
   const dis = Object.keys(S.dismissed);
   $('dismissed').hidden=!dis.length;
   $('dismissed').innerHTML = dis.length?`Marked not an issue: ${dis.map(id=>`${esc(fmt(byId(id).title))} <button class="btn ghost small" type="button" data-undo="${id}">Undo</button>`).join(' · ')}`:'';
@@ -1493,7 +1500,7 @@ $('filters').addEventListener('click',e=>{
   renderToday(); renderTools();
   document.querySelector(`[data-f="${t}"]`)?.focus();
 });
-$('dismissed').addEventListener('click',e=>{ const b=e.target.closest('[data-undo]'); if(!b) return; delete S.dismissed[b.dataset.undo]; log('Restored a finding marked not an issue.'); renderToday(); });
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-undo]'); if(!b) return; delete S.dismissed[b.dataset.undo]; if(S.lastDismissed===b.dataset.undo) S.lastDismissed=null; log('Restored a finding marked not an issue.'); renderToday(); status('Restored.'); });
 $('morning-btn').addEventListener('click',()=>{
   S.morning=true; S.holdResolved=S.note.hold==='approved'; step('morning');
   log(`Jumped to tomorrow morning. Overnight updates changed 3 findings${S.holdResolved?'; the vendor hold was resolved after your note':''}.`);
@@ -1635,7 +1642,7 @@ $('v-detail').addEventListener('click',e=>{
     if(a==='rejected') log(`Rejected a proposed change to ${fmt(i.prop.target)}.`);
     renderProp(i); return; }
   if(t.dataset.react){ S.react[i.id]=t.dataset.react; save(); log(`Would act on "${fmt(i.title)}": ${t.dataset.react}.`); renderTester(i); return; }
-  if(t.dataset.dismiss){ S.dismissed[i.id]=t.dataset.dismiss; log(`Marked "${fmt(i.title)}" not an issue: ${t.dataset.dismiss}.`); status(`Marked "${t.dataset.dismiss}". Ondatrace uses this to tune what it shows you.`); go('today'); }
+  if(t.dataset.dismiss){ S.dismissed[i.id]=t.dataset.dismiss; S.lastDismissed=i.id; log(`Marked "${fmt(i.title)}" not an issue: ${t.dataset.dismiss}.`); go('today'); }
 });
 
 /* risks */
