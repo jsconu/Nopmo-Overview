@@ -237,7 +237,19 @@ details.fine li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-siz
 .diff del{color:var(--crit);text-decoration-thickness:1px}
 .diff ins{color:var(--ok);text-decoration:none;font-weight:600}
 .done-note{margin-top:10px;font-size:13px;padding:8px 10px;border-radius:8px;background:var(--ok-soft);color:var(--ok)}
-.wrongbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;font-size:13px;color:var(--muted)}
+.wrongbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+details.fold{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 18px;margin-top:14px}
+details.fold>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;min-height:56px;padding:6px 0}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary h2{margin:0;font-size:18px}
+details.fold .fold-count{font-size:13px;color:var(--muted)}
+details.fold .fold-act{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--brand-text);border:1.5px solid var(--brand);border-radius:999px;padding:4px 12px;min-height:32px}
+details.fold .fold-act::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .15s}
+details.fold[open] .fold-act{background:var(--brand);color:var(--brand-ink)}
+details.fold[open] .fold-act::after{transform:rotate(-135deg) translateY(-1px)}
+details.fold[open]>summary{border-bottom:1px solid var(--line);margin-bottom:14px}
+details.fold[open]{padding-bottom:16px}
+details.fold:hover>summary h2{text-decoration:underline;text-underline-offset:4px}
 .timeline{list-style:none;margin:0;padding:0;position:relative;display:grid;gap:12px}
 .timeline::before{content:"";position:absolute;left:15px;top:14px;bottom:14px;width:2px;background:var(--line-strong)}
 .ev{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;position:relative}
@@ -507,27 +519,37 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .coach-tip .ct-label{font:600 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brand-text)}
 .coach-tip .ct-go{color:var(--brand-text);font-weight:600;white-space:nowrap}
 .cmoment.hi,.ritem.hi{box-shadow:0 0 0 2px var(--brand),var(--shadow)}
-.guide-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:2px}
+.guide-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
 .detail-toggle{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin:4px 0 10px}
 .detail-toggle .lbl{font-size:13px;color:var(--muted)}
 .detail-toggle .seg{margin:0}
 .detail-toggle .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
 #queue[data-detail="high"] .why,#queue[data-detail="high"] .card-foot .srcs,#queue[data-detail="high"] .span-note,
-#queue[data-detail="high"] .guide-bar,#queue[data-detail="high"] .gb-panel{display:none}
+#queue[data-detail="high"] .guide-bar,#queue[data-detail="high"] .gb-panels{display:none}
 #queue[data-detail="high"] .card{gap:6px;padding-top:14px;padding-bottom:12px}
 #queue[data-detail="high"] .card-foot{justify-content:flex-end}
 #queue[data-detail="more"] .card-foot .srcs,#queue[data-detail="more"] .span-note{display:none}
 #queue[data-detail="more"] .card-foot{justify-content:flex-end}
-.gb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;min-height:36px;cursor:pointer}
-.gb::after{content:"▾";font-size:11px;opacity:.7}
-.gb[aria-expanded="true"]{border-color:var(--brand);color:var(--ink)}
-.gb[aria-expanded="true"]::after{content:"▴"}
-.gb .gb-dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
-.gb.ind .gb-dot{background:var(--watch)}
-.gb.ppl .gb-dot{background:var(--warn)}
-.gb-panel{display:grid;gap:8px;margin-top:8px}
-.gb-panel ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.gb-panel li{font-size:14.5px}
+.guide-bar .gb-lead{font-size:13px;color:var(--muted);margin-right:2px}
+.gb{--c:var(--brand);display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--c);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:13.5px;font-weight:600;min-height:40px;cursor:pointer;transition:background .15s,color .15s}
+.gb.ind{--c:var(--watch)}.gb.ppl{--c:var(--warn)}
+.gb:hover{background:color-mix(in srgb,var(--c) 12%,var(--surface))}
+.gb .gb-act{font-weight:500;font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:3px}
+.gb .gb-act::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .15s}
+.gb[aria-expanded="true"]{background:var(--c);color:#fff}
+.gb[aria-expanded="true"] .gb-act{color:rgba(255,255,255,.85)}
+.gb[aria-expanded="true"] .gb-act::after{transform:rotate(-135deg) translateY(-1px)}
+.gb-panels{display:grid;gap:12px;margin-top:12px}
+.gb-panel{--c:var(--brand);border-left:4px solid var(--c);background:var(--surface-2);border-radius:0 10px 10px 0;padding:12px 16px;display:grid;gap:8px}
+.gb-panel.ind{--c:var(--watch)}.gb-panel.ppl{--c:var(--warn)}
+.gb-panel h4{margin:0;font:600 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.gb-panel p{margin:0;font-size:14.5px;line-height:1.55}
+.gb-panel ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.gb-panel li{font-size:14.5px;line-height:1.55}
+.gb-panel li .tag,.gb-panel p .tag{display:inline-block;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.gb-panel .gb-link{all:unset;cursor:pointer;color:var(--brand-text);font-weight:600;font-size:13.5px;text-decoration:underline;text-underline-offset:3px;justify-self:start}
+.gb-panel.ind .gb-link{color:var(--watch)}
+.gb-panel .gb-link:focus-visible{outline:2px solid var(--c);outline-offset:2px}
 .industry-tip{border-color:var(--watch);background:var(--watch-soft)}
 .industry-tip .ct-label,.industry-tip .ct-go{color:var(--watch)}
 .watch-card h3{font-size:16px;margin:0 0 4px}
@@ -785,24 +807,24 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <div class="wrongbar" id="p-wrong"></div>
         </div>
 
-        <div class="section">
-          <h2>The evidence</h2>
+        <details class="section fold" id="d-ev-sec">
+          <summary><h2>The evidence</h2><span class="fold-count" id="d-ev-count"></span><span class="fold-act">Show</span></summary>
           <p class="section-intro">Each item is shown with what it looked like on its own, in the tool where it lives.</p>
           <ol class="timeline" id="d-timeline"></ol>
-        </div>
+        </details>
 
-        <div class="section" id="d-talk-sec">
-          <h2>What people said in meetings</h2>
+        <details class="section fold" id="d-talk-sec">
+          <summary><h2>What people said in meetings</h2><span class="fold-count" id="d-talk-count"></span><span class="fold-act">Show</span></summary>
           <p class="section-intro" id="d-talk-intro">From recorded meeting transcripts. Nobody wrote these down anywhere else.</p>
           <div class="talks" id="d-talk"></div>
-        </div>
+        </details>
 
-        <div class="section">
-          <h2>How Ondatrace connected them</h2>
+        <details class="section fold" id="d-reason-sec">
+          <summary><h2>How Ondatrace connected them</h2><span class="fold-count" id="d-reason-count"></span><span class="fold-act">Show</span></summary>
           <ol class="reason" id="d-reason" style="margin-top:12px"></ol>
           <div class="unknown" id="d-unknown"></div>
           <p id="d-linked" style="margin-top:16px;font-size:14px" hidden></p>
-        </div>
+        </details>
 
         <div class="section tester" id="d-tester"></div>
       </section>
@@ -1501,9 +1523,13 @@ function renderDetail(){
     const first=!seen.has(e.t); seen.add(e.t); const al=i.alone[e.t];
     return `<li class="ev">${dot(e.t)}<div class="ev-body${e.fresh?' fresh':''}"><div class="ev-meta"><span><b>${TOOLS[e.t].name}</b> · ${esc(fmt(e.where))}</span><span class="mono">${ago(e.d)} · ${fmtD(e.d)}</span></div><div class="ev-text">${fmt(e.text)}</div><div class="muted" style="font-size:12.5px;margin-top:4px">${esc(e.who)}</div><button type="button" class="srclink" data-src="${e.t}">Open in ${TOOLS[e.t].name} ↗</button>${first&&al?`<div class="alone-line"><span>On its own in ${TOOLS[e.t].name}:</span><span class="pill ${/fine|healthy|routine|normal/i.test(al[0])?'ok':'neutral'}">${esc(al[0])}</span><span>${esc(fmt(al[1]))}</span></div>`:''}${e.fresh?'<div class="alone-line"><span class="new-badge">New overnight</span></div>':''}</div></li>`;
   }).join('');
+  $('d-ev-count').textContent=`${ev.length} item${ev.length===1?'':'s'} from ${new Set(ev.map(e=>e.t)).size} tools`;
   const zoomOn=on('zoom');
   $('d-talk-intro').textContent = zoomOn?'From recorded meeting transcripts. None of this was written down anywhere else.':'Zoom is turned off, so Ondatrace can\'t read meeting transcripts. Turn it back on from Today to see what people said.';
   $('d-talk').innerHTML = zoomOn ? i.talk.map(m=>blocked(m.scope)?lockedTalk(m):`<div class="talk"><div class="talk-head"><span>${chip('zoom')} · <b>${esc(m.title)}</b></span><span class="mono">${ago(m.d)} · ${fmtD(m.d)} · ${esc(m.len)}</span></div><div class="talk-lines">${m.lines.map(([ts,who,tx])=>`<div class="tline"><span class="ts">${ts}</span><span><b>${esc(who)}:</b>${fmt(tx)}</span></div>`).join('')}</div></div>`).join('') : '';
+  $('d-talk-count').textContent=zoomOn?`${i.talk.length} meeting${i.talk.length===1?'':'s'}`:'Zoom is off';
+  $('d-reason-count').textContent=`${i.reason.length} steps`;
+  ['d-ev-sec','d-talk-sec','d-reason-sec'].forEach(id=>{ const d=$(id); d.open=false; d.querySelector('.fold-act').textContent='Show'; });
   const tagName={inf:['inf','Inference'],ev:['ev','From evidence'],pol:['pol','Policy']};
   $('d-reason').innerHTML=i.reason.map(([t,k])=>`<li><span>${esc(fmt(t))}<span class="tag ${tagName[k][0]}">${tagName[k][1]}</span></span></li>`).join('');
   $('d-unknown').innerHTML=`<b>What Ondatrace can't see</b>${esc(fmt(i.unknown))}`;
@@ -2052,20 +2078,25 @@ const coachTipHTML = i => { const t=TIPS[i.id]; if(!t||S.viewer!=='morgan') retu
 const outsideFor = i => RESEARCH.filter(r=>r.link===i.id&&r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p)));
 function guideBarHTML(i, scope, withPeople){
   const parts=[];
-  const coach=coachTipHTML(i); if(coach) parts.push(['coach','','Coaching tip',coach]);
-  const out=outsideFor(i); if(out.length) parts.push(['ind','ind',`Outside factors (${out.length})`,out.map(industryTipHTML).join('')]);
+  const t=TIPS[i.id];
+  if(t && S.viewer==='morgan') parts.push(['coach','','Coaching tip','Coaching tip',
+    `<p>${esc(t.text)}</p><button type="button" class="gb-link" data-coachtip="${t.m}" data-from="${i.id}">See the full tip on Coaching →</button>`]);
+  const out=outsideFor(i);
+  if(out.length) parts.push(['ind','ind',`Outside factors (${out.length})`,out.length>1?'Outside factors':'Outside factor',
+    `<ul>${out.map(r=>`<li>${esc(fmt(r.today))}<br><button type="button" class="gb-link" data-research="${r.id}">Read the story in Industry watch →</button></li>`).join('')}</ul>`]);
   const ppl=withPeople?(PEOPLE_SIDE[i.id]||[]):[];
-  if(ppl.length) parts.push(['ppl','ppl',`People side (${ppl.length})`,`<p class="cm-fine">Change management, training and enablement for this step.</p><ul>${ppl.map(([t,k])=>`<li>${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul>`]);
+  if(ppl.length) parts.push(['ppl','ppl',`People side (${ppl.length})`,'The people side: change management, training and enablement',
+    `<ul>${ppl.map(([tx,k])=>`<li>${esc(fmt(tx))}${tagHTML(k)}</li>`).join('')}</ul>`]);
   if(!parts.length) return '';
   const pid=k=>`gb-${scope}-${i.id}-${k}`;
-  return `<div class="guide-bar">${parts.map(([k,c,label])=>`<button type="button" class="gb ${c}" data-gb="${pid(k)}" aria-expanded="false" aria-controls="${pid(k)}"><span class="gb-dot" aria-hidden="true"></span>${esc(label)}</button>`).join('')}</div>`
-    + parts.map(([k,,,body])=>`<div class="gb-panel" id="${pid(k)}" hidden>${body}</div>`).join('');
+  return `<div class="guide-bar"><span class="gb-lead">More on this:</span>${parts.map(([k,c,label])=>`<button type="button" class="gb ${c}" data-gb="${pid(k)}" aria-expanded="false" aria-controls="${pid(k)}">${esc(label)}<span class="gb-act">Show</span></button>`).join('')}</div>`
+    + `<div class="gb-panels">${parts.map(([k,c,,heading,body])=>`<section class="gb-panel ${c}" id="${pid(k)}" aria-label="${esc(heading)}" hidden><h4>${esc(heading)}</h4>${body}</section>`).join('')}</div>`;
 }
 const tipHTML = i => guideBarHTML(i,'card',false);
 function applyDetail(){
   // All details opens every guidance section on Today; the other levels leave them folded.
   const all=S.detail==='all';
-  document.querySelectorAll('#queue [data-gb]').forEach(b=>{ b.setAttribute('aria-expanded',all); const p=$(b.dataset.gb); if(p) p.hidden=!all; });
+  document.querySelectorAll('#queue [data-gb]').forEach(b=>{ b.setAttribute('aria-expanded',all); const p=$(b.dataset.gb); if(p) p.hidden=!all; const a=b.querySelector('.gb-act'); if(a) a.textContent=all?'Hide':'Show'; });
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('button[data-detail]'); if(!b) return;
@@ -2074,10 +2105,12 @@ document.addEventListener('click',e=>{
   renderToday();
 });
 try{ const d=localStorage.getItem('ondatrace-demo-detail'); if(['high','more','all'].includes(d)) S.detail=d; }catch(err){}
+document.addEventListener('toggle',e=>{ const d=e.target; if(d.matches&&d.matches('details.fold')){ const a=d.querySelector('.fold-act'); if(a) a.textContent=d.open?'Hide':'Show'; } },true);
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-gb]'); if(!b) return;
   const panel=$(b.dataset.gb); const open=b.getAttribute('aria-expanded')!=='true';
   b.setAttribute('aria-expanded',open); if(panel) panel.hidden=!open;
+  const act=b.querySelector('.gb-act'); if(act) act.textContent=open?'Hide':'Show';
 });
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-coachtip]'); if(!t) return;
