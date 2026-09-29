@@ -680,7 +680,7 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
   gap: 56px;
   align-items: center;
 }
-.hero-copy h1 { margin-bottom: 20px; font-size: 2.35rem; text-wrap: balance; }
+.hero-copy h1 { margin-bottom: 20px; font-size: 2.7rem; text-wrap: balance; }
 .h1-accent { display: block; margin-top: 6px; color: var(--accent-ink); }
 @media (max-width: 760px) { .hero-copy h1 { font-size: 1.8rem; } }
 .hero-copy .hero-sub { margin-bottom: 30px; }
