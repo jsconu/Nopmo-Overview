@@ -796,7 +796,7 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
 
 /* ---------- helm network (hero) ---------- */
 .helm-card { margin: 0; display: grid; gap: 10px; justify-items: center; }
-.helm-net { width: 100%; max-width: 580px; height: auto; overflow: visible; }
+.helm-net { width: 100%; max-width: 540px; height: auto; overflow: visible; }
 .hn-chord { stroke: var(--primary); stroke-opacity: 0.18; stroke-width: 1.2; }
 .hn-rim { fill: none; stroke: var(--primary); stroke-width: 6; stroke-opacity: 0.85; }
 .hn-spoke { stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 5 7; animation: hn-flow 2.8s linear infinite; }
