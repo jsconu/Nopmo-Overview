@@ -75,6 +75,13 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:2p
 .guide li{counter-increment:g;display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:5px 6px;font-size:13px;line-height:1.35;color:var(--rail-muted)}
 .guide li::before{content:counter(g);display:grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--rail-muted);font:500 11px var(--mono)}
 .guide li.done{color:var(--rail-ink)}
+.guide li button{all:unset;cursor:pointer;color:var(--rail-ink);border-radius:6px;padding:1px 4px;margin:-1px -4px;line-height:1.35}
+.guide li button:hover{background:var(--rail-hi);text-decoration:underline;text-underline-offset:2px}
+.guide li button:focus-visible{outline:2px solid var(--rail-done);outline-offset:1px}
+.guide li.done button{color:var(--rail-ink)}
+.guide-hint{font-size:12px;color:var(--rail-muted);padding:0 6px}
+.pulse{animation:pulse 1.2s ease-out 2;border-radius:10px}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--brand)}100%{box-shadow:0 0 0 10px transparent}}
 .guide li.done::before{content:"✓";background:var(--rail-done);border-color:var(--rail-done);color:var(--rail)}
 .rail-foot{margin-top:auto;font-size:12px;color:var(--rail-muted);line-height:1.45;padding:0 6px}
 
@@ -619,18 +626,19 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
     </nav>
     <div class="guide">
       <div class="eyebrow">Things to try</div>
+      <p class="guide-hint">Click any step to jump there.</p>
       <ol id="guide">
-        <li data-step="connect">Connect the sample tools</li>
-        <li data-step="open">Open the top finding</li>
-        <li data-step="view">View it as a project lead</li>
-        <li data-step="act">Approve a note or change</li>
-        <li data-step="filter">Turn a tool off on Today</li>
-        <li data-step="morning">Jump to tomorrow morning</li>
-        <li data-step="risks">Open the portfolio summary</li>
-        <li data-step="research">Check industry news</li>
-        <li data-step="coach">See your coaching</li>
-        <li data-step="ask">Ask your own question</li>
-        <li data-step="feedback">Give feedback</li>
+        <li data-step="connect"><button type="button" data-guide-go="connect">Connect the sample tools</button></li>
+        <li data-step="open"><button type="button" data-guide-go="open">Open the top finding</button></li>
+        <li data-step="view"><button type="button" data-guide-go="view">View it as a project lead</button></li>
+        <li data-step="act"><button type="button" data-guide-go="act">Approve a note or change</button></li>
+        <li data-step="filter"><button type="button" data-guide-go="filter">Turn a tool off on Today</button></li>
+        <li data-step="morning"><button type="button" data-guide-go="morning">Jump to tomorrow morning</button></li>
+        <li data-step="risks"><button type="button" data-guide-go="risks">Open the portfolio summary</button></li>
+        <li data-step="research"><button type="button" data-guide-go="research">Check industry news</button></li>
+        <li data-step="coach"><button type="button" data-guide-go="coach">See your coaching</button></li>
+        <li data-step="ask"><button type="button" data-guide-go="ask">Ask your own question</button></li>
+        <li data-step="feedback"><button type="button" data-guide-go="feedback">Give feedback</button></li>
       </ol>
     </div>
     <p class="rail-foot">Fictional company and data. Nothing is connected and no messages are sent. Purple dashed boxes are questions for you, not part of Ondatrace.</p>
@@ -1203,6 +1211,34 @@ const status = t => { const s=$('status'); s.hidden=false; s.textContent=t; clea
 const log = t => { S.log.push([new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}),t]); };
 const once = new Set(); const logOnce = (k,t) => { if(!once.has(k)){ once.add(k); log(t); } };
 const step = k => { if(S.guide.has(k)) return; S.guide.add(k); document.querySelector(`#guide [data-step="${k}"]`)?.classList.add('done'); };
+// "Things to try": each step takes you to where you do it, and points at the control.
+const GUIDE = {
+  connect:{go:'connect', el:'#run', hint:'Pick the tools, then read the sample week.'},
+  open:{open:true, hint:'This is the top finding. Its evidence and next steps are below.'},
+  view:{go:'today', el:'#viewer', hint:'Use "View as" at the top to see Ondatrace as Leo, a project lead.'},
+  act:{open:true, el:'#p-note', hint:'Review the drafted note, or approve the proposed change.'},
+  filter:{go:'today', el:'#filters', hint:'Turn a tool off to see which findings disappear without it.'},
+  morning:{go:'today', el:'#morning-btn', hint:'Jump ahead to see what changed overnight.'},
+  risks:{go:'summary', hint:'Health, budget and outcomes for all six projects.'},
+  research:{go:'research', hint:'Outside changes that affect Kestrel\'s projects.'},
+  coach:{go:'coach', hint:'Coaching based on what Morgan actually said and wrote.'},
+  ask:{go:'ask', el:'#ask-input', hint:'Ask anything about Kestrel\'s projects in the bar at the top.'},
+  feedback:{go:'wrap', hint:'Tell us what you think.'}
+};
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-guide-go]'); if(!b) return;
+  const g=GUIDE[b.dataset.guideGo]; if(!g) return;
+  if(!S.scanned && b.dataset.guideGo!=='connect'){ go('connect'); status('Connect the sample tools first. Then every step opens.'); pulse('#run'); return; }
+  if(g.open){ const top=openList()[0]; if(top) openInsight(top.id); } else go(g.go);
+  if(g.hint) status(g.hint);
+  if(g.el) pulse(g.el);
+});
+function pulse(sel){
+  const el=document.querySelector(sel); if(!el) return;
+  document.querySelectorAll('.pulse').forEach(x=>x.classList.remove('pulse'));
+  el.scrollIntoView({block:'center'}); void el.offsetWidth; el.classList.add('pulse');
+  if(el.matches('input,select,button')) el.focus({preventScroll:true});
+}
 const byId = id => INSIGHTS.find(i=>i.id===id);
 const on = t => S.tools.has(t) && S.scanTools && S.scanTools.has(t);
 const visible = i => i.needs.every(on);
