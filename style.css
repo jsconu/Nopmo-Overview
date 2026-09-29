@@ -793,3 +793,23 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
   .cmp-us .cmp-label { color: var(--accent-ink); }
   .cmp-us { padding-bottom: 16px !important; }
 }
+
+/* ---------- helm network (hero) ---------- */
+.helm-card { margin: 0; display: grid; gap: 10px; justify-items: center; }
+.helm-net { width: 100%; max-width: 460px; height: auto; overflow: visible; }
+.hn-chord { stroke: var(--primary); stroke-opacity: 0.18; stroke-width: 1.2; }
+.hn-rim { fill: none; stroke: var(--primary); stroke-width: 6; stroke-opacity: 0.85; }
+.hn-spoke { stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 5 7; animation: hn-flow 2.8s linear infinite; }
+.hn-hub-ring { fill: none; stroke: var(--primary); stroke-opacity: 0.25; stroke-width: 6; }
+.hn-hub { fill: var(--primary); }
+.hn-name { fill: #ffffff; font-family: var(--font-display); font-weight: 700; font-size: 20px; text-anchor: middle; }
+.hn-letter { fill: #ffffff; font-family: var(--font-display); font-weight: 700; text-anchor: middle; }
+.hn-label { fill: var(--ink); font-family: var(--font-body); font-weight: 600; font-size: 13px; text-anchor: middle; }
+.hn-world .hn-label, .hn-craft .hn-label { fill: var(--accent-ink); }
+.hn-node circle { stroke: var(--bg); stroke-width: 4; }
+.helm-card figcaption { color: var(--ink-soft); font-size: 0.95rem; text-align: center; max-width: 380px; }
+@keyframes hn-flow { to { stroke-dashoffset: -24; } }
+@media (prefers-reduced-motion: reduce) { .hn-spoke { animation: none; } }
+@media (max-width: 900px) { .helm-net { max-width: 380px; } }
+.callouts .card h3 { margin-bottom: 6px; }
+.section-note { margin: 24px 0 0; color: var(--ink-soft); font-size: 0.98rem; }
