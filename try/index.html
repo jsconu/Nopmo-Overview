@@ -500,6 +500,17 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .coach-tip .ct-label{font:600 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brand-text)}
 .coach-tip .ct-go{color:var(--brand-text);font-weight:600;white-space:nowrap}
 .cmoment.hi,.ritem.hi{box-shadow:0 0 0 2px var(--brand),var(--shadow)}
+.guide-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:2px}
+.gb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;min-height:36px;cursor:pointer}
+.gb::after{content:"▾";font-size:11px;opacity:.7}
+.gb[aria-expanded="true"]{border-color:var(--brand);color:var(--ink)}
+.gb[aria-expanded="true"]::after{content:"▴"}
+.gb .gb-dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.gb.ind .gb-dot{background:var(--watch)}
+.gb.ppl .gb-dot{background:var(--warn)}
+.gb-panel{display:grid;gap:8px;margin-top:8px}
+.gb-panel ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.gb-panel li{font-size:14.5px}
 .industry-tip{border-color:var(--watch);background:var(--watch-soft)}
 .industry-tip .ct-label,.industry-tip .ct-go{color:var(--watch)}
 .watch-card h3{font-size:16px;margin:0 0 4px}
@@ -1430,7 +1441,7 @@ function renderDetail(){
   $('h-detail').textContent=fmt(i.title);
   $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]&&!i.redacted?i.why+' '+i.lede:i.lede);
   $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span>${i.client?`<span>Client impact <b>${esc(i.redacted?'A customer':i.client)}</b></span>`:''}<span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
-  renderNote(i); renderProp(i); renderWrong(i); renderPeople(i); $('p-coach').innerHTML=tipHTML(i);
+  renderNote(i); renderProp(i); renderWrong(i); $('p-people').hidden=true; $('p-coach').innerHTML=guideBarHTML(i,'detail',true);
   renderAccess(i);
   const seen=new Set();
   const ev=i.ev.filter(e=>on(e.t)).sort((a,b)=>a.d-b.d);
@@ -1951,7 +1962,8 @@ document.addEventListener('input',e=>{ if(e.target.id==='coach-off'){ S.coach.of
 const PEOPLE_SIDE = {
   acme:[['Brief Tom before his next Acme call so the renewal conversation uses the real date. A second corrected promise costs more trust than the first.','inf'],
     ['Acme\'s 1,200 staff will need sign-in instructions and a support contact for SSO. Ask Acme\'s IT lead now who runs the rollout on their side.','inf'],
-    ['Support is training 40 agents on SSO on {d+4}. Settle the date first so they don\'t learn a flow customers won\'t see for weeks.','ev']],
+    ['Support is training 40 agents on SSO on {d+4}. Settle the date first so they don\'t learn a flow customers won\'t see for weeks.','ev'],
+    ['If multi-factor sign-in is added, support will get "I didn\'t get my code" calls. Plan a short training module for it.','inf']],
   hold:[['Tell the Data Migration team why the hold exists, not just that it does, so it doesn\'t read as the project being cut.','inf'],
     ['Add the rule to the team\'s vendor checklist: anything over $50K goes to the CFO until the {d+10} review.','inf'],
     ['Give Ana wording for Stratus so the vendor relationship survives the delay.','inf']],
@@ -1984,8 +1996,26 @@ const TIPS = {
 };
 const coachTipHTML = i => { const t=TIPS[i.id]; if(!t||S.viewer!=='morgan') return '';
   return `<button type="button" class="coach-tip" data-coachtip="${t.m}" data-from="${i.id}"><span class="ct-label">Coaching tip</span><span>${esc(t.text)}</span><span class="ct-go">See the tip →</span></button>`; };
-// Guidance sits inside the suggestion it belongs to: the coaching tip, then any outside change behind the same finding.
-const tipHTML = i => coachTipHTML(i) + RESEARCH.filter(r=>r.link===i.id&&r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p))).map(industryTipHTML).join('');
+// Guidance sits inside the suggestion it belongs to, folded into a row of small buttons so the
+// suggestion itself stays easy to read: coaching, the outside factors behind it, and the people side.
+const outsideFor = i => RESEARCH.filter(r=>r.link===i.id&&r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p)));
+function guideBarHTML(i, scope, withPeople){
+  const parts=[];
+  const coach=coachTipHTML(i); if(coach) parts.push(['coach','','Coaching tip',coach]);
+  const out=outsideFor(i); if(out.length) parts.push(['ind','ind',`Outside factors (${out.length})`,out.map(industryTipHTML).join('')]);
+  const ppl=withPeople?(PEOPLE_SIDE[i.id]||[]):[];
+  if(ppl.length) parts.push(['ppl','ppl',`People side (${ppl.length})`,`<p class="cm-fine">Change management, training and enablement for this step.</p><ul>${ppl.map(([t,k])=>`<li>${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul>`]);
+  if(!parts.length) return '';
+  const pid=k=>`gb-${scope}-${i.id}-${k}`;
+  return `<div class="guide-bar">${parts.map(([k,c,label])=>`<button type="button" class="gb ${c}" data-gb="${pid(k)}" aria-expanded="false" aria-controls="${pid(k)}"><span class="gb-dot" aria-hidden="true"></span>${esc(label)}</button>`).join('')}</div>`
+    + parts.map(([k,,,body])=>`<div class="gb-panel" id="${pid(k)}" hidden>${body}</div>`).join('');
+}
+const tipHTML = i => guideBarHTML(i,'card',false);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-gb]'); if(!b) return;
+  const panel=$(b.dataset.gb); const open=b.getAttribute('aria-expanded')!=='true';
+  b.setAttribute('aria-expanded',open); if(panel) panel.hidden=!open;
+});
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-coachtip]'); if(!t) return;
   S.coachCat=null; S.coachFrom=t.dataset.from||null;
@@ -1995,7 +2025,7 @@ document.addEventListener('click',e=>{
   if(el){ el.classList.add('hi'); el.scrollIntoView({block:'start'}); setTimeout(()=>el.classList.remove('hi'),2600); }
 });
 
-const industryTipHTML = r => `<button type="button" class="coach-tip industry-tip" data-research="${r.id}"><span class="ct-label">Industry watch</span><span>${esc(fmt(r.today))}</span><span class="ct-go">See why →</span></button>`;
+const industryTipHTML = r => `<button type="button" class="coach-tip industry-tip" data-research="${r.id}"><span class="ct-label">Outside factor</span><span>${esc(fmt(r.today))}</span><span class="ct-go">Read the story →</span></button>`;
 function watchCardHTML(){
   const list=RESEARCH.filter(r=>r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p)));
   if(!list.length) return '';
@@ -2042,17 +2072,17 @@ function tuneHTML(types){
 }
 const tuneNote = t => { S.tuneMsg=t; };
 const RESEARCH = [
-  {id:'r-stratus',dek:'Stratus, a data migration services firm, has agreed to be acquired by a larger cloud provider. In a note to customers, Stratus said signed contracts will be honored but list prices will be reviewed after the deal closes next quarter.',today:'Stratus is being acquired and prices may change after the deal. Ask Stratus in writing whether your held price survives it before the CFO decides.',type:'Vendor news',sev:'crit',title:'Stratus is being acquired. Customers are being told prices will change after the deal closes.',src:'Enterprise Data Wire',d:-1,pids:['mig'],link:'hold',
+  {id:'r-stratus',dek:'Stratus, a data migration services firm, has agreed to be acquired by a larger cloud provider. In a note to customers, Stratus said signed contracts will be honored but list prices will be reviewed after the deal closes next quarter.',today:'Stratus is being acquired and says prices will be reviewed after the deal closes, so waiting for the CFO review may cost more than it did last week.',type:'Vendor news',sev:'crit',title:'Stratus is being acquired. Customers are being told prices will change after the deal closes.',src:'Enterprise Data Wire',d:-1,pids:['mig'],link:'hold',
    why:'Data Migration plans to sign a $186K Stratus contract on {d+2}, during the CFO\'s vendor hold. If prices change after the deal closes, waiting for the {d+10} review could cost more.',
    next:'Before Dana decides, ask Stratus in writing whether the held price survives the acquisition. That gives her the facts for an exception or a wait.',
    people:[['Ana\'s team may read this as the migration being at risk. Tell them the plan hasn\'t changed, only possibly the signing date.','inf']],
    found:'Matched "Stratus" from the Data Migration plan and Ana\'s email.'},
-  {id:'r-mfa',dek:'A new rule for patient-facing health portals will require multi-factor sign-in for every user. Providers and their software vendors have until {d+150} to comply, and guidance on accepted methods is expected next month.',today:'Due to a new patient-portal rule, review Portal 2.0\'s charter and scope: multi-factor sign-in becomes required from {d+150}.',type:'Regulation',sev:'warn',title:'A new patient-portal rule will require multi-factor sign-in from {d+150}.',src:'Health IT Policy Brief',d:-2,pids:['portal','api'],link:'acme',
+  {id:'r-mfa',dek:'A new rule for patient-facing health portals will require multi-factor sign-in for every user. Providers and their software vendors have until {d+150} to comply, and guidance on accepted methods is expected next month.',today:'A new patient-portal rule requires multi-factor sign-in from {d+150}, so whatever SSO date you settle on has to include it.',type:'Regulation',sev:'warn',title:'A new patient-portal rule will require multi-factor sign-in from {d+150}.',src:'Health IT Policy Brief',d:-2,pids:['portal','api'],link:'acme',
    why:'Portal 2.0 is building SSO right now (PLAT-412). Adding multi-factor later means a second round of the same identity work, after Acme has rolled SSO out to 1,200 staff.',
    next:'Ask Priya and Leo whether PLAT-412 can include a multi-factor option now, and what it adds to the {d+22} estimate.',
    people:[['Support will get "I didn\'t get my code" calls. Add multi-factor to the training plan as a later module.','inf'],['Customers\' IT teams need notice to plan their own rollout. Put it in the next customer update.','inf']],
    found:'Matched "SSO" and "identity provider" from your Jira tickets and the Portal plan.'},
-  {id:'r-lib',dek:'Researchers disclosed a flaw in version 4.2 of a widely used open-source sign-in library that could let attackers reuse expired sessions. The maintainers released version 4.3 with a fix and recommend upgrading promptly.',today:'A security fix is out for the sign-in library PLAT-412 uses. Add the upgrade to Sprint 25 before Priya\'s leave.',type:'Security',sev:'warn',title:'A security flaw was found in a widely used sign-in library. Version 4.3 fixes it.',src:'Open Source Security Digest',d:0,pids:['api','portal'],link:'acme',
+  {id:'r-lib',dek:'Researchers disclosed a flaw in version 4.2 of a widely used open-source sign-in library that could let attackers reuse expired sessions. The maintainers released version 4.3 with a fix and recommend upgrading promptly.',today:'A security fix is out for the sign-in library PLAT-412 uses, which adds work to the same SSO sprint Acme is waiting on.',type:'Security',sev:'warn',title:'A security flaw was found in a widely used sign-in library. Version 4.3 fixes it.',src:'Open Source Security Digest',d:0,pids:['api','portal'],link:'acme',
    why:'PLAT-412\'s design notes use version 4.2. Fixing it now is cheaper than patching after launch, and it\'s the same SSO work Acme is waiting on.',
    next:'Ask Priya to confirm the version and add the upgrade to Sprint 25 before she\'s out on {d+8}.',
    people:[['No customer message needed if it\'s fixed before launch. If it slips past launch, have a short customer notice ready.','inf']],
@@ -2062,7 +2092,7 @@ const RESEARCH = [
    next:'Ask sales which renewals mention SSO, and mark SSO as a renewal dependency in the Portal plan.',
    people:[['Give account managers one short, accurate SSO status to share, so every customer hears the same date.','inf']],
    found:'Matched "renewal" and "SSO" from Salesforce and Tom\'s email.'},
-  {id:'r-comp',today:'A competitor now onboards partners in a day. Use that to decide quickly which partner onboarding effort continues.',dek:'A competing vendor released self-serve onboarding for partners, with tax forms collected inside the product. The company says partners can now go live in a day instead of two weeks.',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
+  {id:'r-comp',today:'A competitor now onboards partners in a day, so running two slower efforts costs Kestrel more than engineer time.',dek:'A competing vendor released self-serve onboarding for partners, with tax forms collected inside the product. The company says partners can now go live in a day instead of two weeks.',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
    why:'Kestrel has two teams building the same partner onboarding under different names. One combined effort would reach partners sooner.',
    next:'Bring this to the conversation with Sam and Jess: speed to partners matters more than two versions.',
    people:[['Partner managers will be asked how Kestrel compares. Give them a one-page answer.','inf']],
@@ -2079,13 +2109,12 @@ function storyHTML(r, lead){
   const [cls]=SEV[r.sev]; const lk=visible(byId(r.link));
   const proj=r.pids.map(id=>PROJECTS.find(x=>x.id===id).name);
   return `<article class="story${lead?' lead':''}" id="ri-${r.id}">
-    <span class="kicker ${cls}">${esc(r.type)}${r.today?' · Needs a decision':''}</span>
+    <span class="kicker ${cls}">${esc(r.type)}${r.today?' · Affects a decision on Today':''}</span>
     <h3>${esc(fmt(r.title))}</h3>
     <span class="byline">${esc(r.src)} · ${ago(r.d)} · ${fmtD(r.d)}</span>
     <p class="dek">${esc(fmt(r.dek))}</p>
     <p class="for-us"><b>What it means for Kestrel.</b> ${esc(fmt(r.why))}</p>
-    <div class="next"><span>Affects ${esc(proj.join(', '))}</span>${lk?`<button type="button" class="next-link" data-open="${r.link}">Suggested next step: ${esc(fmt(r.next))}</button>`:`<span>Suggested next step: ${esc(fmt(r.next))}</span>`}</div>
-    <details><summary>The people side (${r.people.length})</summary><ul>${r.people.map(([t,k])=>`<li>${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul></details>
+    <div class="next"><span>Affects ${esc(proj.join(', '))}</span>${lk?`<button type="button" class="next-link" data-open="${r.link}">Shapes: ${esc(fmt(current(byId(r.link)).title))}</button>`:''}</div>
   </article>`;
 }
 function renderResearch(){
