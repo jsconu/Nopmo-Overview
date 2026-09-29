@@ -1349,7 +1349,7 @@ function renderToday(){
     ? `Overnight, Ondatrace read 214 new updates. <b>${open} ${open===1?'finding needs':'findings need'} you</b>, and ${vis.filter(i=>i.fresh).length} changed since yesterday.`
     : `Since Friday, Ondatrace read ${ALL.filter(on).reduce((a,t)=>a+TOOLS[t].n,0).toLocaleString()} updates across ${nOn} tools. <b>${open} ${open===1?'finding needs':'findings need'} you.</b> None of them shows up in any single tool.`;
   const missing = [...new Set(hid.flatMap(i=>i.needs.filter(t=>!on(t))))];
-  $('queue').innerHTML = vis.map(cardHTML).join('') + watchCardHTML() +
+  $('queue').innerHTML = vis.map(cardHTML).join('') +
     (hid.length?`<div class="card missing"><p><b>${hid.length} ${hid.length===1?'finding is':'findings are'} hidden</b> because ${hid.length===1?'it needs':'they need'} a tool that's off: ${missing.map(t=>TOOLS[t].name).join(', ')}. Without it, the connection doesn't exist.</p></div>`:'') +
     (!vis.length && !hid.length ? `<div class="card missing"><p>Nothing needs you right now.</p></div>`:'');
   const dis = Object.keys(S.dismissed);
@@ -1982,8 +1982,10 @@ const TIPS = {
   training:{m:'align-lead',text:'Downstream teams like Support hear about slips last. When a date moves, ask "who else is building on this?"'},
   dup:{m:'write-jess',text:'Your note to Jess this week worked: one ask, one date, one reason. Use the same shape when you write to Sam and Jess.'}
 };
-const tipHTML = i => { const t=TIPS[i.id]; if(!t||S.viewer!=='morgan') return '';
+const coachTipHTML = i => { const t=TIPS[i.id]; if(!t||S.viewer!=='morgan') return '';
   return `<button type="button" class="coach-tip" data-coachtip="${t.m}" data-from="${i.id}"><span class="ct-label">Coaching tip</span><span>${esc(t.text)}</span><span class="ct-go">See the tip →</span></button>`; };
+// Guidance sits inside the suggestion it belongs to: the coaching tip, then any outside change behind the same finding.
+const tipHTML = i => coachTipHTML(i) + RESEARCH.filter(r=>r.link===i.id&&r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p))).map(industryTipHTML).join('');
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-coachtip]'); if(!t) return;
   S.coachCat=null; S.coachFrom=t.dataset.from||null;
@@ -2060,7 +2062,7 @@ const RESEARCH = [
    next:'Ask sales which renewals mention SSO, and mark SSO as a renewal dependency in the Portal plan.',
    people:[['Give account managers one short, accurate SSO status to share, so every customer hears the same date.','inf']],
    found:'Matched "renewal" and "SSO" from Salesforce and Tom\'s email.'},
-  {id:'r-comp',dek:'A competing vendor released self-serve onboarding for partners, with tax forms collected inside the product. The company says partners can now go live in a day instead of two weeks.',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
+  {id:'r-comp',today:'A competitor now onboards partners in a day. Use that to decide quickly which partner onboarding effort continues.',dek:'A competing vendor released self-serve onboarding for partners, with tax forms collected inside the product. The company says partners can now go live in a day instead of two weeks.',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
    why:'Kestrel has two teams building the same partner onboarding under different names. One combined effort would reach partners sooner.',
    next:'Bring this to the conversation with Sam and Jess: speed to partners matters more than two versions.',
    people:[['Partner managers will be asked how Kestrel compares. Give them a one-page answer.','inf']],
