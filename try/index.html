@@ -508,6 +508,16 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .coach-tip .ct-go{color:var(--brand-text);font-weight:600;white-space:nowrap}
 .cmoment.hi,.ritem.hi{box-shadow:0 0 0 2px var(--brand),var(--shadow)}
 .guide-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:2px}
+.detail-toggle{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin:4px 0 10px}
+.detail-toggle .lbl{font-size:13px;color:var(--muted)}
+.detail-toggle .seg{margin:0}
+.detail-toggle .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+#queue[data-detail="high"] .why,#queue[data-detail="high"] .card-foot .srcs,#queue[data-detail="high"] .span-note,
+#queue[data-detail="high"] .guide-bar,#queue[data-detail="high"] .gb-panel{display:none}
+#queue[data-detail="high"] .card{gap:6px;padding-top:14px;padding-bottom:12px}
+#queue[data-detail="high"] .card-foot{justify-content:flex-end}
+#queue[data-detail="more"] .card-foot .srcs,#queue[data-detail="more"] .span-note{display:none}
+#queue[data-detail="more"] .card-foot{justify-content:flex-end}
 .gb{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;min-height:36px;cursor:pointer}
 .gb::after{content:"▾";font-size:11px;opacity:.7}
 .gb[aria-expanded="true"]{border-color:var(--brand);color:var(--ink)}
@@ -740,6 +750,8 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <div class="row"><button type="button" class="fchip client-toggle" id="client-only" aria-pressed="false">Only findings that affect a client</button></div>
           <p class="filter-note">To see what you'd miss without a tool, turn it off here and watch which findings disappear.</p>
         </div>
+        <div class="detail-toggle"><span class="lbl">How much to show on each suggestion</span>
+          <span class="seg" role="group" aria-label="Detail level"><button type="button" data-detail="high">High level</button><button type="button" data-detail="more">More detail</button><button type="button" data-detail="all">All details</button></span></div>
         <div class="queue" id="queue"></div>
         <p class="dismissed" id="dismissed" hidden></p>
         <div class="morning" id="morning">
@@ -1188,7 +1200,7 @@ const SCANLOG = [
 ];
 
 const S = {tools:new Set(ALL), scanTools:null, scanned:false, view:'start', prev:'today', cur:null, morning:false, holdResolved:false,
-  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited', coachCat:null, coachFrom:null, coach:{use:'',topics:[],who:'',off:''}, research:{use:'',watch:[],trust:''}, paperSection:null, tune:{removed:[],added:[],weights:{}}, coachSet:{level:'VP or head of delivery',focus:[],sources:{meetings:true,emails:true,chat:true,video:true},guide:null,prep:false}};
+  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited', detail:'more', coachCat:null, coachFrom:null, coach:{use:'',topics:[],who:'',off:''}, research:{use:'',watch:[],trust:''}, paperSection:null, tune:{removed:[],added:[],weights:{}}, coachSet:{level:'VP or head of delivery',focus:[],sources:{meetings:true,emails:true,chat:true,video:true},guide:null,prep:false}};
 
 /* runtime capabilities (only inside the Claude viewer) */
 const CAP = {sample:null, db:null, uid:null, owner:false, canWrite:null, askOff:false};
@@ -1396,6 +1408,8 @@ function renderToday(){
     ? `Overnight, Ondatrace read 214 new updates. <b>${open} ${open===1?'finding needs':'findings need'} you</b>, and ${vis.filter(i=>i.fresh).length} changed since yesterday.`
     : `Since Friday, Ondatrace read ${ALL.filter(on).reduce((a,t)=>a+TOOLS[t].n,0).toLocaleString()} updates across ${nOn} tools. <b>${open} ${open===1?'finding needs':'findings need'} you.</b> None of them shows up in any single tool.`;
   const missing = [...new Set(hid.flatMap(i=>i.needs.filter(t=>!on(t))))];
+  $('queue').dataset.detail = S.detail;
+  document.querySelectorAll('[data-detail]').forEach(b=>{ if(b.tagName==='BUTTON') b.setAttribute('aria-pressed', b.dataset.detail===S.detail); });
   $('queue').innerHTML = vis.map(cardHTML).join('') +
     (hid.length?`<div class="card missing"><p><b>${hid.length} ${hid.length===1?'finding is':'findings are'} hidden</b> because ${hid.length===1?'it needs':'they need'} a tool that's off: ${missing.map(t=>TOOLS[t].name).join(', ')}. Without it, the connection doesn't exist.</p></div>`:'') +
     (!vis.length && !hid.length ? `<div class="card missing"><p>Nothing needs you right now.</p></div>`:'');
@@ -1406,6 +1420,7 @@ function renderToday(){
   $('morning-text').innerHTML = S.morning?'<b>It\'s tomorrow morning.</b> Findings with a green label changed overnight. Ondatrace keeps state between days, so it knows what\'s new, what improved and what got worse.':'<b>See how findings change over time.</b> Ondatrace keeps watching. Jump ahead a day and new updates arrive overnight.';
   const fine = FINE.filter(([t])=>on(t));
   $('fine-sum').textContent = `${Math.max(fine.length, Math.round(41*nOn/9))} items checked and fine`;
+  applyDetail();
   $('fine').innerHTML = fine.map(([t,x])=>`<li>${chip(t)}<span>${esc(x)}</span></li>`).join('') + `<li class="muted" style="font-size:13px">Showing ${fine.length}. Ondatrace checks these so that a quiet Today means something.</li>`;
 }
 document.addEventListener('click',e=>{ const b=e.target.closest('#client-only'); if(!b) return; S.clientOnly=!S.clientOnly; b.setAttribute('aria-pressed',S.clientOnly); logOnce('client'+S.clientOnly,S.clientOnly?'Filtered Today to client-facing findings.':'Showed all findings again.'); renderToday(); });
@@ -2047,6 +2062,18 @@ function guideBarHTML(i, scope, withPeople){
     + parts.map(([k,,,body])=>`<div class="gb-panel" id="${pid(k)}" hidden>${body}</div>`).join('');
 }
 const tipHTML = i => guideBarHTML(i,'card',false);
+function applyDetail(){
+  // All details opens every guidance section on Today; the other levels leave them folded.
+  const all=S.detail==='all';
+  document.querySelectorAll('#queue [data-gb]').forEach(b=>{ b.setAttribute('aria-expanded',all); const p=$(b.dataset.gb); if(p) p.hidden=!all; });
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-detail]'); if(!b) return;
+  S.detail=b.dataset.detail; logOnce('detail-'+S.detail,`Set Today to "${b.textContent}".`);
+  try{ localStorage.setItem('ondatrace-demo-detail',S.detail); }catch(err){}
+  renderToday();
+});
+try{ const d=localStorage.getItem('ondatrace-demo-detail'); if(['high','more','all'].includes(d)) S.detail=d; }catch(err){}
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-gb]'); if(!b) return;
   const panel=$(b.dataset.gb); const open=b.getAttribute('aria-expanded')!=='true';
