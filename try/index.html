@@ -656,7 +656,14 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .columns .story:nth-child(odd){padding-right:0}
 .brief-foot{margin-top:18px}
 .tune{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
-.tune>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between;padding:12px 16px;min-height:44px}
+.tune>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between;padding:12px 56px 12px 16px;min-height:44px;position:relative;border-radius:12px}
+/* The flex summary hides the browser's own arrow, so draw one: a down chevron that flips when open. */
+.tune>summary::after{content:"\25BE";position:absolute;right:14px;top:50%;transform:translateY(-50%);width:30px;height:30px;display:grid;place-items:center;border-radius:999px;border:1.5px solid currentColor;background:var(--brand-soft);color:var(--brand-text);font-size:20px;line-height:1;transition:transform .15s ease,background .15s ease}
+.tune[open]>summary::after{transform:translateY(-50%) rotate(180deg)}
+.tune>summary:hover b{text-decoration:underline;text-underline-offset:3px}
+.tune>summary:hover::after{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.tune>summary:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.tune>summary::after{transition:none}}
 .tune>summary::-webkit-details-marker{display:none}
 .tune>summary b{font-size:15px}
 .tune>summary span{font-size:13px;color:var(--muted)}
