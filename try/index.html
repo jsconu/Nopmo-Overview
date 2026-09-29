@@ -521,6 +521,66 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .ritem h3{margin:0;font-size:17px}
 .ritem .rlabel{font:600 11.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
 .ritem .rfound{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.paper{--serif:Georgia,"Iowan Old Style","Times New Roman",serif}
+.masthead{border-top:3px double var(--ink);border-bottom:1px solid var(--line-strong);padding:12px 0 10px;margin-top:10px;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;align-items:baseline}
+.masthead .title{font:700 30px/1.1 var(--serif);letter-spacing:-.01em}
+.masthead .issue{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.sections{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.sections button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;min-height:36px;cursor:pointer;color:var(--ink-2)}
+.sections button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.story{display:grid;gap:8px;padding:18px 0;border-bottom:1px solid var(--line)}
+.story .kicker{font:600 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--brand-text)}
+.story .kicker.crit{color:var(--crit)}.story .kicker.warn{color:var(--warn)}
+.story h3{font:700 22px/1.25 var(--serif);margin:0;letter-spacing:-.005em}
+.story.lead h3{font-size:32px;line-height:1.15}
+.story .byline{font-size:12.5px;color:var(--muted)}
+.story .dek{font:400 16px/1.6 var(--serif);color:var(--ink)}
+.story.lead .dek{font-size:18px}
+.story .for-us{font-size:14.5px;padding-left:12px;border-left:3px solid var(--brand)}
+.story .for-us b{font-weight:600}
+.story .next{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;font-size:13px;color:var(--muted)}
+.story .next .next-link{border:0;background:none;padding:0;font:inherit;font-size:13px;color:var(--brand-text);text-decoration:underline;text-underline-offset:2px;cursor:pointer;text-align:left}
+.story details{font-size:13px;color:var(--muted)}
+.story details summary{cursor:pointer;min-height:32px;display:inline-flex;align-items:center}
+.story details ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px;color:var(--ink)}
+.story.hi{background:var(--brand-soft);box-shadow:0 0 0 8px var(--brand-soft)}
+.columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}
+.columns .story:nth-child(odd){padding-right:0}
+.brief-foot{margin-top:18px}
+.tune{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+.tune>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;justify-content:space-between;padding:12px 16px;min-height:44px}
+.tune>summary::-webkit-details-marker{display:none}
+.tune>summary b{font-size:15px}
+.tune>summary span{font-size:13px;color:var(--muted)}
+.tune[open]>summary{border-bottom:1px solid var(--line)}
+.tune-body{padding:14px 16px;display:grid;gap:16px}
+.tune-body h4{margin:0 0 6px;font-size:13px;font-family:var(--mono);font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tchips{display:flex;flex-wrap:wrap;gap:6px}
+.tchip{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:4px 6px 4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+.tchip small{color:var(--muted)}
+.tchip.added{border-color:var(--brand);background:var(--brand-soft)}
+.tchip button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:15px;line-height:1;min-width:24px;min-height:24px}
+.tsugg{display:grid;gap:6px}
+.tsugg button{display:flex;gap:8px;align-items:baseline;text-align:left;border:1px dashed var(--brand);background:transparent;border-radius:8px;padding:7px 10px;font:inherit;font-size:13.5px;color:var(--ink);cursor:pointer;min-height:40px}
+.tsugg button b{color:var(--brand-text);white-space:nowrap}
+.tsugg small{color:var(--muted)}
+.weights{display:grid;gap:6px}
+.weights .wrow{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;font-size:14px}
+.weights .seg{margin:0}
+.weights .seg button{padding:4px 10px;font-size:13px}
+.weights .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tune-note{font-size:13px;color:var(--ok);min-height:1em}
+.tune-built{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.upload{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.upload label.btn{cursor:pointer}
+.upload input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
+.focus-badge{font:600 10.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brand-text);background:var(--brand-soft);border-radius:999px;padding:2px 7px;justify-self:start}
+.tune select{border:1px solid var(--line-strong);border-radius:8px;padding:6px 8px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px}
+.srcs-toggle{display:flex;flex-wrap:wrap;gap:6px}
+.tgl{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;min-height:36px;cursor:pointer}
+.tgl[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.tgl[aria-pressed="true"]::before{content:"✓ "}
+@media (max-width:720px){.columns{grid-template-columns:1fr}.story.lead h3{font-size:26px}.masthead .title{font-size:24px}}
 @media (max-width:980px){.coach-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.coach-focus{grid-template-columns:1fr}}
 @media (max-width:560px){.coach-grid{grid-template-columns:1fr}.obs li{grid-template-columns:18px minmax(0,1fr)}.obs .ts{grid-column:1/-1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -749,7 +809,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
       <!-- INDUSTRY WATCH -->
       <section class="view" id="v-research" aria-labelledby="h-research" hidden>
         <span class="eyebrow">Industry watch</span>
-        <h1 id="h-research" style="margin-top:6px">What's happening outside Kestrel that affects your projects</h1>
+        <h1 id="h-research" class="sr">The Kestrel Brief: outside changes that affect your projects</h1>
         <div id="research-body"></div>
       </section>
 
@@ -1109,7 +1169,7 @@ const SCANLOG = [
 ];
 
 const S = {tools:new Set(ALL), scanTools:null, scanned:false, view:'start', prev:'today', cur:null, morning:false, holdResolved:false,
-  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited', coachCat:null, coachFrom:null, coach:{use:'',topics:[],who:'',off:''}, research:{use:'',watch:[],trust:''}};
+  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited', coachCat:null, coachFrom:null, coach:{use:'',topics:[],who:'',off:''}, research:{use:'',watch:[],trust:''}, paperSection:null, tune:{removed:[],added:[],weights:{}}, coachSet:{level:'VP or head of delivery',focus:[],sources:{meetings:true,emails:true,chat:true,video:true},guide:null,prep:false}};
 
 /* runtime capabilities (only inside the Claude viewer) */
 const CAP = {sample:null, db:null, uid:null, owner:false, canWrite:null, askOff:false};
@@ -1811,6 +1871,38 @@ function coachTesterHTML(){
     <fieldset class="q-block"><legend>Who should be able to see your coaching?</legend><div class="choices">${['Only me','Me and my manager','Me, plus anything I choose to share'].map(v=>`<label class="choice"><input type="radio" name="coach-who" value="${v}"${rd('who',v)}>${v}</label>`).join('')}</div></fieldset>
     <label class="q-block"><span class="ql">Did anything feel off, too personal or not useful?</span><textarea id="coach-off">${esc(c.off)}</textarea></label></div>`;
 }
+const LEVELS=['Senior project manager','Program manager','Director of delivery','VP or head of delivery'];
+function coachSetHTML(){
+  const C=S.coachSet; const src=[['meetings','Meetings you speak in'],['emails','Emails you write'],['chat','Chat messages you write'],['video','Meeting video (body language)']];
+  return `<details class="tune" id="coach-tune" ${S.coachTuneOpen?'open':''}><summary><b>Make coaching yours</b><span>Ondatrace set this up from your role and tools. Change anything.</span></summary><div class="tune-body">
+    <div><h4>How Ondatrace builds your coaching</h4><ul class="tune-built"><li>Reads the meetings you speak in and the emails and chat messages you write, and quotes your own words.</li><li>Rates you against what's expected of a <b>${esc(C.level)}</b>${C.guide?`, using <b>${esc(C.guide)}</b>`:''}.</li><li>Only you see it. It isn't used to rate you.</li></ul></div>
+    <div><h4>Your role</h4><select id="coach-level" aria-label="Role level">${LEVELS.map(l=>`<option${l===C.level?' selected':''}>${esc(l)}</option>`).join('')}</select></div>
+    <div><h4>What you want to work on (pick up to 2)</h4><div class="srcs-toggle">${COACH_CATS.map(c=>`<button type="button" class="tgl" data-cfocus="${c.id}" aria-pressed="${C.focus.includes(c.id)}">${esc(c.name)}</button>`).join('')}</div></div>
+    <div><h4>Your company's expectations</h4>
+      ${C.guide?`<div class="tchips"><span class="tchip added">${esc(C.guide)} <small>ratings now use your company's wording</small><button type="button" data-noguide aria-label="Stop using ${esc(C.guide)}">×</button></span></div>`:`
+      <div class="tsugg" style="margin-bottom:8px"><button type="button" data-guide="Kestrel leadership expectations 2026"><b>+ Use</b><span>Kestrel leadership expectations 2026 <small>· found in Google Docs, shared with managers</small></span></button></div>
+      <div class="upload"><label class="btn small" for="guide-file">Upload performance review guidelines</label><input id="guide-file" type="file" accept=".pdf,.doc,.docx,.txt,.md"><span class="cm-fine">A competency framework or review template. PDF, Word or text.</span></div>`}
+    </div>
+    <div><h4>What to coach on</h4><div class="srcs-toggle">${src.map(([k,l])=>`<button type="button" class="tgl" data-csrc="${k}" aria-pressed="${C.sources[k]}">${esc(l)}</button>`).join('')}</div></div>
+    <div><h4>Suggested</h4><div class="srcs-toggle"><button type="button" class="tgl" data-prep aria-pressed="${C.prep}">Coach me before big meetings</button></div><p class="cm-fine" style="margin-top:6px">A short tip the morning of meetings like Portal 2.0 steering, based on how your last one went.</p></div>
+    <p class="tune-note" id="coach-note" role="status"></p>
+  </div></details>`;
+}
+document.addEventListener('click',e=>{
+  const C=S.coachSet; let msg=null;
+  const f=e.target.closest('[data-cfocus]'), sr=e.target.closest('[data-csrc]'), g=e.target.closest('[data-guide]'), ng=e.target.closest('[data-noguide]'), pr=e.target.closest('[data-prep]');
+  if(f){ const id=f.dataset.cfocus; if(C.focus.includes(id)) C.focus=C.focus.filter(x=>x!==id); else { C.focus=[...C.focus,id].slice(-2); } msg=C.focus.length?'Your focus areas come first below.':'Focus cleared.'; }
+  else if(sr){ C.sources[sr.dataset.csrc]=!C.sources[sr.dataset.csrc]; msg=C.sources[sr.dataset.csrc]?'Turned on.':'Turned off. Coaching from it is hidden.'; }
+  else if(g){ C.guide=g.dataset.guide; msg='Ondatrace matched 6 of your 7 competencies to its categories and will rate against your wording.'; }
+  else if(ng){ C.guide=null; msg='Back to Ondatrace\'s standard expectations.'; }
+  else if(pr){ C.prep=!C.prep; msg=C.prep?'You\'ll get a tip the morning of your next steering meeting.':'Off.'; }
+  else return;
+  S.coachTuneOpen=true; logOnce('ctune-'+msg,'Customized coaching.'); renderCoach(); $('coach-note').textContent=msg;
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='coach-level'){ S.coachSet.level=e.target.value; S.coachTuneOpen=true; renderCoach(); $('coach-note').textContent=`Ratings now use what's expected of a ${S.coachSet.level}.`; }
+  if(e.target.id==='guide-file' && e.target.files[0]){ S.coachSet.guide=e.target.files[0].name; S.coachTuneOpen=true; logOnce('guide','Uploaded review guidelines to coaching.'); renderCoach(); $('coach-note').textContent='Ondatrace matched 6 of your 7 competencies to its categories and will rate against your wording. (In this demo the file stays in your browser.)'; }
+});
 function renderCoach(){
   step('coach');
   const V=VIEWERS[S.viewer];
@@ -1819,18 +1911,21 @@ function renderCoach(){
       <div class="row" style="margin-top:14px"><button class="btn" type="button" data-viewas="morgan">Switch back to Morgan</button></div>`;
     return;
   }
-  const list=COACH.filter(m=>!S.coachCat||m.cat===S.coachCat);
+  const C=S.coachSet; const toolOn={zoom:C.sources.meetings,gmail:C.sources.emails,slack:C.sources.chat};
+  const list=COACH.filter(m=>(!S.coachCat||m.cat===S.coachCat) && toolOn[m.t]!==false && !(m.obs&&!C.sources.video))
+    .sort((a,b)=>(C.focus.includes(b.cat)?1:0)-(C.focus.includes(a.cat)?1:0));
   const cat=COACH_CATS.find(c=>c.id===S.coachCat);
   const from=S.coachFrom&&visible(byId(S.coachFrom))?`<div class="row" style="margin-top:10px"><button type="button" class="btn ghost small" data-open="${S.coachFrom}">← Back to the finding</button></div>`:'';
   $('coach-body').innerHTML=from+`
     <p class="summary">Based on 4 meetings you spoke in, 11 emails and 23 Slack messages you wrote this week. Every note quotes what you actually said or wrote.</p>
     <div class="coach-private">${LOCKICON}<span><b>Only you see this.</b> Your coaching isn't shared with your manager or your team, and it's never used to rate you.</span></div>
+    ${coachSetHTML()}
     <div class="coach-focus">
       <div class="panel"><span class="eyebrow">This week's focus</span><h2>Close every decision with an owner, a date, and who else needs to know.</h2><p class="section-intro" style="margin:0">Three of this week's findings started in a meeting where a decision ended without one: the two launch dates, the vendor hold, and the Acme SSO promise.</p></div>
       <div class="panel"><span class="eyebrow">Before your next meeting</span><h2>Portal 2.0 steering · ${fmtD(3)}</h2><ol><li>Start by confirming the go-live date and whether Nina has heard.</li><li>Ask Leo what would have to be true for ${fmtD(38)} to hold.</li><li>When a lead raises a risk, stop typing.</li></ol></div>
     </div>
-    <div class="section"><h2>Your ratings</h2><p class="section-intro">Rated against what's expected of a senior delivery leader, from this week's evidence. Pick one to see the moments behind it.</p>
-      <div class="coach-grid">${COACH_CATS.map(c=>`<button type="button" class="ctile" data-coachcat="${c.id}" aria-pressed="${S.coachCat===c.id}"><span class="cname">${esc(c.name)}</span>${ratingHTML(c)}<span class="cline">${esc(c.line)}</span></button>`).join('')}</div>
+    <div class="section"><h2>Your ratings</h2><p class="section-intro">Rated against what's expected of a ${esc(C.level)}${C.guide?` in ${esc(C.guide)}`:''}, from this week's evidence. Pick one to see the moments behind it.</p>
+      <div class="coach-grid">${[...COACH_CATS].sort((a,b)=>(C.focus.includes(b.id)?1:0)-(C.focus.includes(a.id)?1:0)).map(c=>`<button type="button" class="ctile" data-coachcat="${c.id}" aria-pressed="${S.coachCat===c.id}">${C.focus.includes(c.id)?'<span class="focus-badge">Your focus</span>':''}<span class="cname">${esc(c.name)}</span>${ratingHTML(c)}<span class="cline">${esc(c.line)}</span></button>`).join('')}</div>
     </div>
     <div class="coach-filter" role="status">${cat?`Showing ${list.length} moment${list.length===1?'':'s'} for <b style="color:var(--ink)">${esc(cat.name)}</b> <button type="button" class="btn small" data-coachcat="">Show all</button>`:`${list.length} moments from this week, with what worked and what to try`}</div>
     <div class="cmoments">${list.map(momentHTML).join('')}</div>
@@ -1915,28 +2010,57 @@ document.addEventListener('click',e=>{
 
 /* industry watch: illustrative research, matched to Kestrel's own projects, vendors and customers */
 const WATCH_SCOPE = [['Industry','Healthcare software'],['Customers','Health systems, clinics'],['Vendors, from your contracts','Stratus, your identity provider'],['Topics, from your tickets and plans','SSO, sign-in, data migration, tax forms'],['Competitors','3 named by your sales team'],['Region','United States']];
+const WATCH_BUILT = [
+  {id:'industry',label:'Healthcare software',from:'your company profile'},
+  {id:'customers',label:'Health systems and clinics',from:'Salesforce accounts'},
+  {id:'stratus',label:'Stratus',from:'Data Migration plan',type:'Vendor news'},
+  {id:'idp',label:'Your identity provider',from:'PLAT-412 in Jira',type:'Security'},
+  {id:'sso',label:'SSO and sign-in rules',from:'Portal 2.0 plan',type:'Regulation'},
+  {id:'partners',label:'Partner onboarding',from:'Jira and Monday'},
+  {id:'competitors',label:'3 competitors',from:'your sales team\'s notes',type:'Competitor'},
+  {id:'region',label:'United States',from:'customer addresses'}
+];
+const WATCH_SUGGEST = [
+  {id:'privacy',label:'State privacy laws',why:'You have customers in 12 states'},
+  {id:'mergers',label:'Health-system mergers',why:'3 renewals this year are with health systems'},
+  {id:'meridian',label:'Meridian Health Cloud',why:'Named 4 times in Salesforce notes, not yet watched'},
+  {id:'ai-rules',label:'Rules on AI in clinical software',why:'Mentioned in the Q4 roadmap doc'}
+];
+const WEIGHT_LABEL={more:'More',normal:'Normal',less:'Less'};
+function tuneHTML(types){
+  const T=S.tune; const kept=WATCH_BUILT.filter(w=>!T.removed.includes(w.id));
+  const sugg=WATCH_SUGGEST.filter(w=>!T.added.includes(w.id));
+  return `<details class="tune" id="tune" ${S.tuneOpen?'open':''}><summary><b>Tune your brief</b><span>Ondatrace built this from your tools. Change anything.</span></summary><div class="tune-body">
+    <div><h4>What Ondatrace watches for you</h4><div class="tchips">${kept.map(w=>`<span class="tchip">${esc(w.label)} <small>from ${esc(w.from)}</small><button type="button" data-untune="${w.id}" aria-label="Stop watching ${esc(w.label)}">×</button></span>`).join('')}${T.added.map(id=>WATCH_SUGGEST.find(w=>w.id===id)).map(w=>`<span class="tchip added">${esc(w.label)} <small>added by you</small><button type="button" data-unadd="${w.id}" aria-label="Remove ${esc(w.label)}">×</button></span>`).join('')}</div></div>
+    ${sugg.length?`<div><h4>Suggested additions</h4><div class="tsugg">${sugg.map(w=>`<button type="button" data-addtune="${w.id}"><b>+ Add</b><span>${esc(w.label)} <small>· ${esc(w.why)}</small></span></button>`).join('')}</div></div>`:''}
+    <div><h4>How much of each section</h4><div class="weights">${types.map(t=>`<div class="wrow"><span>${esc(t)}</span><span class="seg" role="group" aria-label="${esc(t)}">${['less','normal','more'].map(w=>`<button type="button" data-weight="${esc(t)}" data-w="${w}" aria-pressed="${(T.weights[t]||'normal')===w}">${WEIGHT_LABEL[w]}</button>`).join('')}</span></div>`).join('')}</div>
+      <p class="cm-fine" style="margin-top:6px">Less shows only stories that need a decision. More puts that section first.</p></div>
+    <p class="tune-note" id="tune-note" role="status"></p>
+  </div></details>`;
+}
+const tuneNote = t => { S.tuneMsg=t; };
 const RESEARCH = [
-  {id:'r-stratus',today:'Stratus is being acquired and prices may change after the deal. Ask Stratus in writing whether your held price survives it before the CFO decides.',type:'Vendor news',sev:'crit',title:'Stratus is being acquired. Customers are being told prices will change after the deal closes.',src:'Enterprise Data Wire',d:-1,pids:['mig'],link:'hold',
+  {id:'r-stratus',dek:'Stratus, a data migration services firm, has agreed to be acquired by a larger cloud provider. In a note to customers, Stratus said signed contracts will be honored but list prices will be reviewed after the deal closes next quarter.',today:'Stratus is being acquired and prices may change after the deal. Ask Stratus in writing whether your held price survives it before the CFO decides.',type:'Vendor news',sev:'crit',title:'Stratus is being acquired. Customers are being told prices will change after the deal closes.',src:'Enterprise Data Wire',d:-1,pids:['mig'],link:'hold',
    why:'Data Migration plans to sign a $186K Stratus contract on {d+2}, during the CFO\'s vendor hold. If prices change after the deal closes, waiting for the {d+10} review could cost more.',
    next:'Before Dana decides, ask Stratus in writing whether the held price survives the acquisition. That gives her the facts for an exception or a wait.',
    people:[['Ana\'s team may read this as the migration being at risk. Tell them the plan hasn\'t changed, only possibly the signing date.','inf']],
    found:'Matched "Stratus" from the Data Migration plan and Ana\'s email.'},
-  {id:'r-mfa',today:'Due to a new patient-portal rule, review Portal 2.0\'s charter and scope: multi-factor sign-in becomes required from {d+150}.',type:'Regulation',sev:'warn',title:'A new patient-portal rule will require multi-factor sign-in from {d+150}.',src:'Health IT Policy Brief',d:-2,pids:['portal','api'],link:'acme',
+  {id:'r-mfa',dek:'A new rule for patient-facing health portals will require multi-factor sign-in for every user. Providers and their software vendors have until {d+150} to comply, and guidance on accepted methods is expected next month.',today:'Due to a new patient-portal rule, review Portal 2.0\'s charter and scope: multi-factor sign-in becomes required from {d+150}.',type:'Regulation',sev:'warn',title:'A new patient-portal rule will require multi-factor sign-in from {d+150}.',src:'Health IT Policy Brief',d:-2,pids:['portal','api'],link:'acme',
    why:'Portal 2.0 is building SSO right now (PLAT-412). Adding multi-factor later means a second round of the same identity work, after Acme has rolled SSO out to 1,200 staff.',
    next:'Ask Priya and Leo whether PLAT-412 can include a multi-factor option now, and what it adds to the {d+22} estimate.',
    people:[['Support will get "I didn\'t get my code" calls. Add multi-factor to the training plan as a later module.','inf'],['Customers\' IT teams need notice to plan their own rollout. Put it in the next customer update.','inf']],
    found:'Matched "SSO" and "identity provider" from your Jira tickets and the Portal plan.'},
-  {id:'r-lib',today:'A security fix is out for the sign-in library PLAT-412 uses. Add the upgrade to Sprint 25 before Priya\'s leave.',type:'Security',sev:'warn',title:'A security flaw was found in a widely used sign-in library. Version 4.3 fixes it.',src:'Open Source Security Digest',d:0,pids:['api','portal'],link:'acme',
+  {id:'r-lib',dek:'Researchers disclosed a flaw in version 4.2 of a widely used open-source sign-in library that could let attackers reuse expired sessions. The maintainers released version 4.3 with a fix and recommend upgrading promptly.',today:'A security fix is out for the sign-in library PLAT-412 uses. Add the upgrade to Sprint 25 before Priya\'s leave.',type:'Security',sev:'warn',title:'A security flaw was found in a widely used sign-in library. Version 4.3 fixes it.',src:'Open Source Security Digest',d:0,pids:['api','portal'],link:'acme',
    why:'PLAT-412\'s design notes use version 4.2. Fixing it now is cheaper than patching after launch, and it\'s the same SSO work Acme is waiting on.',
    next:'Ask Priya to confirm the version and add the upgrade to Sprint 25 before she\'s out on {d+8}.',
    people:[['No customer message needed if it\'s fixed before launch. If it slips past launch, have a short customer notice ready.','inf']],
    found:'Matched the library name in PLAT-412\'s design notes.'},
-  {id:'r-market',type:'Market trend',sev:'watch',title:'Survey: most health-system buyers now require SSO before they renew software contracts.',src:'Healthcare CIO Pulse',d:-4,pids:['portal'],link:'acme',
+  {id:'r-market',dek:'In a survey of 300 health-system technology leaders, a clear majority said single sign-on is now a requirement when they renew software, up sharply from two years ago. Most cited staff time lost to separate logins.',type:'Market trend',sev:'watch',title:'Survey: most health-system buyers now require SSO before they renew software contracts.',src:'Healthcare CIO Pulse',d:-4,pids:['portal'],link:'acme',
    why:'Acme said SSO is "the one thing blocking" its renewal. Three more Kestrel renewals this year are with health systems.',
    next:'Ask sales which renewals mention SSO, and mark SSO as a renewal dependency in the Portal plan.',
    people:[['Give account managers one short, accurate SSO status to share, so every customer hears the same date.','inf']],
    found:'Matched "renewal" and "SSO" from Salesforce and Tom\'s email.'},
-  {id:'r-comp',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
+  {id:'r-comp',dek:'A competing vendor released self-serve onboarding for partners, with tax forms collected inside the product. The company says partners can now go live in a day instead of two weeks.',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
    why:'Kestrel has two teams building the same partner onboarding under different names. One combined effort would reach partners sooner.',
    next:'Bring this to the conversation with Sam and Jess: speed to partners matters more than two versions.',
    people:[['Partner managers will be asked how Kestrel compares. Give them a one-page answer.','inf']],
@@ -1949,25 +2073,51 @@ function researchTesterHTML(){
     <fieldset class="q-block"><legend>What should Ondatrace watch for you? Pick any.</legend><div class="choices">${['Regulations','My vendors','Competitors','Security alerts','My customers in the news','Industry trends'].map(v=>`<label class="choice"><input type="checkbox" name="research-watch" value="${v}"${ck(v)}>${v}</label>`).join('')}</div></fieldset>
     <label class="q-block"><span class="ql">What would you need to trust a news item enough to act on it?</span><textarea id="research-trust">${esc(r.trust)}</textarea></label></div>`;
 }
+function storyHTML(r, lead){
+  const [cls]=SEV[r.sev]; const lk=visible(byId(r.link));
+  const proj=r.pids.map(id=>PROJECTS.find(x=>x.id===id).name);
+  return `<article class="story${lead?' lead':''}" id="ri-${r.id}">
+    <span class="kicker ${cls}">${esc(r.type)}${r.today?' · Needs a decision':''}</span>
+    <h3>${esc(fmt(r.title))}</h3>
+    <span class="byline">${esc(r.src)} · ${ago(r.d)} · ${fmtD(r.d)}</span>
+    <p class="dek">${esc(fmt(r.dek))}</p>
+    <p class="for-us"><b>What it means for Kestrel.</b> ${esc(fmt(r.why))}</p>
+    <div class="next"><span>Affects ${esc(proj.join(', '))}</span>${lk?`<button type="button" class="next-link" data-open="${r.link}">Suggested next step: ${esc(fmt(r.next))}</button>`:`<span>Suggested next step: ${esc(fmt(r.next))}</span>`}</div>
+    <details><summary>The people side (${r.people.length})</summary><ul>${r.people.map(([t,k])=>`<li>${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul></details>
+  </article>`;
+}
 function renderResearch(){
   step('research');
-  const proj=id=>PROJECTS.find(x=>x.id===id).name;
-  $('research-body').innerHTML=`
-    <p class="summary">Ondatrace reads news, regulators, security alerts, and what's said about your vendors and competitors every day. It shows only what touches a project, customer or vendor you actually work with. This week, 5 of 212 items passed that test.</p>
-    <div class="panel" style="margin-top:14px"><span class="eyebrow">What Ondatrace watches for Kestrel</span>
-      <div class="watch-scope">${WATCH_SCOPE.map(([k,v])=>`<span class="wchip"><b>${esc(k)}</b>${esc(v)}</span>`).join('')}</div>
-      <p class="cm-fine" style="margin-top:10px">Built from your connected tools, so it stays current as projects and vendors change. You can add or remove anything.</p></div>
-    <div class="rlist">${RESEARCH.filter(r=>r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p))).map(r=>{ const [cls,label]=SEV[r.sev]; const lk=visible(byId(r.link));
-      return `<article class="ritem" id="ri-${r.id}"><div class="rtop"><span class="pill ${cls}">${label}</span><span class="eyebrow">${esc(r.type)}</span><span>${esc(r.src)} · ${ago(r.d)}</span></div>
-        <h3>${esc(fmt(r.title))}</h3>
-        <div><span class="rlabel">Why it matters to Kestrel</span>${esc(fmt(r.why))}${lk?` <button type="button" class="cite" data-open="${r.link}">Related finding ↗</button>`:''}</div>
-        <div><span class="rlabel">Projects</span>${r.pids.map(proj).map(esc).join(', ')}</div>
-        <div class="cm-try"><b>Suggested next step</b>${esc(fmt(r.next))}</div>
-        <div><span class="rlabel">The people side</span><ul class="people-side" style="list-style:none;margin:4px 0 0;padding:0;display:grid;gap:6px">${r.people.map(([t,k])=>`<li style="font-size:14.5px">${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul></div>
-        <p class="rfound">How Ondatrace found this: ${esc(r.found)}</p></article>`; }).join('')}</div>
+  const mine=RESEARCH.filter(r=>r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p)));
+  const types=[...new Set(mine.map(r=>r.type))];
+  const T=S.tune; const removedTypes=WATCH_BUILT.filter(w=>w.type&&T.removed.includes(w.id)).map(w=>w.type);
+  const rank=r=>({more:0,normal:1,less:2}[T.weights[r.type]||'normal']);
+  const tuned=mine.filter(r=>!removedTypes.includes(r.type) && !(T.weights[r.type]==='less' && !r.today)).sort((a,b)=>rank(a)-rank(b));
+  const list=tuned.filter(r=>!S.paperSection||r.type===S.paperSection);
+  const [lead,...rest]=list;
+  $('research-body').innerHTML=`<div class="paper">
+    <div class="masthead"><span class="title" aria-hidden="true">The Kestrel Brief</span><span class="issue">Week of ${fmtD(-4)} · ${tuned.length} of 212 stories touch your projects</span></div>
+    ${tuneHTML(types)}
+    <div class="sections" role="group" aria-label="Sections"><button type="button" data-paper="" aria-pressed="${!S.paperSection}">All</button>${types.map(t=>`<button type="button" data-paper="${esc(t)}" aria-pressed="${S.paperSection===t}">${esc(t)}</button>`).join('')}</div>
+    ${lead?storyHTML(lead,true):'<p class="summary" style="margin-top:18px">Nothing left in this section with your current settings.</p>'}
+    <div class="columns">${rest.map(r=>storyHTML(r,false)).join('')}</div>
     <p class="cm-fine" style="margin-top:14px">Illustrative only. The publications and events above are made up for this demo.</p>
-    ${researchTesterHTML()}`;
+    ${researchTesterHTML()}</div>`;
 }
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-paper]'); if(!b) return;
+  S.paperSection=b.dataset.paper||null; renderResearch();
+});
+document.addEventListener('click',e=>{
+  const T=S.tune; let msg=null;
+  const u=e.target.closest('[data-untune]'); const a=e.target.closest('[data-addtune]'); const ua=e.target.closest('[data-unadd]'); const w=e.target.closest('[data-weight]');
+  if(u){ T.removed.push(u.dataset.untune); msg=`Removed. Ondatrace will stop watching ${WATCH_BUILT.find(x=>x.id===u.dataset.untune).label}.`; }
+  else if(a){ T.added.push(a.dataset.addtune); msg=`Added. ${WATCH_SUGGEST.find(x=>x.id===a.dataset.addtune).label} will be in next week's brief.`; }
+  else if(ua){ T.added=T.added.filter(x=>x!==ua.dataset.unadd); msg='Removed.'; }
+  else if(w){ T.weights[w.dataset.weight]=w.dataset.w; msg=`${w.dataset.weight}: ${WEIGHT_LABEL[w.dataset.w].toLowerCase()}.`; }
+  else return;
+  S.tuneOpen=true; logOnce('tune-'+(msg||''),'Tuned the industry brief.'); renderResearch(); $('tune-note').textContent=msg;
+});
 document.addEventListener('change',e=>{
   const t=e.target; if(!t.name||!t.name.startsWith('research-')) return;
   if(t.name==='research-use') S.research.use=t.value;
