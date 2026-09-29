@@ -754,3 +754,42 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); margin: 0; }
   .silo-list li.silo-none { flex-wrap: wrap; }
   .silo-none .silo-tool { white-space: normal; }
 }
+
+/* ---------- "Not just another AI agent" comparison ---------- */
+.cmp { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--white); }
+.cmp-head, .cmp-row { display: grid; grid-template-columns: 0.8fr 1fr 1.4fr; }
+.cmp-head span {
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--bg-alt);
+}
+.cmp-head span:last-child { color: var(--accent-ink); }
+.cmp-row { border-top: 1px solid var(--border); }
+.cmp-row p { margin: 0; padding: 16px 20px; }
+.cmp-topic { font-family: var(--font-display); font-weight: 600; color: var(--ink); }
+.cmp-them { color: var(--ink-soft); }
+.cmp-us { color: var(--ink); background: var(--accent-ink-bg); }
+.cmp-label { display: none; }
+@media (max-width: 760px) {
+  .cmp-head { display: none; }
+  .cmp-row { grid-template-columns: 1fr; }
+  .cmp-row p { padding: 10px 16px; }
+  .cmp-topic { padding-top: 16px !important; }
+  .cmp-label {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 2px;
+  }
+  .cmp-us .cmp-label { color: var(--accent-ink); }
+  .cmp-us { padding-bottom: 16px !important; }
+}
