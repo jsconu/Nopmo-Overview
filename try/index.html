@@ -202,6 +202,10 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:2p
 .card-foot{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--line)}
 .srcs{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
 .span-note{font:500 12px var(--mono);color:var(--muted)}
+.card-projs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}
+.card-projs-label{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.proj-chip{display:inline-flex;align-items:center;min-height:28px;padding:2px 10px;border-radius:999px;border:1px solid var(--line-strong);background:var(--surface);color:var(--brand-text);font:500 13px var(--sans,inherit);cursor:pointer}
+.proj-chip:hover,.proj-chip:focus-visible{background:var(--brand-soft);border-color:var(--brand)}
 .foot-right{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .card.missing{background:transparent;box-shadow:none;border-style:dashed}
 .card.missing::before{display:none}
@@ -1693,12 +1697,19 @@ function renderChannels(){
     </div>
   </div>`;
 }
+// Which projects a finding affects, each opening that project's schedule and risks.
+function affectsHTML(i){
+  const ps=(i.pids||[]).map(id=>PROJECTS.find(p=>p.id===id)).filter(Boolean);
+  if(!ps.length) return '';
+  return `<div class="card-projs"><span class="card-projs-label">Affects</span>${ps.map(p=>`<button type="button" class="proj-chip" data-proj="${p.id}" aria-label="Open ${esc(p.name)}: schedule and risks">${esc(p.name)} →</button>`).join('')}</div>`;
+}
 function cardHTML(i){
   const [cls,label]=SEV[i.sev];
   return `<article class="card clickable" data-sev="${cls}" data-card="${i.id}">
     <div class="card-top"><span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.client?'<span class="pill client">Client impact</span>':''}${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}${S.note[i.id]==='approved'?'<span class="pill neutral">Note approved</span>':''}${S.prop[i.id]==='approved'?'<span class="pill neutral">Change approved</span>':''}</div>
     <h3>${esc(fmt(i.title))}</h3>
     <p class="why">${esc(fmt(i.why))}</p>
+    ${affectsHTML(i)}
     <div class="card-foot"><div class="srcs">${toolsOf(i).map(chip).join('')}</div><div class="foot-right"><span class="span-note">${esc(i.span)}</span><button type="button" class="btn small open-btn" data-open="${i.id}">Review finding →</button></div></div>
     ${tipHTML(i)}
   </article>`;
@@ -1736,7 +1747,7 @@ function renderDetail(){
   $('d-top').innerHTML=`<span class="pill ${cls}">${i.sev==='ok'?'Resolved':label}</span><span class="eyebrow">${esc(i.kind)}</span>${i.fresh?`<span class="new-badge">· ${esc(i.fresh)}</span>`:''}`;
   $('h-detail').textContent=fmt(i.title);
   $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]&&!i.redacted?i.why+' '+i.lede:i.lede);
-  $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span>${i.client?`<span>Client impact <b>${esc(i.redacted?'A customer':i.client)}</b></span>`:''}<span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
+  $('d-facts').innerHTML=`<span>Projects <b>${i.pids.map(p=>PROJECTS.find(x=>x.id===p)).map(p=>`<button type="button" class="cite" data-proj="${p.id}">${esc(p.name)} →</button>`).join(' ')}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span>${i.client?`<span>Client impact <b>${esc(i.redacted?'A customer':i.client)}</b></span>`:''}<span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
   renderNote(i); renderProp(i); renderWrong(i); $('p-people').hidden=true; $('p-coach').innerHTML=guideBarHTML(i,'detail',true);
   renderAccess(i);
   const seen=new Set();
