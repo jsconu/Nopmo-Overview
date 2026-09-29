@@ -494,6 +494,33 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
 .cm-fine{font-size:12.5px;color:var(--muted)}
 .talk-table td.num{font-family:var(--mono)}
 .talk-table tr.try td{background:var(--warn-soft)}
+/* coaching tips in the workflow */
+.coach-tip{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:baseline;width:100%;text-align:left;margin-top:2px;padding:9px 12px;border:1px dashed var(--brand);border-radius:8px;background:var(--brand-soft);color:var(--ink);font:inherit;font-size:13.5px;cursor:pointer;min-height:44px}
+.coach-tip:hover{border-style:solid}
+.coach-tip .ct-label{font:600 11px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brand-text)}
+.coach-tip .ct-go{color:var(--brand-text);font-weight:600;white-space:nowrap}
+.cmoment.hi,.ritem.hi{box-shadow:0 0 0 2px var(--brand),var(--shadow)}
+.industry-tip{border-color:var(--watch);background:var(--watch-soft)}
+.industry-tip .ct-label,.industry-tip .ct-go{color:var(--watch)}
+.watch-card h3{font-size:16px;margin:0 0 4px}
+.watch-card .tips{display:grid;gap:8px;margin-top:10px}
+/* people side */
+.people-side{margin-top:12px}
+.people-side h3{font-size:15px;margin:0 0 4px}
+.people-side ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+.people-side li{font-size:14.5px;padding-left:14px;position:relative}
+.people-side li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.people-side .tag{margin-left:6px;vertical-align:1px}
+/* industry watch */
+.watch-scope{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:10px}
+.watch-scope .wchip{font-size:13px;padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line)}
+.watch-scope .wchip b{font-weight:600;color:var(--muted);margin-right:4px}
+.rlist{display:grid;gap:14px;margin-top:14px}
+.ritem{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:10px}
+.ritem .rtop{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:13px;color:var(--muted)}
+.ritem h3{margin:0;font-size:17px}
+.ritem .rlabel{font:600 11.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.ritem .rfound{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
 @media (max-width:980px){.coach-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.coach-focus{grid-template-columns:1fr}}
 @media (max-width:560px){.coach-grid{grid-template-columns:1fr}.obs li{grid-template-columns:18px minmax(0,1fr)}.obs .ts{grid-column:1/-1}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -514,6 +541,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
       <button type="button" data-go="today" disabled>Today <span class="count" id="nav-count">6</span></button>
       <button type="button" data-go="summary" disabled>Portfolio summary</button>
       <button type="button" data-go="risks" disabled>Portfolio risks</button>
+      <button type="button" data-go="research" disabled>Industry watch</button>
       <button type="button" data-go="coach" disabled>Coaching</button>
       <button type="button" data-go="ask" disabled>Ask</button>
       <button type="button" data-go="wrap" class="fb-nav" disabled>Give feedback</button>
@@ -528,6 +556,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
         <li data-step="filter">Turn a tool off on Today</li>
         <li data-step="morning">Jump to tomorrow morning</li>
         <li data-step="risks">Open the portfolio summary</li>
+        <li data-step="research">Check industry news</li>
         <li data-step="coach">See your coaching</li>
         <li data-step="ask">Ask your own question</li>
         <li data-step="feedback">Give feedback</li>
@@ -564,7 +593,7 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
               <li>Step into Morgan's morning at a fictional healthcare software company.</li>
               <li>Connect a week of sample work from nine tools.</li>
               <li>See what Ondatrace finds, check the evidence, and decide what to do.</li>
-              <li>Get coaching on how Morgan ran meetings and wrote updates, based on what Morgan actually said.</li>
+              <li>See industry news that affects Kestrel's projects, and get coaching based on what Morgan actually said.</li>
             </ul>
             <div class="row">
               <button class="btn primary" type="button" data-go="connect">Start the demo</button>
@@ -660,6 +689,8 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
             <div class="panel" id="p-note"></div>
             <div class="panel" id="p-prop"></div>
           </div>
+          <div class="panel people-side" id="p-people"></div>
+          <div id="p-coach"></div>
           <div class="wrongbar" id="p-wrong"></div>
         </div>
 
@@ -713,6 +744,13 @@ fieldset.q-block{border-top:1px dashed var(--ask-line);padding-bottom:18px}
           <p class="section-intro">Dates from across all tools where a finding turns into a missed commitment.</p>
           <ul class="upcoming" id="upcoming"></ul>
         </div>
+      </section>
+
+      <!-- INDUSTRY WATCH -->
+      <section class="view" id="v-research" aria-labelledby="h-research" hidden>
+        <span class="eyebrow">Industry watch</span>
+        <h1 id="h-research" style="margin-top:6px">What's happening outside Kestrel that affects your projects</h1>
+        <div id="research-body"></div>
       </section>
 
       <!-- COACHING -->
@@ -1071,7 +1109,7 @@ const SCANLOG = [
 ];
 
 const S = {tools:new Set(ALL), scanTools:null, scanned:false, view:'start', prev:'today', cur:null, morning:false, holdResolved:false,
-  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited', coachCat:null, coach:{use:'',topics:[],who:'',off:''}};
+  note:{}, prop:{}, dismissed:{}, react:{}, why:{}, opened:new Set(), guide:new Set(), log:[], asked:[], lens:null, msugg:{}, np:null, viewer:'morgan', permMode:'limited', coachCat:null, coachFrom:null, coach:{use:'',topics:[],who:'',off:''}, research:{use:'',watch:[],trust:''}};
 
 /* runtime capabilities (only inside the Claude viewer) */
 const CAP = {sample:null, db:null, uid:null, owner:false, canWrite:null, askOff:false};
@@ -1162,9 +1200,9 @@ const current = i => {
 const openList = () => INSIGHTS.map(current).filter(i=>visible(i) && viewerSees(i) && !S.dismissed[i.id]).sort((a,b)=>ORDER[a.sev]-ORDER[b.sev]);
 
 /* navigation */
-const VIEWS=['start','connect','today','detail','summary','risks','coach','ask','wrap'];
+const VIEWS=['start','connect','today','detail','summary','risks','research','coach','ask','wrap'];
 function go(v){
-  if(['today','summary','risks','coach','ask','wrap','detail'].includes(v) && !S.scanned) return;
+  if(['today','summary','risks','research','coach','ask','wrap','detail'].includes(v) && !S.scanned) return;
   if(v==='detail' && S.view!=='detail') S.prev=S.view;
   S.view=v;
   VIEWS.forEach(n=>$('v-'+n).hidden = n!==v);
@@ -1174,6 +1212,7 @@ function go(v){
   if(v==='summary'){ step('risks'); renderSummary(); }
   if(v==='risks') renderRisks();
   if(v==='coach') renderCoach();
+  if(v==='research') renderResearch();
   if(v==='ask') renderAsk();
   if(v==='wrap') renderWrap();
   window.scrollTo(0,0);
@@ -1250,7 +1289,7 @@ function renderToday(){
     ? `Overnight, Ondatrace read 214 new updates. <b>${open} ${open===1?'finding needs':'findings need'} you</b>, and ${vis.filter(i=>i.fresh).length} changed since yesterday.`
     : `Since Friday, Ondatrace read ${ALL.filter(on).reduce((a,t)=>a+TOOLS[t].n,0).toLocaleString()} updates across ${nOn} tools. <b>${open} ${open===1?'finding needs':'findings need'} you.</b> None of them shows up in any single tool.`;
   const missing = [...new Set(hid.flatMap(i=>i.needs.filter(t=>!on(t))))];
-  $('queue').innerHTML = vis.map(cardHTML).join('') +
+  $('queue').innerHTML = vis.map(cardHTML).join('') + watchCardHTML() +
     (hid.length?`<div class="card missing"><p><b>${hid.length} ${hid.length===1?'finding is':'findings are'} hidden</b> because ${hid.length===1?'it needs':'they need'} a tool that's off: ${missing.map(t=>TOOLS[t].name).join(', ')}. Without it, the connection doesn't exist.</p></div>`:'') +
     (!vis.length && !hid.length ? `<div class="card missing"><p>Nothing needs you right now.</p></div>`:'');
   const dis = Object.keys(S.dismissed);
@@ -1294,6 +1333,7 @@ function cardHTML(i){
     <h3>${esc(fmt(i.title))}</h3>
     <p class="why">${esc(fmt(i.why))}</p>
     <div class="card-foot"><div class="srcs">${toolsOf(i).map(chip).join('')}</div><div class="foot-right"><span class="span-note">${esc(i.span)}</span><button type="button" class="btn small open-btn" data-open="${i.id}">Review finding →</button></div></div>
+    ${tipHTML(i)}
   </article>`;
 }
 $('queue').addEventListener('click',e=>{ if(e.target.closest('button')) return; const c=e.target.closest('[data-card]'); if(c) openInsight(c.dataset.card); });
@@ -1330,7 +1370,7 @@ function renderDetail(){
   $('h-detail').textContent=fmt(i.title);
   $('d-lede').textContent=fmt(S.morning&&OVERNIGHT[i.id]&&!i.redacted?i.why+' '+i.lede:i.lede);
   $('d-facts').innerHTML=`<span>Projects <b>${esc(i.pids.map(p=>PROJECTS.find(x=>x.id===p).name).join(', '))}</b></span><span>People <b>${esc(i.people)}</b></span><span>At stake <b>${esc(i.stake)}</b></span>${i.client?`<span>Client impact <b>${esc(i.redacted?'A customer':i.client)}</b></span>`:''}<span>Sources <b>${toolsOf(i).map(t=>TOOLS[t].name).join(', ')}</b></span>`;
-  renderNote(i); renderProp(i); renderWrong(i);
+  renderNote(i); renderProp(i); renderWrong(i); renderPeople(i); $('p-coach').innerHTML=tipHTML(i);
   renderAccess(i);
   const seen=new Set();
   const ev=i.ev.filter(e=>on(e.t)).sort((a,b)=>a.d-b.d);
@@ -1694,49 +1734,49 @@ const COACH_CATS = [
 ];
 const ME = 'Morgan Reyes';
 const COACH = [
-  {cat:'decide',kind:'try',t:'zoom',where:'Portal 2.0 steering committee',d:-4,lines:[
+  {id:'decide-steer',cat:'decide',kind:'try',t:'zoom',where:'Portal 2.0 steering committee',d:-4,lines:[
     ['00:42:15','Leo Park','{d+38}. I\'ll update the plan this week.'],
     ['00:42:20','Maya Chen','And marketing?'],
     ['00:42:22','Leo Park','I\'ll let them know.'],
     ['00:42:26',ME,'<mark>Great, sounds like we\'re aligned. Let\'s keep moving.</mark>']],
    note:'You closed a date change without a deadline for the plan update or a check that marketing heard. Two days later marketing said nobody had told them, and the launch email to every customer is still set for {d+21}.',
    try:'"Before we move on: Leo, can you update the plan and tell Nina by Thursday? Nina, please hold the launch email until you hear from Leo. I\'ll check in Friday."',link:'dates'},
-  {cat:'risk',kind:'try',t:'zoom',where:'Morgan / Leo 1:1',d:-6,lines:[
+  {id:'risk-1on1',cat:'risk',kind:'try',t:'zoom',where:'Morgan / Leo 1:1',d:-6,lines:[
     ['00:07:40',ME,'How\'s Portal looking?'],
     ['00:07:44','Leo Park','Good. SSO is <mark>a bit tight</mark>, but we\'ll make it.'],
     ['00:07:49',ME,'<mark>Good. Let me know if that changes.</mark>']],
    note:'"A bit tight" was the first sign of the SSO slip. Three days later Tom promised Acme SSO by {d+14}. "Let me know if that changes" leaves the risk with the person least likely to want to raise it.',
    try:'"What does a bit tight mean in days? What would have to slip for us to miss {d+14}, and who would we need to tell?"',link:'acme'},
-  {cat:'align',kind:'try',t:'zoom',where:'Leadership staff meeting',d:-8,lines:[
+  {id:'align-lead',cat:'align',kind:'try',t:'zoom',where:'Leadership staff meeting',d:-8,lines:[
     ['00:12:02','Dana Whitfield','Until the Q4 review, anything over fifty K waits. I\'ll post it in the channel.'],
     ['00:12:15','CEO','Does that include the migration vendor?'],
     ['00:12:18','Dana Whitfield','Anything that isn\'t signed yet.'],
     ['00:12:21',ME,'<mark>Makes sense.</mark>']],
    note:'You run delivery for Data Migration, and the CEO named its vendor. You agreed, but didn\'t say you\'d tell the team. Eight days later Ana still plans to sign the $186K contract on {d+2}.',
    try:'"That affects the Stratus contract on Data Migration. I\'ll tell Ana today and send it to you, Dana, for a decision."',link:'hold'},
-  {cat:'write',kind:'try',t:'gmail',where:'Sent · Weekly portfolio update to the exec team',d:-1,
+  {id:'write-exec',cat:'write',kind:'try',t:'gmail',where:'Sent · Weekly portfolio update to the exec team',d:-1,
    quote:'Hi all, quick update across the portfolio this week. Platform API v3 had a good sprint, with code review turnaround steady at 1.2 days. Data Migration passed 14 of 14 test runs. Partner Launch is 62% spent at 60% complete. Support Readiness has all 40 agents confirmed for training. <mark>Also, there may be some timing questions on Portal SSO that we\'re looking into.</mark>',
    stat:'212 words · the one item that needs a decision is the last sentence',
    note:'The item the exec team needs to act on, a $420K renewal that depends on SSO, comes last and is softened by "may be" and "looking into". Anyone skimming will miss it.',
    try:'"Decision needed by {d+2}: Acme\'s $420K renewal depends on SSO by {d+14}, and engineering now says {d+22}. I recommend we tell Acme this week and offer a partial release. Everything else is on track (details below)."',link:'acme'},
-  {cat:'write',kind:'good',t:'slack',where:'Direct message to Jess Lin',d:-3,
+  {id:'write-jess',cat:'write',kind:'good',t:'slack',where:'Direct message to Jess Lin',d:-3,
    quote:'Jess, nice work. Partner Launch is 62% spent at 60% done, right where it should be. <mark>One ask: send me the vendor quote by Friday</mark> so I can get it into the Q4 review.',
    stat:'38 words · one ask, with a date and a reason',
    note:'Specific praise, the number behind it, and one clear ask with a date and a reason. Jess sent the quote the same afternoon.',
    try:'Use the same shape for the exec update: the number, what it means, and one ask with a date.'},
-  {cat:'listen',kind:'good',t:'zoom',where:'Portal 2.0 steering committee',d:-4,lines:[
+  {id:'listen-q',cat:'listen',kind:'good',t:'zoom',where:'Portal 2.0 steering committee',d:-4,lines:[
     ['00:38:02',ME,'<mark>Leo, what would have to be true for the {d+21} date to hold?</mark>'],
     ['00:38:15','Leo Park','Honestly? SSO would have to land two sprints early. That\'s the part I\'m worried about.']],
    note:'An open question, then 13 seconds of silence you didn\'t fill. It brought out the SSO risk that none of the plans showed.',
    try:'Keep doing this. Add "Who else needs to know?" at the end, and the new date would have reached marketing.',link:'dates'},
-  {cat:'listen',kind:'try',t:'zoom',where:'Talk time across your meetings this week',table:[
+  {id:'listen-talk',cat:'listen',kind:'try',t:'zoom',where:'Talk time across your meetings this week',table:[
     ['Portal 2.0 steering committee','You ran it',18,6,0,''],
     ['Leadership staff meeting','Attendee',9,1,0,''],
     ['Morgan / Leo 1:1','1:1',58,2,3,'try'],
     ['Data Migration check-in','Guest',22,3,1,'']],
    note:'In your 1:1 with Leo you talked 58% of the time and cut Leo off three times, once at 00:12:10 just as Leo started on the SSO edge cases. In a 1:1, aim to talk less than 40% of the time.',
    try:'Open with "What\'s on your mind?" and let Leo set the first ten minutes.'},
-  {cat:'presence',kind:'try',t:'zoom',where:'Portal 2.0 steering committee · meeting video',d:-4,obs:[
+  {id:'presence',cat:'presence',kind:'try',t:'zoom',where:'Portal 2.0 steering committee · meeting video',d:-4,obs:[
     ['00:03:10–00:09:40','Camera on, at eye level and well lit. You looked into the camera through your opening update.','good'],
     ['00:03:10','Your opening update ran at about 180 words a minute, faster than your usual 150. You said "just" 11 times in six minutes.','try'],
     ['00:38:02','After asking your question, you stayed still for 13 seconds while Leo thought. No typing, no looking away.','good'],
@@ -1760,7 +1800,7 @@ function momentHTML(m){
   if(m.obs) body=`<p class="cm-fine">From the meeting video. Ondatrace describes what the camera shows, like where you were looking or whether you were typing. It doesn't guess how you or anyone else felt.</p><ul class="obs">${m.obs.map(([ts,tx,k])=>`<li><span class="ts">${ts}</span><span class="mk ${k}" aria-label="${k==='good'?'Worked':'Try next time'}">${k==='good'?'✓':'→'}</span><span>${esc(fmt(tx))}</span></li>`).join('')}</ul>`;
   if(m.table) body=`<div class="tablewrap"><table class="rtable talk-table"><thead><tr><th>Meeting</th><th>Your role</th><th>Your share of talk time</th><th>Questions you asked</th><th>Times you cut someone off</th></tr></thead><tbody>${m.table.map(r=>`<tr class="${r[5]}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="num">${r[2]}%</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td></tr>`).join('')}</tbody></table></div>`;
   const link=m.link&&visible(byId(m.link))?` <button type="button" class="cite" data-open="${m.link}">See the finding ↗</button>`:'';
-  return `<article class="cmoment"><div class="cm-head"><span class="left"><span class="cm-kind ${m.kind}">${m.kind==='good'?'What worked':'Try next time'}</span><span class="cm-cat">${esc(cat.name)}</span></span><span class="left">${chip(m.t)} · <b>${esc(m.where)}</b> · ${when}</span></div>
+  return `<article class="cmoment" id="cm-${m.id}"><div class="cm-head"><span class="left"><span class="cm-kind ${m.kind}">${m.kind==='good'?'What worked':'Try next time'}</span><span class="cm-cat">${esc(cat.name)}</span></span><span class="left">${chip(m.t)} · <b>${esc(m.where)}</b> · ${when}</span></div>
     <div class="cm-body">${body}<p class="cm-note">${esc(fmt(m.note))}${link}</p><div class="cm-try"><b>${m.kind==='good'?'Keep doing this':'Try this instead'}</b>${esc(fmt(m.try))}</div></div></article>`;
 }
 function coachTesterHTML(){
@@ -1781,7 +1821,8 @@ function renderCoach(){
   }
   const list=COACH.filter(m=>!S.coachCat||m.cat===S.coachCat);
   const cat=COACH_CATS.find(c=>c.id===S.coachCat);
-  $('coach-body').innerHTML=`
+  const from=S.coachFrom&&visible(byId(S.coachFrom))?`<div class="row" style="margin-top:10px"><button type="button" class="btn ghost small" data-open="${S.coachFrom}">← Back to the finding</button></div>`:'';
+  $('coach-body').innerHTML=from+`
     <p class="summary">Based on 4 meetings you spoke in, 11 emails and 23 Slack messages you wrote this week. Every note quotes what you actually said or wrote.</p>
     <div class="coach-private">${LOCKICON}<span><b>Only you see this.</b> Your coaching isn't shared with your manager or your team, and it's never used to rate you.</span></div>
     <div class="coach-focus">
@@ -1810,6 +1851,130 @@ document.addEventListener('change',e=>{
   save();
 });
 document.addEventListener('input',e=>{ if(e.target.id==='coach-off'){ S.coach.off=e.target.value; save(); } });
+
+/* change management, training and enablement: part of every suggested next step */
+const PEOPLE_SIDE = {
+  acme:[['Brief Tom before his next Acme call so the renewal conversation uses the real date. A second corrected promise costs more trust than the first.','inf'],
+    ['Acme\'s 1,200 staff will need sign-in instructions and a support contact for SSO. Ask Acme\'s IT lead now who runs the rollout on their side.','inf'],
+    ['Support is training 40 agents on SSO on {d+4}. Settle the date first so they don\'t learn a flow customers won\'t see for weeks.','ev']],
+  hold:[['Tell the Data Migration team why the hold exists, not just that it does, so it doesn\'t read as the project being cut.','inf'],
+    ['Add the rule to the team\'s vendor checklist: anything over $50K goes to the CFO until the {d+10} review.','inf'],
+    ['Give Ana wording for Stratus so the vendor relationship survives the delay.','inf']],
+  dates:[['Marketing, support and sales all have material that says {d+21}. List every customer-facing asset with the date before anyone reschedules.','inf'],
+    ['Customers who were told {d+21} need one clear update from one owner, not three versions from three teams.','inf'],
+    ['Give account managers a two-line answer to "when is Portal 2.0 live?"','inf']],
+  priya:[['A backup needs a handover, not just a name. Ask Priya for a short walkthrough of the auth code before {d+8}; Jess says she\'s the only one who knows it.','ev'],
+    ['Write down what only Priya knows. Knowledge held by one person is a delivery risk every time someone takes leave.','inf']],
+  training:[['Record a short SSO demo once it works on staging, so agents can catch up without a second full session.','inf'],
+    ['Update the support knowledge base and reply templates for the new sign-in flow before customers see it.','inf'],
+    ['Tell agents what to say if a customer asks about SSO before it ships.','inf']],
+  dup:[['Whichever effort continues, give the other team\'s work a visible place in it, or you\'ll lose their buy-in.','inf'],
+    ['Partners will see one invite flow. Agree on one set of partner instructions and one support path.','inf']]
+};
+const tagHTML = k => k==='ev'?'<span class="tag ev">From evidence</span>':'<span class="tag inf">Inference</span>';
+function renderPeople(i){
+  const items=PEOPLE_SIDE[i.id]||[];
+  $('p-people').hidden=!items.length;
+  $('p-people').innerHTML=items.length?`<h3>The people side</h3><p class="section-intro" style="margin:0">Change management, training and enablement for this step. Ondatrace flags these alongside the fix, not as a separate project.</p><ul>${items.map(([t,k])=>`<li>${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul>`:'';
+}
+
+/* coaching, in the workflow: a short tip on each finding, linked to the full coaching moment */
+const TIPS = {
+  acme:{m:'risk-1on1',text:'Leo called SSO "a bit tight" in your 1:1 and you let it go. When a lead softens a risk, ask what it means in days.'},
+  hold:{m:'align-lead',text:'You heard this hold announced and said "Makes sense." When a decision touches your teams, say you\'ll carry it to them.'},
+  dates:{m:'decide-steer',text:'This began with "sounds like we\'re aligned" in steering. Close date changes with an owner, a deadline and who else needs to hear.'},
+  priya:{m:'decide-steer',text:'When you ask for backups, name who confirms each one and by when, or the same question comes back next week.'},
+  training:{m:'align-lead',text:'Downstream teams like Support hear about slips last. When a date moves, ask "who else is building on this?"'},
+  dup:{m:'write-jess',text:'Your note to Jess this week worked: one ask, one date, one reason. Use the same shape when you write to Sam and Jess.'}
+};
+const tipHTML = i => { const t=TIPS[i.id]; if(!t||S.viewer!=='morgan') return '';
+  return `<button type="button" class="coach-tip" data-coachtip="${t.m}" data-from="${i.id}"><span class="ct-label">Coaching tip</span><span>${esc(t.text)}</span><span class="ct-go">See the tip →</span></button>`; };
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-coachtip]'); if(!t) return;
+  S.coachCat=null; S.coachFrom=t.dataset.from||null;
+  logOnce('tip-'+t.dataset.coachtip,'Opened a coaching tip from a finding.');
+  go('coach');
+  const el=$('cm-'+t.dataset.coachtip);
+  if(el){ el.classList.add('hi'); el.scrollIntoView({block:'start'}); setTimeout(()=>el.classList.remove('hi'),2600); }
+});
+
+const industryTipHTML = r => `<button type="button" class="coach-tip industry-tip" data-research="${r.id}"><span class="ct-label">Industry watch</span><span>${esc(fmt(r.today))}</span><span class="ct-go">See why →</span></button>`;
+function watchCardHTML(){
+  const list=RESEARCH.filter(r=>r.today&&r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p)));
+  if(!list.length) return '';
+  return `<article class="card watch-card" data-sev="watch"><div class="card-top"><span class="pill watch">From industry watch</span><span class="eyebrow">Outside changes that affect your projects</span></div>
+    <h3>${list.length} changes outside Kestrel need a project decision</h3><div class="tips">${list.map(industryTipHTML).join('')}</div></article>`;
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-research]'); if(!t) return;
+  logOnce('ri-'+t.dataset.research,'Opened an industry change from Today.');
+  go('research');
+  const el=$('ri-'+t.dataset.research);
+  if(el){ el.classList.add('hi'); el.scrollIntoView({block:'start'}); setTimeout(()=>el.classList.remove('hi'),2600); }
+});
+
+/* industry watch: illustrative research, matched to Kestrel's own projects, vendors and customers */
+const WATCH_SCOPE = [['Industry','Healthcare software'],['Customers','Health systems, clinics'],['Vendors, from your contracts','Stratus, your identity provider'],['Topics, from your tickets and plans','SSO, sign-in, data migration, tax forms'],['Competitors','3 named by your sales team'],['Region','United States']];
+const RESEARCH = [
+  {id:'r-stratus',today:'Stratus is being acquired and prices may change after the deal. Ask Stratus in writing whether your held price survives it before the CFO decides.',type:'Vendor news',sev:'crit',title:'Stratus is being acquired. Customers are being told prices will change after the deal closes.',src:'Enterprise Data Wire',d:-1,pids:['mig'],link:'hold',
+   why:'Data Migration plans to sign a $186K Stratus contract on {d+2}, during the CFO\'s vendor hold. If prices change after the deal closes, waiting for the {d+10} review could cost more.',
+   next:'Before Dana decides, ask Stratus in writing whether the held price survives the acquisition. That gives her the facts for an exception or a wait.',
+   people:[['Ana\'s team may read this as the migration being at risk. Tell them the plan hasn\'t changed, only possibly the signing date.','inf']],
+   found:'Matched "Stratus" from the Data Migration plan and Ana\'s email.'},
+  {id:'r-mfa',today:'Due to a new patient-portal rule, review Portal 2.0\'s charter and scope: multi-factor sign-in becomes required from {d+150}.',type:'Regulation',sev:'warn',title:'A new patient-portal rule will require multi-factor sign-in from {d+150}.',src:'Health IT Policy Brief',d:-2,pids:['portal','api'],link:'acme',
+   why:'Portal 2.0 is building SSO right now (PLAT-412). Adding multi-factor later means a second round of the same identity work, after Acme has rolled SSO out to 1,200 staff.',
+   next:'Ask Priya and Leo whether PLAT-412 can include a multi-factor option now, and what it adds to the {d+22} estimate.',
+   people:[['Support will get "I didn\'t get my code" calls. Add multi-factor to the training plan as a later module.','inf'],['Customers\' IT teams need notice to plan their own rollout. Put it in the next customer update.','inf']],
+   found:'Matched "SSO" and "identity provider" from your Jira tickets and the Portal plan.'},
+  {id:'r-lib',today:'A security fix is out for the sign-in library PLAT-412 uses. Add the upgrade to Sprint 25 before Priya\'s leave.',type:'Security',sev:'warn',title:'A security flaw was found in a widely used sign-in library. Version 4.3 fixes it.',src:'Open Source Security Digest',d:0,pids:['api','portal'],link:'acme',
+   why:'PLAT-412\'s design notes use version 4.2. Fixing it now is cheaper than patching after launch, and it\'s the same SSO work Acme is waiting on.',
+   next:'Ask Priya to confirm the version and add the upgrade to Sprint 25 before she\'s out on {d+8}.',
+   people:[['No customer message needed if it\'s fixed before launch. If it slips past launch, have a short customer notice ready.','inf']],
+   found:'Matched the library name in PLAT-412\'s design notes.'},
+  {id:'r-market',type:'Market trend',sev:'watch',title:'Survey: most health-system buyers now require SSO before they renew software contracts.',src:'Healthcare CIO Pulse',d:-4,pids:['portal'],link:'acme',
+   why:'Acme said SSO is "the one thing blocking" its renewal. Three more Kestrel renewals this year are with health systems.',
+   next:'Ask sales which renewals mention SSO, and mark SSO as a renewal dependency in the Portal plan.',
+   people:[['Give account managers one short, accurate SSO status to share, so every customer hears the same date.','inf']],
+   found:'Matched "renewal" and "SSO" from Salesforce and Tom\'s email.'},
+  {id:'r-comp',type:'Competitor',sev:'watch',title:'A competitor launched self-serve partner onboarding with built-in tax forms.',src:'Health Tech Launches',d:-5,pids:['pon','pl'],link:'dup',
+   why:'Kestrel has two teams building the same partner onboarding under different names. One combined effort would reach partners sooner.',
+   next:'Bring this to the conversation with Sam and Jess: speed to partners matters more than two versions.',
+   people:[['Partner managers will be asked how Kestrel compares. Give them a one-page answer.','inf']],
+   found:'Matched "partner onboarding" and "tax form" from Jira and Monday.'}
+];
+function researchTesterHTML(){
+  const r=S.research; const ck=v=>r.watch.includes(v)?' checked':''; const rd=v=>r.use===v?' checked':'';
+  return `<div class="tester" style="margin-top:22px">${TESTER_LABEL}<h2>Would research like this help you?</h2><p class="note">Your answers go into your feedback at the end.</p>
+    <fieldset class="q-block" style="border-top:0;padding-top:4px"><legend>Would you use it?</legend><div class="choices">${['Yes','Maybe','No'].map(v=>`<label class="choice"><input type="radio" name="research-use" value="${v}"${rd(v)}>${v}</label>`).join('')}</div></fieldset>
+    <fieldset class="q-block"><legend>What should Ondatrace watch for you? Pick any.</legend><div class="choices">${['Regulations','My vendors','Competitors','Security alerts','My customers in the news','Industry trends'].map(v=>`<label class="choice"><input type="checkbox" name="research-watch" value="${v}"${ck(v)}>${v}</label>`).join('')}</div></fieldset>
+    <label class="q-block"><span class="ql">What would you need to trust a news item enough to act on it?</span><textarea id="research-trust">${esc(r.trust)}</textarea></label></div>`;
+}
+function renderResearch(){
+  step('research');
+  const proj=id=>PROJECTS.find(x=>x.id===id).name;
+  $('research-body').innerHTML=`
+    <p class="summary">Ondatrace reads news, regulators, security alerts, and what's said about your vendors and competitors every day. It shows only what touches a project, customer or vendor you actually work with. This week, 5 of 212 items passed that test.</p>
+    <div class="panel" style="margin-top:14px"><span class="eyebrow">What Ondatrace watches for Kestrel</span>
+      <div class="watch-scope">${WATCH_SCOPE.map(([k,v])=>`<span class="wchip"><b>${esc(k)}</b>${esc(v)}</span>`).join('')}</div>
+      <p class="cm-fine" style="margin-top:10px">Built from your connected tools, so it stays current as projects and vendors change. You can add or remove anything.</p></div>
+    <div class="rlist">${RESEARCH.filter(r=>r.pids.some(p=>!VIEWERS[S.viewer].projects||VIEWERS[S.viewer].projects.includes(p))).map(r=>{ const [cls,label]=SEV[r.sev]; const lk=visible(byId(r.link));
+      return `<article class="ritem" id="ri-${r.id}"><div class="rtop"><span class="pill ${cls}">${label}</span><span class="eyebrow">${esc(r.type)}</span><span>${esc(r.src)} · ${ago(r.d)}</span></div>
+        <h3>${esc(fmt(r.title))}</h3>
+        <div><span class="rlabel">Why it matters to Kestrel</span>${esc(fmt(r.why))}${lk?` <button type="button" class="cite" data-open="${r.link}">Related finding ↗</button>`:''}</div>
+        <div><span class="rlabel">Projects</span>${r.pids.map(proj).map(esc).join(', ')}</div>
+        <div class="cm-try"><b>Suggested next step</b>${esc(fmt(r.next))}</div>
+        <div><span class="rlabel">The people side</span><ul class="people-side" style="list-style:none;margin:4px 0 0;padding:0;display:grid;gap:6px">${r.people.map(([t,k])=>`<li style="font-size:14.5px">${esc(fmt(t))}${tagHTML(k)}</li>`).join('')}</ul></div>
+        <p class="rfound">How Ondatrace found this: ${esc(r.found)}</p></article>`; }).join('')}</div>
+    <p class="cm-fine" style="margin-top:14px">Illustrative only. The publications and events above are made up for this demo.</p>
+    ${researchTesterHTML()}`;
+}
+document.addEventListener('change',e=>{
+  const t=e.target; if(!t.name||!t.name.startsWith('research-')) return;
+  if(t.name==='research-use') S.research.use=t.value;
+  if(t.name==='research-watch') S.research.watch=[...document.querySelectorAll('[name=research-watch]:checked')].map(x=>x.value);
+  save();
+});
+document.addEventListener('input',e=>{ if(e.target.id==='research-trust'){ S.research.trust=e.target.value; save(); } });
 
 function renderAsk(){
   $('suggest').innerHTML=QA.map((x,n)=>`<button type="button" data-q="${n}">${esc(x.q)}</button>`).join('');
@@ -1898,7 +2063,7 @@ function payload(){
     session:{opened:[...S.opened], asked:S.asked.slice(-20), morning:S.morning, toolsOff:ALL.filter(t=>S.scanTools&&!on(t)),
       notes:Object.keys(S.note).filter(k=>S.note[k]==='approved'), changes:Object.keys(S.prop).filter(k=>S.prop[k]==='approved'),
       dismissed:S.dismissed},
-    coaching:{...S.coach},
+    coaching:{...S.coach}, research:{...S.research},
     submittedAt:new Date().toISOString(), demo:'v2'
   };
 }
@@ -1916,14 +2081,14 @@ function formFields(p){
   const r=id=>{ const x=p.reactions[id]; return x.act?(x.act+(x.why?' - '+x.why:'')):''; };
   return [p.name, r('acme'), r('hold'), r('dates'), r('priya'), r('training'), r('dup'),
     p.missed.map(id=>byId(id).kind).join(', '), p.scope, p.track, p.projectView, p.evidence, p.inbox, p.auto, p.next, p.other,
-    `Alert channels: ${p.alerts.join(', ')||'none picked'}; opened ${p.session.opened.length}/6 findings; asked: ${p.session.asked.join(' | ')||'none'}; next morning: ${p.session.morning?'yes':'no'}; tools off: ${p.session.toolsOff.join(', ')||'none'}; notes approved: ${p.session.notes.join(', ')||'none'}; changes approved: ${p.session.changes.join(', ')||'none'}; coaching: would use ${p.coaching.use||'no answer'}, topics ${p.coaching.topics.join(', ')||'none picked'}, who sees it ${p.coaching.who||'no answer'}, felt off: ${p.coaching.off||'nothing noted'}`];
+    `Alert channels: ${p.alerts.join(', ')||'none picked'}; opened ${p.session.opened.length}/6 findings; asked: ${p.session.asked.join(' | ')||'none'}; next morning: ${p.session.morning?'yes':'no'}; tools off: ${p.session.toolsOff.join(', ')||'none'}; notes approved: ${p.session.notes.join(', ')||'none'}; changes approved: ${p.session.changes.join(', ')||'none'}; coaching: would use ${p.coaching.use||'no answer'}, topics ${p.coaching.topics.join(', ')||'none picked'}, who sees it ${p.coaching.who||'no answer'}, felt off: ${p.coaching.off||'nothing noted'}; research: would use ${p.research.use||'no answer'}, watch ${p.research.watch.join(', ')||'none picked'}, trust needs: ${p.research.trust||'nothing noted'}`];
 }
 async function sendToForm(p){
   const body=new URLSearchParams();
   formFields(p).forEach((v,n)=>{ const k=FORM.map[n+1]; if(k) body.append(k,String(v||'')); });
   await fetch(FORM.action,{method:'POST',mode:'no-cors',body});
 }
-function save(){ try{ localStorage.setItem('ondatrace-demo-fb',JSON.stringify({react:S.react,why:S.why,f:Object.fromEntries(FB.map(k=>[k,$(k).value])),scope:radio('scope'),track:radio('track'),alerts:[...document.querySelectorAll('[name=alerts]:checked')].map(x=>x.value),missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value),coach:S.coach})); }catch(e){} }
+function save(){ try{ localStorage.setItem('ondatrace-demo-fb',JSON.stringify({react:S.react,why:S.why,f:Object.fromEntries(FB.map(k=>[k,$(k).value])),scope:radio('scope'),track:radio('track'),alerts:[...document.querySelectorAll('[name=alerts]:checked')].map(x=>x.value),missed:[...document.querySelectorAll('#missed input:checked')].map(x=>x.value),coach:S.coach,research:S.research})); }catch(e){} }
 function fill(d){
   if(!d) return;
   if(d.react) Object.assign(S.react,d.react); if(d.why) Object.assign(S.why,d.why);
@@ -1933,6 +2098,7 @@ function fill(d){
   ['scope','track'].forEach(n=>{ if(d[n]){ const r=document.querySelector(`[name=${n}][value="${d[n]}"]`); if(r) r.checked=true; } });
   if(d.missed) S.missed=d.missed;
   if(d.coach) S.coach={...S.coach,...d.coach};
+  if(d.research) S.research={...S.research,...d.research};
   else if(d.coaching) S.coach={...S.coach,...d.coaching};
   if(d.alerts) document.querySelectorAll('[name=alerts]').forEach(x=>x.checked=d.alerts.includes(x.value));
 }
