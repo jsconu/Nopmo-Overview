@@ -333,6 +333,7 @@ details.fold:hover>summary h2{text-decoration:underline;text-underline-offset:4p
 .plist li{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:grid;gap:4px;background:var(--surface)}
 .plist .meta{color:var(--muted);font-size:12.5px}
 .proj-open{margin-top:12px}
+.rtable td.name .proj-link{display:inline-block;margin-top:6px;font-size:12.5px}
 .qsec{font:500 11.5px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 -2px}
 .qproj{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;font-size:14px;margin-top:6px}
 .next14 h2{font-size:17px;margin-bottom:4px}
@@ -1213,6 +1214,8 @@ const SCHED = {
       sG('All partners live',['monday:Item 30'],[
         sT('All 12 partners onboarded','Jess Lin',35,40,'on',['monday:Item 31'])])])]
 };
+// Every Portfolio summary row links straight to its project view (schedule and risks).
+const projLink = p => `<button type="button" class="cite proj-link" data-proj="${p.id}">Schedule and risks →</button>`;
 /* each project's own risk log, as its team keeps it (Ondatrace's findings are listed separately) */
 const PRISKS = {
   api:[['SSO token service slipped a sprint','warn','Kevin Doyle',22,['jira:PLAT-412']],['Sign-in latency above target (180 ms, target 150 ms)','watch','Priya Shah',45,['jira:PLAT-460']]],
@@ -1901,7 +1904,7 @@ function renderSummary(){
     const over=b.forecast-b.total;
     let cells;
     if(tab==='overview'){
-      cells=`<td class="name"><b>${esc(p.name)}</b><span>${esc(p.purpose)}</span></td>
+      cells=`<td class="name"><b>${esc(p.name)}</b><span>${esc(p.purpose)}</span>${projLink(p)}</td>
       <td>${esc(p.owner)}</td>
       <td><div class="health"><span class="pill ok">${esc(p.plan)}</span><span class="cell-sub">in ${TOOLS[p.tool].name}</span></div></td>
       <td><div class="health">${nop}</div></td>
@@ -1911,7 +1914,7 @@ function renderSummary(){
       cells=successCells(p);
     } else {
       const sv=p.pct-p.elapsed, burn=Math.round(b.spent/b.total*100), m=p.m, dt=m.thr[0]-m.thr[1];
-      cells=`<td class="name"><b>${esc(p.name)}</b><span>${esc(p.owner)}</span></td>
+      cells=`<td class="name"><b>${esc(p.name)}</b><span>${esc(p.owner)}</span>${projLink(p)}</td>
       <td class="num">${p.pct}% done<div class="meter" role="img" aria-label="${p.pct}% complete, ${p.elapsed}% of time used"><span style="width:${p.pct}%"></span><i style="left:${p.elapsed}%"></i></div><span class="cell-sub ${sv<-3?'bad':sv>=0?'good':''}">${p.elapsed}% of time used (${sv>=0?'+':''}${sv} pts)</span></td>
       <td class="num">${burn}% spent<span class="cell-sub ${burn-p.pct>5?'bad':''}">at ${p.pct}% done</span></td>
       <td class="num">${m.thr[0]} ${esc(m.thr[2])}<span class="cell-sub ${dt<0?'bad':'good'}">${dt>=0?'▲':'▼'} ${Math.abs(dt)} vs. prior 2 wks</span></td>
@@ -1939,7 +1942,7 @@ function projDetail(p,f){
   </div>`;
 }
 function toggleLens(id){ S.lens=S.lens===id?null:id; if(S.lens) logOnce('lens'+id,`Opened the summary for ${PROJECTS.find(p=>p.id===id).name}.`); renderSummary(); document.querySelector(`[data-lens="${id}"]`)?.focus(); }
-$('sum-table').addEventListener('click',e=>{ if(e.target.closest('[data-open]')) return; const r=e.target.closest('[data-lens]'); if(r) toggleLens(r.dataset.lens); });
+$('sum-table').addEventListener('click',e=>{ if(e.target.closest('[data-open],[data-proj]')) return; const r=e.target.closest('[data-lens]'); if(r) toggleLens(r.dataset.lens); });
 $('sum-table').addEventListener('keydown',e=>{ const r=e.target.closest('[data-lens]'); if(r&&e.target===r&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); toggleLens(r.dataset.lens); } });
 ['overview','metrics','success'].forEach(k=>$('st-'+k).addEventListener('click',()=>{ S.sumTab=k; if(k==='metrics') logOnce('metrics','Looked at portfolio delivery.'); if(k==='success') logOnce('success','Looked at portfolio outcomes.'); renderSummary(); }));
 
@@ -2124,7 +2127,7 @@ const NEWPROJ = {
 function successCells(p){
   const s=SUCCESS[p.id]; const n=s.metrics.length; const onT=s.metrics.filter(m=>m[4]==='on').length; const unm=s.metrics.filter(m=>m[4]==='none').length;
   const st=S.msugg[p.id];
-  return `<td class="name"><b>${esc(p.name)}</b><span>${esc(p.owner)}</span></td>
+  return `<td class="name"><b>${esc(p.name)}</b><span>${esc(p.owner)}</span>${projLink(p)}</td>
     <td style="max-width:320px">${esc(fmt(s.charter))}</td>
     <td>${s.metrics.map(m=>`<span class="cell-sub" style="color:var(--ink-2)">${esc(m[0])}</span>`).join('')}</td>
     <td class="num">${onT} of ${n} on track${unm?`<span class="cell-sub bad">${unm} not measured</span>`:''}</td>
